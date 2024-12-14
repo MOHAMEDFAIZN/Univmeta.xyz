@@ -1,3 +1,4 @@
+require('dotenv').config();  // Load environment variables from .env file
 const express = require('express');
 const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
@@ -13,7 +14,7 @@ const helmet = require('helmet');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3078;
+const PORT = process.env.PORT || 3078;  // Use environment variable for port
 
 // Initialize multer
 const upload = multer(); 
@@ -28,7 +29,7 @@ app.use(helmet());  // Adds security headers
 
 // Session setup
 app.use(session({
-    secret: 'your-session-secret',  // Use a more secure session secret in production
+    secret: process.env.SESSION_SECRET,  // Use the session secret from .env
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }  // Set to true in production with HTTPS
@@ -38,11 +39,11 @@ app.use(session({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MYSQL DATABASE CONNECTION //////////////////////////////////////////////////////////////////////////////////////
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Ioba@324',
-    database: 'univmeta',
-    port: 3306,
+    host: process.env.DB_HOST,  // Use environment variable for DB host
+    user: process.env.DB_USER,  // Use environment variable for DB user
+    password: process.env.DB_PASSWORD,  // Use environment variable for DB password
+    database: process.env.DB_NAME,  // Use environment variable for DB name
+    port: process.env.DB_PORT,  // Use environment variable for DB port
     connectTimeout: 10000
 });
 
