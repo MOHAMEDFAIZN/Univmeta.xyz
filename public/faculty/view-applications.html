@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Event Applications - univmeta.xyz</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+      color: #333;
+      text-align: center; /* Center-aligns heading and logo */
+    }
+
+    /* Logo Placement */
+    .brand-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px;
+      display: block; /* Centers the logo above the heading */
+    }
+
+    /* Header */
+    h1 {
+      margin-bottom: 23px;
+      color: #000000;
+    }
+
+    /* Table Styling */
+    table {
+      width: 80%;
+      margin: 0 auto 20px; /* Centers the table */
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table th,
+    table td {
+      border: 3px solid #ffffff;
+      padding: 10px 10px;
+      text-align: center;
+    }
+
+    table th {
+      background: #000000;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    /* Print Button */
+    .print-button {
+      padding: 10px 20px;
+      background: #000000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      display: inline-block;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .print-button:hover {
+      background: #555;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      table th,
+      table td {
+        font-size: 14px;
+      }
+
+      .print-button {
+        font-size: 14px;
+        padding: 8px 15px;
+      }
+    }
+
+    /* Footer Section */
+    .footer {
+      text-align: center;
+      font-size: 17px;
+      color: #000000;
+      margin-top: 20px;
+    }
+
+    footer a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Logo -->
+  <img class="brand-logo" src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="Brand Logo">
+
+  <!-- Page Title -->
+  <h1>Event Applications Report</h1>
+
+  <!-- Table to Display Applications -->
+  <table id="applications-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Applicant Name</th>
+        <th>Event Name</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Populated dynamically with JavaScript -->
+    </tbody>
+  </table>
+
+  <!-- Print Button -->
+  <a href="#" onclick="window.print()" class="print-button">Print</a>
+
+  <script>
+    /**
+     * Format date as "dd-mm-yyyy"
+     * @param {string} dateStr - The raw date string from the database
+     * @returns {string} - Formatted date
+     */
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return 'Invalid Date';
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
+    async function fetchApplications() {
+      try {
+        const response = await fetch('/api/event-applications');
+        const data = await response.json();
+        const tableBody = document.getElementById('applications-table').querySelector('tbody');
+
+        // Dynamically populate table rows
+        data.forEach(application => {
+          const row = `
+            <tr>
+              <td>${application.id}</td>
+              <td>${application.student_name || 'N/A'}</td>
+              <td>${application.event_name || 'N/A'}</td>
+              <td>${formatDate(application.event_date) || 'N/A'}</td>
+              <td>${application.status || 'N/A'}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error('Error fetching event applications:', error);
+      }
+    }
+
+    // Fetch the data on page load
+    window.onload = fetchApplications;
+  </script>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    &copy; 2024 UnivMeta.xyz. All Rights Reserved.
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requisition Form for Bonafide Certificate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Light background color for contrast */
+            color: #333;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: justify; /* Justify text content inside the form */
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url('http://localhost:3078/Klu%20Black%20Logo.png'); /* Replace with your watermark image URL */
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 600px; /* Adjust width to make watermark smaller */
+            height: 600px; /* Adjust height to keep aspect ratio */
+            opacity: 20; /* Makes the watermark faint */
+            pointer-events: none; /* Ensures it doesn't interfere with form content */
+            z-index: -1; /* Sends the watermark behind form content */
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input[type="radio"] {
+            width: auto;
+        }
+
+        .form-group input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .fees-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .fees-table th,
+        .fees-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .fees-table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        .fees-table td input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Requisition Form for Bonafide Certificate</h1>
+        <form action="/api/student/submit-bonafide-requisition" method="post">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="name">1. Name of the Student:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="registerNumber">2. Register Number:</label>
+                <input type="text" id="registerNumber" name="registerNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="department">3. Department:</label>
+                <select id="department" name="department" required>
+                    <option value="" id="department" name="department" disabled selected>Select a program</option>
+
+                    <!-- Engineering and Technology -->
+                    <option value="BCA">Bachelor of Computer Applications(BCA)</option>
+                    <option value="btech-cse">B.Tech in Computer Science and Engineering</option>
+                    <option value="btech-ece">B.Tech in Electronics and Communication Engineering</option>
+                    <option value="btech-mechanical">B.Tech in Mechanical Engineering</option>
+                    <option value="btech-civil">B.Tech in Civil Engineering</option>
+                    <option value="btech-chemical">B.Tech in Chemical Engineering</option>
+                    <option value="btech-biotechnology">B.Tech in Biotechnology</option>
+                    <option value="btech-it">B.Tech in Information Technology</option>
+                    <option value="btech-ai-ds">B.Tech in Artificial Intelligence and Data Science</option>
+                    <option value="btech-robotics">B.Tech in Robotics and Automation</option>
+                    
+                    <option value="mtech-cse">M.Tech in Computer Science and Engineering</option>
+                    <option value="mtech-vlsi">M.Tech in VLSI Design</option>
+                    <option value="mtech-power-systems">M.Tech in Power Systems</option>
+                    <option value="mtech-software-engineering">M.Tech in Software Engineering</option>
+                    <option value="mtech-thermal-engineering">M.Tech in Thermal Engineering</option>
+                    <option value="mtech-data-science">M.Tech in Data Science</option>
+                    <option value="mtech-embedded-systems">M.Tech in Embedded Systems</option>
+                    <option value="mtech-communication-systems">M.Tech in Communication Systems</option>
+
+                    <!-- Sciences -->
+                    <option value="bsc-physics">B.Sc in Physics</option>
+                    <option value="bsc-chemistry">B.Sc in Chemistry</option>
+                    <option value="bsc-mathematics">B.Sc in Mathematics</option>
+                    <option value="bsc-biotechnology">B.Sc in Biotechnology</option>
+                    
+                    <option value="msc-physics">M.Sc in Physics</option>
+                    <option value="msc-chemistry">M.Sc in Chemistry</option>
+                    <option value="msc-mathematics">M.Sc in Mathematics</option>
+                    <option value="msc-environmental-science">M.Sc in Environmental Science</option>
+                    
+                    <!-- Management and Business -->
+                    <option value="bba">BBA</option>
+                    <option value="mba-marketing">MBA in Marketing</option>
+                    <option value="mba-finance">MBA in Finance</option>
+                    <option value="mba-hrm">MBA in Human Resource Management</option>
+                    <option value="mba-operations">MBA in Operations Management</option>
+                    <option value="mba-international-business">MBA in International Business</option>
+
+                    <!-- Arts and Humanities -->
+                    <option value="ba-english">BA in English</option>
+                    <option value="ba-tamil">BA in Tamil</option>
+                    <option value="ma-english">MA in English</option>
+                    <option value="ma-tamil">MA in Tamil</option>
+                    
+                    <!-- Law -->
+                    <option value="ba-llb">B.A. LL.B</option>
+                    <option value="llm">LL.M</option>
+
+                    <!-- Education -->
+                    <option value="bed">B.Ed</option>
+                    <option value="med">M.Ed</option>
+
+                    <!-- Agriculture -->
+                    <option value="bsc-agriculture">B.Sc in Agriculture</option>
+                    <option value="msc-agriculture">M.Sc in Agriculture</option>
+
+                    <!-- Design -->
+                    <option value="bdes-fashion">B.Des in Fashion Design</option>
+                    <option value="bdes-product">B.Des in Product Design</option>
+                    <option value="mdes-fashion">M.Des in Fashion Design</option>
+                    <option value="mdes-product">M.Des in Product Design</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>4. Gender:</label>
+                <input type="radio" id="male" name="gender" value="Male" required>
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="Female">
+                <label for="female">Female</label>
+            </div>
+            <div class="form-group">
+                <label for="yearSemester">5. Year / Semester:</label>
+                <input type="text" id="yearSemester" name="yearSemester" required>
+            </div>
+            <div class="form-group">
+                <label for="guardianName">6. Father / Guardian Name:</label>
+                <input type="text" id="guardianName" name="guardianName" required>
+            </div>
+            <div class="form-group">
+                <label for="mobileNumber">7. Mobile Number:</label>
+                <input type="tel" id="mobileNumber" name="mobileNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="email">8. Student E-mail ID:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">9. Reason for Bonafide:</label>
+                <textarea id="reason" name="reason" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="hscMode">10. Mode of HSC exam (First year only):</label>
+                <select id="hscMode" name="hscMode" >
+                    <option value="" disabled selected>Select Mode</option>
+                    <option value="state-board">STATE BOARD</option>
+                    <option value="cbse">CBSE</option>
+                    <option value="icse">ICSE</option>
+                    <option value="igcse">IGCSE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="scholarshipMode">11. Mode of Scholarship (First year only):</label>
+                <select id="scholarshipMode" name="scholarshipMode">
+                    <option value="" disabled selected>Select Mode</option>
+                    <option value="keee">KEEE</option>
+                    <option value="inter">INTER</option>
+                    <option value="jee">JEE</option>
+                    <option value="neet">NEET</option>
+                    <option value="ts-ap-eamcet">TS & AP EAMCET</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="diplomaCgpa">12. Diploma CGPA / Percentage (Lateral entry):</label>
+                <input type="text" id="diplomaCgpa" name="diplomaCgpa">
+            </div>
+            <div class="form-group">
+                <label for="ugPgCgpa">13. U.G/P.G CGPA/Percentage (First year PG & M.Phil only):</label>
+                <input type="text" id="ugPgCgpa" name="ugPgCgpa">
+            </div>
+            <div class="form-group">
+                <label for="bonafideReceived">14. If any Bonafide received earlier:</label>
+                <input type="radio" id="bonafideYes" name="bonafideReceived" value="Yes">
+                <label for="bonafideYes">Yes</label>
+                <input type="radio" id="bonafideNo" name="bonafideReceived" value="No">
+                <label for="bonafideNo">No</label>
+                <input type="text" id="bonafideReason" name="bonafideReason" placeholder="If Yes, Reason">
+            </div>
+            <div class="form-group">
+                <label for="cgpa">15. CGPA (Existing KARE students):</label>
+                <input type="text" id="cgpa" name="cgpa">
+            </div>
+            <div class="form-group">
+                <label>16. Fees Paid details:</label>
+                <table class="fees-table">
+                    <thead>
+                        <tr>
+                            <th>Details</th>
+                            <th>1st Year</th>
+                            <th>2nd Year</th>
+                            <th>3rd Year</th>
+                            <th>4th Year</th>
+                            <th>5th Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>One time admission fee</td>
+                            <td><input type="text" name="admissionFee1stYear"></td>
+                            <td><input type="text" name="admissionFee2ndYear"></td>
+                            <td><input type="text" name="admissionFee3rdYear"></td>
+                            <td><input type="text" name="admissionFee4thYear"></td>
+                            <td><input type="text" name="admissionFee5thYear"></td>
+                        </tr>
+                        <tr>
+                            <td>Miscellaneous fee</td>
+                            <td><input type="text" name="miscellaneousFee1stYear"></td>
+                            <td><input type="text" name="miscellaneousFee2ndYear"></td>
+                            <td><input type="text" name="miscellaneousFee3rdYear"></td>
+                            <td><input type="text" name="miscellaneousFee4thYear"></td>
+                            <td><input type="text" name="miscellaneousFee5thYear"></td>
+                        </tr>
+                        <tr>
+                            <td>Tuition fee</td>
+                            <td><input type="text" name="tuitionFee1stYear"></td>
+                            <td><input type="text" name="tuitionFee2ndYear"></td>
+                            <td><input type="text" name="tuitionFee3rdYear"></td>
+                            <td><input type="text" name="tuitionFee4thYear"></td>
+                            <td><input type="text" name="tuitionFee5thYear"></td>
+                        </tr>
+                        <tr>
+                            <td>Hostel fee</td>
+                            <td><input type="text" name="hostelFee1stYear"></td>
+                            <td><input type="text" name="hostelFee2ndYear"></td>
+                            <td><input type="text" name="hostelFee3rdYear"></td>
+                            <td><input type="text" name="hostelFee4thYear"></td>
+                            <td><input type="text" name="hostelFee5thYear"></td>
+                        </tr>
+                        <tr>
+                            <td>Bus fee</td>
+                            <td><input type="text" name="busFee1stYear"></td>
+                            <td><input type="text" name="busFee2ndYear"></td>
+                            <td><input type="text" name="busFee3rdYear"></td>
+                            <td><input type="text" name="busFee4thYear"></td>
+                            <td><input type="text" name="busFee5thYear"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const submittingBox = document.createElement('div');
+        
+            // Add styles for the Submitting Box
+            submittingBox.innerHTML = `
+                <style>
+                    #submittingBox {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background-color: rgba(255, 255, 255, 0.95);
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        display: none;
+                        z-index: 9999;
+                        text-align: center;
+                        font-family: Arial, sans-serif;
+                    }
+                    #submittingBox h3 {
+                        margin: 0;
+                        margin-bottom: 10px;
+                        font-size: 18px;
+                        font-weight: 500;
+                    }
+                    #submittingBox .loader {
+                        border: 4px solid #f3f3f3;
+                        border-radius: 50%;
+                        border-top: 4px solid #000;
+                        width: 20px;
+                        height: 20px;
+                        animation: spin 1s linear infinite;
+                        margin: 0 auto;
+                    }
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+                <div id="submittingBox">
+                    <h3>UnivMeta Processing your request...</h3>
+                    <div class="loader"></div>
+                </div>
+            `;
+        
+            document.body.appendChild(submittingBox);
+        
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+        
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+        
+                const submittingBoxElement = document.getElementById('submittingBox');
+                submittingBoxElement.style.display = 'block';
+        
+                try {
+                    const response = await fetch('/api/student/submit-bonafide-requisition', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+        
+                    const result = await response.json();
+                    submittingBoxElement.style.display = 'none'; // Hide the Submitting Box
+        
+                    if (response.ok) {
+                        // Debugging: Check what is returned
+                        console.log('Response:', result);
+        
+                        // Redirect to the confirmation page with query parameters
+                        const confirmationUrl = `/Bonofide%20Confirmation.html?studentName=${encodeURIComponent(
+                            result.studentName
+                        )}&studentId=${encodeURIComponent(result.studentId)}&applicationId=${encodeURIComponent(
+                            result.applicationId
+                        )}`;
+                        window.location.href = confirmationUrl;
+                    } else {
+                        alert(result.message || 'Failed to submit the form.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again.');
+                    submittingBoxElement.style.display = 'none'; // Hide the Submitting Box
+                }
+            });
+        });
+        </script>    
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Notifications</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa; /* Light gray background for contrast */
+            color: #000;
+            padding-top: 20px;
+            position: relative;
+            min-height: 90vh; /* Ensures body covers full viewport */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1; /* Ensures the container takes available space */
+            position: relative; /* Keeps content above the watermark */
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000000;
+            border-bottom: 2px solid #ddd;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .notification-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #fff; /* White card background */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .notification-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-card.unread {
+            border-left: 5px solid #007bff; /* Blue accent for unread notifications */
+        }
+
+        .notification-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .timestamp {
+            font-size: 0.85rem;
+            color: #000000;
+            text-align: right;
+        }
+
+        .no-notifications {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #000000;
+            margin-top: 50px;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .pagination a {
+            color: #000000;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Watermark Background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url(''); /* Replace with your watermark image URL */
+            background-size: cover;
+            background-position: center;
+            width: 50%;
+            height: 50%;
+            z-index: -1; /* Ensures watermark stays behind content */
+            opacity: 0.15; /* Adjust opacity for faint watermark */
+        }
+
+        /* Footer Styles */
+        footer {
+            margin-top: auto; /* Ensures footer stays at bottom */
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            padding: 10px 0;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Faculty Notifications</h2>
+        <div id="notifications">
+            <!-- Notifications will be dynamically populated here -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">Next</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 University Name. All Rights Reserved.</p>
+        <p><a href="#">Contact Support</a></p>
+    </footer>
+
+    <script>
+        async function fetchNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                if (!response.ok) throw new Error('Failed to fetch notifications');
+                const notifications = await response.json();
+
+                const container = document.getElementById('notifications');
+                container.innerHTML = '';
+
+                if (notifications.length === 0) {
+                    container.innerHTML = `<p class="no-notifications">No notifications available.</p>`;
+                    return;
+                }
+
+                notifications.forEach(notification => {
+                    const timestamp = new Date(notification.created_at).toLocaleString();
+                    container.innerHTML += `
+                        <div class="notification-card ${notification.is_read ? '' : 'unread'}">
+                            <div class="notification-content">
+                                <p class="notification-text">${notification.message}</p>
+                                <small class="timestamp">${timestamp}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+                document.getElementById('notifications').innerHTML = `
+                    <p class="no-notifications">Failed to load notifications.</p>
+                `;
+            }
+        }
+
+        fetchNotifications();
+    </script>
+</body>
+</html>

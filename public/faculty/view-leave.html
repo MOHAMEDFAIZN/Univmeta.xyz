@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Leave Applications - univmeta.xyz</title>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Base body styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+      color: #333;
+      padding: 60px;
+    }
+
+    /* Logo + Heading Section */
+    .header-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .brand-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    /* Print Button - aligned under the header */
+    .print-button-container {
+      margin-bottom: 20px;
+    }
+
+    .print-button {
+      padding: 10px 20px;
+      background: #000000;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .print-button:hover {
+      background: #555;
+    }
+
+    /* Table Styling */
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table th,
+    table td {
+      border: 3px solid #ffffff;
+      padding: 10px 15px;
+      text-align: center;
+    }
+
+    table th {
+      background: #000000;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    table tbody tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+
+    table tbody tr:nth-child(odd) {
+      background: #ffffff;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-top: 30px;
+      padding: 10px 0;
+      border-top: 1px solid #ccc;
+    }
+
+    footer a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      table th,
+      table td {
+        font-size: 14px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .print-button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header Section with Logo and Heading -->
+  <div class="header-container">
+    <img class="brand-logo" src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="Logo" />
+    <h1>Leave Applications Report</h1>
+  </div>
+
+  <!-- Print Button Section -->
+  <div class="print-button-container">
+    <button onclick="window.print()" class="print-button">Print Page</button>
+  </div>
+
+  <!-- Leave Applications Table -->
+  <table id="applications-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Applicant Name</th>
+        <th>Leave Type</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will populate dynamically -->
+    </tbody>
+  </table>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    &copy; 2024 <a href="#">univmeta.xyz</a>. All Rights Reserved.
+  </footer>
+
+  <script>
+    // Helper function for formatting dates to DD-MM-YYYY
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
+    async function fetchApplications() {
+      try {
+        const response = await fetch('/api/leave-applications');
+        const data = await response.json();
+        const tableBody = document.getElementById('applications-table').querySelector('tbody');
+
+        tableBody.innerHTML = ''; // Clear any previous data
+
+        data.forEach(application => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${application.id}</td>
+            <td>${application.name || 'N/A'}</td>
+            <td>${application.leaveType || 'N/A'}</td>
+            <td>${application.startDate ? formatDate(application.startDate) : 'N/A'}</td>
+            <td>${application.endDate ? formatDate(application.endDate) : 'N/A'}</td>
+            <td>${application.status || 'N/A'}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching leave applications:', error);
+      }
+    }
+
+    window.onload = fetchApplications;
+  </script>
+</body>
+
+</html>

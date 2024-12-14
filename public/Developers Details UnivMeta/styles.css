@@ -1,0 +1,136 @@
+/* General Reset and Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Header Styling */
+.header {
+    width: 100%;
+    background-color: #e3e4e6;
+    text-align: left;
+    padding: 20px 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2.1rem;
+    font-family: 'Lobster', cursive;
+    color: #2d3436;
+    margin-bottom: 9px;
+}
+
+.developer-heading {
+    font-size: 2.0rem;
+    color: #101111;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Team Section Styling */
+.team-section {
+    text-align: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.developers {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+/* Developer Card Styling */
+.developer-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    width: 280px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    flex-shrink: 0;
+}
+
+.developer-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.developer-card img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.card-content h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 10px;
+}
+
+.card-content .reg-number {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.card-content p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.social-links {
+    margin-top: 15px;
+}
+
+.social-links a {
+    color: #007bff;
+    font-size: 1.2rem;
+    margin: 0 8px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #0056b3;
+}
+
+/* Footer Styling */
+.footer {
+    width: 100%;
+    background-color: #e3e4e6;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-text {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: bold; /* Makes the first line bold */
+    margin-bottom: 5px;
+}
+
+.footer-highlight {
+    font-size: 0.9rem;
+    font-weight: bold; /* Makes the second line bold */
+    color: #333; /* Yellow color */
+}

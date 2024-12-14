@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duplicate ID Card Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .signature-box {
+            width: 30%;
+            text-align: center;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Application for Duplicate Identity Card</h1>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="text" id="date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="student-name">Student's Name:</label>
+                <input type="text" id="student-name" name="student-name">
+            </div>
+            <div class="form-group">
+                <label for="register-number">Register Number:</label>
+                <input type="text" id="register-number" name="register-number">
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department">
+            </div>
+            <div class="form-group">
+                <label for="year-branch">Year & Branch:</label>
+                <input type="text" id="year-branch" name="year-branch">
+            </div>
+            <div class="form-group">
+                <label for="loss-details">Brief details of loss:</label>
+                <textarea id="loss-details" name="loss-details" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="student-signature">Student's Signature:</label>
+                <input type="text" id="student-signature" name="student-signature">
+            </div>
+            <div class="signature-section">
+                <div class="signature-box">Signature of the Class Coordinator</div>
+                <div class="signature-box">Signature of the Head of the Department</div>
+                <div class="signature-box">Signature of the Director (Student Affairs)</div>
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>

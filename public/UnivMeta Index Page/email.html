@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonafide Requisition Status</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 10px 0 5px;
+        }
+
+        .content {
+            padding: 20px 30px;
+        }
+
+        .content h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .status-box {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .status-box span {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .action-button {
+            display: inline-block;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .action-button:hover {
+            background-color: #444444;
+        }
+
+        .footer {
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+
+        .footer a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <img src="https://via.placeholder.com/80" alt="UnivMeta Logo">
+            <h1>Bonafide Requisition</h1>
+            <p>UnivMeta - Streamlining University Processes</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h2>Dear ${studentName},</h2>
+            <p>We are pleased to inform you that your Bonafide Requisition status has been updated by the faculty. Below are the details:</p>
+            <div class="status-box">
+                <p>Current Status:</p>
+                <span>${status}</span>
+            </div>
+            <p>Thank you for using UnivMeta to streamline your academic processes. You can log in to your dashboard to view more details and track your requisition status.</p>
+            <div class="button-container">
+                <a href="http://localhost:3078/dashboard" class="action-button">View Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Need assistance? Visit our <a href="http://localhost:3078/support">Support Center</a> or contact us at <a href="mailto:support@univmeta.com">support@univmeta.com</a>.</p>
+            <p>&copy; 2024 UnivMeta. All Rights Reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

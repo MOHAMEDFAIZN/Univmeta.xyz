@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Application Review</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+        .table thead {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .icon-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .icon-button:hover {
+            color: #28a745;
+            transform: scale(1.1);
+        }
+
+        .approve-icon {
+            color: #000000;
+        }
+
+        .reject-icon {
+            color: #dc3545;
+        }
+
+        .view-icon {
+            color: #28a745;
+        }
+         /* Approve Button Gradient */
+    .btn-success-gradient {
+        background: linear-gradient(45deg, #28a745, #000000);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 0px;
+        transition: background 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-success-gradient:hover {
+        background: linear-gradient(45deg, #218838, #28a745);
+        transform: translateY(-2px);
+    }
+
+    /* Reject Button Gradient */
+    .btn-danger-gradient {
+        background: linear-gradient(45deg, #218838, #111010);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 0px;
+        transition: background 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-danger-gradient:hover {
+        background: linear-gradient(45deg, #c82333, #dc3545);
+        transform: translateY(-2px);
+    }
+
+    /* Spinner Styling for Loading State */
+    .btn-loading .spinner-border {
+        margin-right: 5px;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Bonafide Application Review</h1>
+        <div id="loadingMessage" class="text-center my-3">Loading applications...</div>
+        <table class="table table-striped" id="applicationsTableWrapper" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Application ID</th>
+                    <th>Date & Time</th>
+                    <th>Student Name</th>
+                    <th>Register Number</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="applicationsTable">
+                <!-- Dynamic content will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Viewing Details -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">Application Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="applicationDetails" class="list-group">
+                        <!-- Dynamic details will be appended here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Approving/Rejecting -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="statusForm">
+                        <div class="form-group">
+                            <label for="applicationIdInput">Application ID</label>
+                            <input type="number" id="applicationIdInput" class="form-control" readonly>
+                        </div>
+                        <!-- Approve Button with Loading State -->
+<button id="approveBtn" type="button" class="btn btn-success-gradient btn-block" onclick="handleLoadingState(this, 'approve')">
+    Approve
+</button>
+
+<!-- Reject Button with Loading State -->
+<button id="rejectBtn" type="button" class="btn btn-danger-gradient btn-block" onclick="handleLoadingState(this, 'reject')">
+    Reject
+</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let currentAction = ''; // Tracks the current action
+
+        // Function to format date and time
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date)) return 'N/A';
+
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const formattedTime = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            return `${formattedDate} <br> <small>${formattedTime}</small>`;
+        }
+
+        async function fetchApplications() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const tableWrapper = document.getElementById('applicationsTableWrapper');
+            const tableBody = document.getElementById('applicationsTable');
+            loadingMessage.style.display = 'block';
+            tableWrapper.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:3078/api/faculty/pending-bonafide-requisitions', {
+                    method: 'GET',
+                    credentials: 'include' // Include session cookie
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch applications');
+
+                const applications = await response.json();
+                tableBody.innerHTML = ''; // Clear previous table content
+
+                if (applications.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No pending requisitions</td></tr>`;
+                } else {
+                    applications.forEach(application => {
+                        const formattedDateTime = application.date
+                            ? formatDateTime(application.date)
+                            : 'N/A';
+
+                        const row = `
+                            <tr>
+                                <td>${application.id || 'Unknown'}</td>
+                                <td>${formattedDateTime}</td>
+                                <td>${application.name || 'Unknown'}</td>
+                                <td>${application.registerNumber || 'Unknown'}</td>
+                                <td>${application.reason || 'No details provided'}</td>
+                                <td id="status-${application.id}" 
+                                    class="${application.status === 'Approved' ? 'text-success' : 
+                                           application.status === 'Rejected' ? 'text-danger' : 
+                                           'text-warning'}">
+                                    ${application.status}
+                                </td>
+                                <td>
+                                    <button class="icon-button view-icon" onclick="viewDetails(${application.id})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="icon-button approve-icon" onclick="openStatusModal(${application.id})">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                }
+
+                loadingMessage.style.display = 'none';
+                tableWrapper.style.display = 'table';
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                loadingMessage.textContent = 'NO PENDING APPLICATIONS....';
+            }
+        }
+
+        function openStatusModal(applicationId) {
+            document.getElementById('applicationIdInput').value = applicationId;
+            $('#statusModal').modal('show');
+        }
+
+        async function viewDetails(applicationId) {
+            try {
+                const response = await fetch(`http://localhost:3078/api/faculty/application/${applicationId}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch application details');
+
+                const details = await response.json();
+                const detailsList = document.getElementById('applicationDetails');
+                detailsList.innerHTML = '';
+
+                for (const [key, value] of Object.entries(details)) {
+                    const item = document.createElement('li');
+                    item.className = 'list-group-item';
+                    item.innerHTML = `<strong>${key}:</strong> ${value || 'N/A'}`;
+                    detailsList.appendChild(item);
+                }
+
+                $('#viewModal').modal('show');
+            } catch (error) {
+                console.error('Error fetching application details:', error);
+                alert('Failed to fetch application details. Please try again later.');
+            }
+        }
+
+        async function updateStatus(newStatus) {
+            const requisitionId = document.getElementById('applicationIdInput').value;
+
+            try {
+                const response = await fetch('http://localhost:3078/api/faculty/approve-requisition', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ requisitionId, status: newStatus })
+                });
+
+                if (!response.ok) throw new Error('Failed to update requisition status');
+
+                $('#statusModal').modal('hide');
+                fetchApplications(); // Refresh table
+                alert(`Requisition ${newStatus.toLowerCase()} successfully.`);
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Failed to update requisition status. Please try again later.');
+            }
+        }
+
+        document.getElementById('approveBtn').addEventListener('click', () => updateStatus('Approved'));
+        document.getElementById('rejectBtn').addEventListener('click', () => updateStatus('Rejected'));
+
+        // Fetch applications when the page loads
+        fetchApplications();
+        //////////////////
+        function handleLoadingState(button, action) {
+        // Save the original button content
+        const originalText = button.innerHTML;
+
+        // Change the button to show a spinner
+        button.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Processing...
+        `;
+        button.classList.add('btn-loading');
+        button.disabled = true; // Disable the button
+
+        // Simulate the processing delay (replace this with actual API call)
+        setTimeout(() => {
+            button.innerHTML = action === 'approve' ? 'Approve' : 'Reject'; // Restore original text
+            button.classList.remove('btn-loading');
+            button.disabled = false; // Re-enable the button
+        }, 2000); // Simulated 2-second delay
+    }
+    </script>
+
+</body>
+
+</html>

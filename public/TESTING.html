@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Leave Application</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        .container {
+            max-width: 798px;
+            margin: auto;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 0;
+        }
+        .header img {
+            max-width: 500px;
+            margin-bottom: 0;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .signature {
+            margin-top: 15px;
+            text-align: right;
+            font-weight: bold;
+        }
+        .sign-placeholder {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 150px;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+        }
+        .sign-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: url('http://localhost:3078/watermark_image.png') no-repeat center center;
+            background-size: 70%; /* Adjust size as needed */
+            opacity: 0.1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark"></div>
+    <div class="container">
+        <div class="header">
+            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="College Logo">
+        </div>
+        <h2>Approved Application</h2>
+        <p><strong>Date:</strong> {{date}}</p>
+        <p><strong>To</strong>,</p>
+        <p><strong>Head Of The Department,</strong></p>
+        <p><strong>{{department}},</strong></p>
+        <p><strong>Kalasalingam Academy Of Research And Education [DEEMED TO BE UNIVERSITY],</strong></p>
+        <p><strong>Anand Nagar, Krishnankovil-626126.</strong></p>
+        <br>
+        <p><strong>From,</strong></p>
+        <p><strong></strong> {{name}}</p>
+        <p><strong>Register Number:</strong> {{registerNo}}</p>
+        <p><strong>{{department}},</strong></p>
+        <p><strong>Kalasalingam Academy Of Research And Education [DEEMED TO BE UNIVERSITY],</strong></p>
+        <p><strong>Anand Nagar, Krishnankovil-626126.</strong></p>
+        <p><strong>Subject:</strong> Leave Application for {{leaveType}}</p>
+        <p>Dear Sir/Madam,</p>
+        <p>I am {{name}}, a student of <strong>{{department}}</strong>. I am writing to request leave from <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong> due to <strong>{{reason}}</strong>.</p>
+        <p>I kindly request your approval for this leave. I assure you that I will cover all academic work during my absence.</p>
+        <p>Thank you for considering my request.</p>
+        <p><strong>Contact Number:</strong> {{contactNo}}</p>
+        <p><strong>Parent's Contact Number:</strong> {{parentContactNo}}</p>
+        <p><strong>Email ID:</strong> {{email}}</p>
+        <p class="signature">Yours sincerely,<br>{{name}}</p>
+        <div class="sign-placeholder">
+            <img src="http://localhost:3078/sign_placeholder.png" alt="Signature Placeholder">
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f9; /* Light grey background */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            padding: 30px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            color: white;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            position: fixed;
+            height: 100%;
+        }
+
+        .sidebar.closed {
+            width: 45px; /* Sidebar width when collapsed */
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 70%;
+            margin-bottom: 10px;
+        }
+
+        .profile h5 {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .profile p {
+            font-size: 14px;
+            color: #adb5bd;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #ffffff;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .notification-count {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+            position: relative; /* Required for the pseudo-element */
+        }
+
+        .sidebar.closed + .main-content {
+            margin-left: 60px; /* Adjust content when sidebar is collapsed */
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 380px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('http://localhost:3078/Klu Black Logo.png') no-repeat center center;
+            background-size: 20%;
+            opacity: 0.1; /* Only the image is transparent */
+            z-index: -1; /* Ensures it stays behind the content */
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .toggle-sidebar {
+            cursor: pointer;
+            font-size: 24px;
+            color: #343a40;
+            margin-right: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #343a40;
+        }
+
+        /* Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff; /* Solid background for cards */
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            color: #343a40;
+            font-size: 18px;
+        }
+
+        .card i {
+            font-size: 30px;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 20px;
+            color: #495057;
+        }
+
+        /* Footer */
+        .footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 25px 5px;
+            margin-top: auto;
+        }
+
+        .footer h6 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .footer p {
+            font-size: 12px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .sidebar.closed {
+                width: 60px;
+            }
+
+            .card-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar a {
+                font-size: 14px;
+            }
+
+            .toggle-sidebar {
+                font-size: 20px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="Profile">
+            <h5>Admin</h5>
+            <p>UnivMeta.Xyz</p>
+        </div>
+        <a href="Student Details.html"><i class="fas fa-user-graduate"></i> Student Details</a>
+        <a href="#"><i class="fas fa-chalkboard-teacher"></i> Faculty Details</a>
+        <a href="Applications Review Bonafide.html"><i class="fas fa-file-alt"></i> Student Applications</a>
+        <a href="#"><i class="fas fa-file-alt"></i> Faculty Applications</a>
+        <a href="Notifications.html"><i class="fas fa-bell"></i> Notifications <span class="notification-count">5</span></a>
+        <a href="change-password.html"><i class="fas fa-key"></i> Admin Change Password</a>
+        <a href="Admin Login Page.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="toggle-sidebar" onclick="toggleSidebar()">&#9776;</div>
+            <h1>Admin Dashboard</h1>
+        </div>
+        
+        <!-- Card Section -->
+        <div class="card-container">
+            <div class="card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Total Forms</h3>
+                <p>120</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-clock"></i>
+                <h3>Waiting Forms</h3>
+                <p>30</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-times-circle"></i>
+                <h3>Rejected Forms</h3>
+                <p>10</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-check-circle"></i>
+                <h3>Approved Forms</h3>
+                <p>80</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h6>© 2024 UnivMeta.xyz. All Rights Reserved From AFAS Teams.</h6>
+        <p></p>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("closed");
+        }
+
+        function logout() {
+            alert("You have been logged out.");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

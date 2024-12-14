@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Application Review</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+        .table thead {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .icon-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .approve-icon {
+            color: #28a745;
+        }
+
+        .reject-icon {
+            color: #dc3545;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .modal-header {
+            background-color: #343a40;
+            color: #fff;
+        }
+        /* General Button Style */
+.gradient-button {
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Specific Button Gradients */
+#leaveApplicationsBtn {
+    background: linear-gradient(45deg,  #4682b4, #1e252c);
+}
+
+#leaveApplicationsBtn:hover {
+    background: linear-gradient(45deg, #0056b3, #007b);
+    transform: translateY(-2px);
+}
+
+#onDutyFormsBtn {
+    background: linear-gradient(45deg, #4682b4, #1e252c);
+}
+
+#onDutyFormsBtn:hover {
+    background: linear-gradient(45deg, #5a6268, #6c757d);
+    transform: translateY(-2px);
+}
+
+#leaveApplicationsBtn:focus,
+#onDutyFormsBtn:focus {
+    outline: none;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mb-4">Faculty Application Review</h1>
+
+        <div class="btn-group mb-3" role="group">
+            <button  
+        id="leaveApplicationsBtn" 
+        class="gradient-button" 
+        onclick="showApplications('leave')">
+        Leave Applications
+    </button>
+
+    <button 
+        id="onDutyFormsBtn" 
+        class="gradient-button" 
+        onclick="showApplications('event')">
+        On Duty Forms
+    </button>
+        </div>
+
+        <div class="loading" id="loadingMessage">Loading applications...</div>
+
+        <div id="applicationsTableWrapper" style="display: none;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Application Details</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationsTable">
+                    <!-- Dynamic content will be inserted here -->
+                </tbody>
+            </table>
+
+            <div id="pagination" class="pagination">
+                <!-- Pagination buttons will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for approve/reject confirmation -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">Confirm Status Change</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to <span id="statusAction"></span> this application?</p>
+                    <p><strong>Application ID:</strong> <span id="applicationId"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmStatusChange">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentApplicationType = 'leave'; // default is Leave Applications
+        let currentPage = 1;
+        const rowsPerPage = 15;
+        let applicationsData = [];
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date)) {
+                return 'Invalid Date';
+            }
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        function paginateApplications(applications) {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const currentPageApplications = applications.slice(start, end);
+
+            const tableBody = document.getElementById('applicationsTable');
+            tableBody.innerHTML = ''; // Clear previous table content
+
+            if (currentPageApplications.length === 0) {
+                const noDataRow = document.createElement('tr');
+                noDataRow.innerHTML = `
+                    <td colspan="6" class="text-center">No applications found</td>
+                `;
+                tableBody.appendChild(noDataRow);
+            } else {
+                currentPageApplications.forEach(application => {
+                    const formattedSubmissionDate = application.submission_date ? formatDate(application.submission_date) : 'Invalid Date';
+                    const formattedEventDate = application.event_date ? formatDate(application.event_date) : 'Invalid Date';
+
+                    const applicationDetails = application.applicationType === 'Event' ?
+                        `<p><strong>Name of the Event:</strong> ${application.type || 'N/A'}</p>
+                         <p><strong>Date:</strong> ${formattedEventDate}</p>
+                         <p><strong>Organizing Department / Club / College:</strong> ${application.reason || 'N/A'}</p>
+                         <p><strong>Type of Event:</strong> ${application.event_type || 'N/A'}</p>
+                         <p><strong>Register Number:</strong> ${application.student_reg_no || 'N/A'}</p>` :
+                        `<p><strong>Leave Type:</strong> ${application.type}</p>
+                         <p><strong>Reason:</strong> ${application.reason}</p>
+                         <p><strong>Register Number:</strong> ${application.registerNo || 'N/A'}</p>
+                         <p><strong>Contact Number:</strong> ${application.contactNo || 'N/A'}</p>
+                         <p><strong>Parent's Contact:</strong> ${application.parentContactNo || 'N/A'}</p>
+                         <p><strong>Email ID:</strong> ${application.email || 'N/A'}</p>
+                         <p><strong>Department:</strong> ${application.department || 'N/A'}</p>
+                         <p><strong>Leave Start Date:</strong> ${formatDate(application.startDate)}</p>
+                         <p><strong>Leave End Date:</strong> ${formatDate(application.endDate)}</p>`;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${application.id}</td>
+                        <td>${application.name || 'Unknown'}</td>
+                        <td>${applicationDetails}</td>
+                        <td>${formattedSubmissionDate}</td>
+                        <td id="status-${application.id}" class="${application.status === 'Approved' ? 'text-success' : application.status === 'Rejected' ? 'text-danger' : 'text-warning'}">
+                            ${application.status}
+                        </td>
+                        <td>
+                            <button class="icon-button approve-icon" onclick="openStatusModal(${application.id}, 'Approved', '${application.applicationType}')">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                            <button class="icon-button reject-icon" onclick="openStatusModal(${application.id}, 'Rejected', '${application.applicationType}')">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            generatePagination(applications.length);
+        }
+
+        function generatePagination(totalRows) {
+            const paginationWrapper = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+            paginationWrapper.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = 'btn btn-sm btn-outline-secondary mx-1';
+                pageButton.textContent = i;
+                pageButton.onclick = function () {
+                    currentPage = i;
+                    paginateApplications(applicationsData);
+                };
+                paginationWrapper.appendChild(pageButton);
+            }
+        }
+
+        function openStatusModal(applicationId, newStatus, applicationType) {
+            const statusAction = newStatus === 'Approved' ? 'approve' : 'reject';
+            document.getElementById('statusAction').textContent = statusAction;
+            document.getElementById('applicationId').textContent = applicationId;
+            document.getElementById('confirmStatusChange').onclick = function () {
+                updateStatus(applicationId, newStatus, applicationType);
+                $('#statusModal').modal('hide');
+            };
+            $('#statusModal').modal('show');
+        }
+
+        async function fetchApplications(applicationType) {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const tableWrapper = document.getElementById('applicationsTableWrapper');
+            loadingMessage.style.display = 'block';
+            tableWrapper.style.display = 'none';
+
+            try {
+                const response = await fetch(`http://localhost:3078/api/faculty/pending-applications/${applicationType}`);
+                if (!response.ok) throw new Error('Failed to fetch applications');
+
+                applicationsData = await response.json();
+                paginateApplications(applicationsData);
+
+                loadingMessage.style.display = 'none';
+                tableWrapper.style.display = 'block';
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                loadingMessage.textContent = 'Error loading applications. Please try again later.';
+            }
+        }
+
+        function showApplications(applicationType) {
+            currentApplicationType = applicationType; // Update the current type
+            fetchApplications(applicationType);
+        }
+
+        async function updateStatus(applicationId, newStatus, applicationType) {
+            try {
+                const response = await fetch('http://localhost:3078/api/faculty/update-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: applicationId, status: newStatus, applicationType }),
+                });
+
+                if (!response.ok) throw new Error('Failed to update application status');
+
+                const result = await response.json();
+                console.log('Status updated:', result);
+
+                const statusCell = document.getElementById(`status-${applicationId}`);
+                statusCell.textContent = newStatus;
+                statusCell.className = newStatus === 'Approved' ? 'text-success' : 'text-danger';
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Failed to update application status. Please try again later.');
+            }
+        }
+
+        window.onload = function () {
+            fetchApplications(currentApplicationType);
+        };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

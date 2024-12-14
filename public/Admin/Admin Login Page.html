@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Unique font -->
+    <style>
+        /* General Reset & Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 98vh;
+            background: url('http://localhost:3078/one.jpg') no-repeat center center/cover; /* Background image */
+        }
+
+        .top-bar {
+            width: 100%;
+            padding: 0px 35px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align items to the left */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar img {
+            width: 95px;
+            height: 95px;
+            margin-right: 10px;
+        }
+
+        .top-bar h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #333333;
+            font-family: 'Lobster', cursive; /* Unique font style */
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 200px;
+            height: 160px;
+            margin-bottom: 9%;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #292517; /* Dark color */
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .input-group span {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #333;
+        }
+
+        .input-group button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #000000;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .input-group button:hover {
+            background-color: #ffcc00;
+        }
+
+        .bottom-bar {
+            width: 100%;
+            padding: 20px 35px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            text-align: center;
+            font-size: 14px;
+            color: #555555;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-bar a {
+            text-decoration: none;
+            color: #555555;
+            font-weight: bold;
+        }
+
+        .bottom-bar a:hover {
+            color: #333333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            .top-bar h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <img src="http://localhost:3078/UNIVMETA_BLACK.png" alt="Logo">
+        <h1>UnivMeta - Automation System</h1> <!-- UnivMeta with unique font -->
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <img src="http://localhost:3078/Klu%20Black%20Logo.png" alt="Login Image">
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="userId" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span onclick="togglePassword()">Show</span>
+                </div>
+                <div class="input-group">
+                    <button type="button" onclick="validateLogin()">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bottom-bar">
+        © All rights reserved | <a href="http://localhost:3078/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Teams</a>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const showHideIcon = event.target;
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                showHideIcon.textContent = "Hide";
+            } else {
+                passwordField.type = "password";
+                showHideIcon.textContent = "Show";
+            }
+        }
+
+        // Validate login credentials
+        async function validateLogin() {
+            const userId = document.getElementById("userId").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: userId, password: password })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('Login successful!');
+                    window.location.href = "Admin Dashboard.html"; // Redirect to dashboard page
+                } else {
+                    alert('Invalid ID or Password');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('Server error. Please try again later.');
+            }
+        }
+    </script>
+</body>
+</html>

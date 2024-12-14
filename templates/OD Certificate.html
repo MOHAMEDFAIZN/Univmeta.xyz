@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OD Certificate</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fdfdfd;
+        }
+
+        .certificate-container {
+            border: 2px solid black;
+            padding: 30px;
+            width: 35%; /* Reduced width */
+            margin: 30px auto;
+            background-color: #ffffff;
+            page-break-after: always;
+            min-height: 700px; /* Increased height */
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 500px; /* Adjusted logo size */
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-top: 25px;
+        }
+
+        .content label {
+            font-weight: bold;
+        }
+
+        .content span {
+            text-decoration: underline;
+            padding: 0 5px;
+        }
+
+        .signature-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 40px;
+        }
+
+        .signature {
+            text-align: center;
+            flex: 1;
+        }
+
+        .signature img {
+            display: block;
+            margin: 0 auto;
+            width: 110px; /* Adjust image size */
+            height: 70px;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+
+        .signature p {
+            margin: 10px 0 0;
+            font-size: 16px;
+        }
+
+        .signature-line {
+            margin-top: 10px;
+            border-top: 1px solid black;
+            width: 180px;
+            margin: 0 auto;
+        }
+
+        /* Footer for print layout */
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .certificate-container {
+                width: 90%;
+                margin: 0;
+            }
+
+            .header img {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <!-- Header with Image -->
+        <div class="header">
+            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="Institution Logo" />
+            <h1>Event Participation Approval Certificate</h1>
+        </div>
+
+        <!-- Certificate Content -->
+        <div class="content">
+            <p>
+                <label>Submission Date:</label>
+                <span>{{submissionDate}}</span>
+            </p>
+            <p>
+                <label>Name of the Event:</label>
+                <span>{{eventName}}</span>
+            </p>
+            <p>
+                <label>Date:</label>
+                <span>{{eventDate}}</span>
+            </p>
+            <p>
+                <label>Organizing Department / Club / College:</label>
+                <span>{{organizingDepartment}}</span>
+            </p>
+            <p>
+                <label>Number of Days:</label>
+                <span>{{numberOfDays}}</span>
+            </p>
+            <p>
+                <label>Type of Event:</label>
+                <span>{{eventType}}</span>
+            </p>
+            <p>
+                <label>Register Number:</label>
+                <span>{{studentRegNo}}</span>
+            </p>
+            <p>
+                <label>Name of the Student:</label>
+                <span>{{studentName}}</span>
+            </p>
+        </div>
+
+        <!-- Signature Section with Images -->
+        <div class="signature-section">
+            <div class="signature">
+                <!-- Image for Class Coordinator -->
+                <img src="http://localhost:3078/Student/IMAGES/Faculty%20Advisor.jpg" alt="Class Coordinator Image">
+                <p>Class Coordinator</p>
+                <div class="signature-line"></div>
+            </div>
+            <div class="signature">
+                <!-- Image for Head of the Department -->
+                <img src="http://localhost:3078/Student/IMAGES/HOD.jpg" alt="HOD Image">
+                <p>Head of the Department</p>
+                <div class="signature-line"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

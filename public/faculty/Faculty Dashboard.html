@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - UnivMeta.xyz</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding-top: 50px;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.show {
+            width: 30px; /* When collapsed */
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: #ffffff;
+            text-decoration: none;
+            margin: 5px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #16182b;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .sidebar .profile h5 {
+            margin: 10px 0;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 55px;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.show + .main-content {
+            margin-left: 30px; /* Adjust main content when the sidebar is collapsed */
+        }
+
+        /* Updated Sidebar Toggle Button Appearance */
+        .sidebar-toggle {
+            position: absolute;
+            top: 20px;
+            left: 280px; /* Positioned above the sidebar */
+            font-size: 30px;
+            color: #0b0b0bc2; /* Text color */
+            background-color: transparent; /* Transparent background */
+            border: none; /* No border */
+            cursor: pointer;
+            z-index: 1000;
+            padding: 5px; /* Adjust padding for click area */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Button hover effect */
+        .sidebar-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle background on hover */
+        }
+
+        .welcome-section {
+            max-width: 97%; /* Limits width to 90% of its container */
+            margin: 35px auto; /* Centers the section */
+            padding: 25px;
+            background: linear-gradient(135deg, #ffd64e, #e7e7e7);
+            color: #000000;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            height: auto; /* Allows height to adjust with content */
+        }
+
+        .welcome-section h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .welcome-section p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Summary Box Styling */
+        .summary-box {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: linear-gradient(135deg, #eaf0ff, #ffffff);
+            color: #2b2c34;
+            height: 155px;
+            font-family: 'Verdana', sans-serif;
+        }
+
+        .summary-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-box i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .summary-box h4 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .summary-box p {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* Anchor Tag Styling for Boxes */
+        a.box-link {
+            text-decoration: none; /* Prevent underlines */
+            display: block; /* Ensure the <a> spans the size of the box */
+        }
+
+        .footer {
+            background: linear-gradient(90deg, #2c3e50, #2c3e50);
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .footer h6 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .footer p {
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="Profile">
+            <h5>Faculty Member</h5>
+            <p id="sidebarUserName">Loading...</p>
+            <p>UnivMeta.xyz</p>
+        </div>
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <a href="faculty/Faculty Notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="faculty/Applications Review.html"><i class="fas fa-file-alt"></i> Applications</a>
+        <a href="http://localhost:3078/faculty/Applications%20Review%20Bonafide.html"><i class="fas fa-file-alt"></i> Bonafide Applications</a>
+        <a href="http://localhost:3078/faculty/change-password.html"><i class="fas fa-key"></i> Change Password</a>
+        <a href="faculty/Faculty Login Page.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Button to Toggle Sidebar (Transparent) -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2>Welcome to UnivMeta.xyz!</h2>
+            <p>Your personalized faculty dashboard to manage tasks efficiently.</p>
+        </div>
+
+       <!-- Summary Section -->
+       <div class="container">
+        <div class="row justify-content-center">
+            <a href="#" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="fas fa-bell text-warning"></i>
+                    <h4>Notifications</h4>
+                </div>
+            </a>
+            <a href="faculty/Total.html" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="fas fa-file-alt text-primary"></i>
+                    <h4>Bonafide Applications</h4>
+                    <p>View Report</p>
+                </div>
+            </a>
+            <a href="faculty/Total leave.html" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="fas fa-file-alt text-info"></i>
+                    <h4>Leave Forms</h4>
+                    <p>View Report</p>
+                </div>
+            </a>
+        </div>
+        <div class="row justify-content-center">
+            <a href="faculty/Total Event.html" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="fas fa-file-alt text-secondary"></i> <!-- Gray -->
+                    <h4>On Duty Forms</h4>
+                    <p>View Report</p>
+                </div>
+            </a>
+            <a href="#" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="fas fa-id-card text-secondary"></i>
+                    <h4>Duplicate ID Card</h4>
+                    <p>View Report</p>
+                </div>
+            </a>
+            <a href="#" class="col-md-4 box-link">
+                <div class="summary-box">
+                    <i class="far fa-file-alt text-primary"></i>
+                    <h4>No Due Forms</h4>
+                    <p>View Report</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+    <!-- Footer -->
+    <div class="footer">
+        <h6>© 2024 UnivMeta.xyz. All Rights Reserved.</h6>
+    </div>
+     <!-- External JS -->
+     <script src="/faculty/dashboard.js"></script>
+      
+</body>
+
+</html>

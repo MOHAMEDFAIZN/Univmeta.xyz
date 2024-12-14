@@ -1,0 +1,314 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnivMeta - Academic Form Automation System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: 'Lato', sans-serif;
+            background-color: #fff;
+            color: #000;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        header img {
+            max-height: 85px;
+            margin-right: 100px;
+            border-radius: 80%; /* Make only the brand image round */
+        }
+
+        header .header-text {
+            text-align: center;
+            flex: 1;
+        }
+
+        header h1 {
+            font-family: 'Lobster', cursive;
+            font-size: 3em;
+            margin: 0;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        header h2 {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 5px 0 0;
+            color: #ddd;
+        }
+
+        header p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        nav {
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ccc;
+        }
+
+        /* Main Section */
+        main {
+            padding: 50px 15px;
+        }
+
+        .branding-section {
+            text-align: center;
+            margin: 0 auto 40px;
+            background-color: #fff;
+            padding: 20px;
+            max-width: 850px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .branding-section img {
+            max-width: 550px;
+            height: auto;
+            margin-bottom: px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .branding-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.0em;
+            margin-bottom: 15px;
+            color: #222;
+            font-weight: 800;
+        }
+
+        .branding-section p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .branding-section strong {
+            color: #000;
+        }
+
+        /* File Viewer Section */
+        #pdf-viewer {
+            margin: 30px auto;
+            max-width: 900px;
+            height: 75vh; /* Increased height for better view */
+            overflow: hidden;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #000;
+            color: #ccc;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 0px;
+        }
+
+        footer p {
+            margin: 3px 0;
+            font-size: 0.95em;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer .credits {
+            font-size: 0.9em;
+            margin-top: 10px;
+            color: #777;
+        }
+
+        /* File Upload Section */
+        .file-upload {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload label {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #000;
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-upload label:hover {
+            background-color: #444;
+        }
+
+        /* Image Slider Section */
+        .image-slider {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .image-slider img {
+            max-width: 250px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .image-slider img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Prevent horizontal scrollbars */
+        .image-slider::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .image-slider::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 5px;
+        }
+
+        .image-slider::-webkit-scrollbar-track {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div>
+            <img id="brand-logo" src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="UnivMeta Logo">
+        </div>
+        <div class="header-text">
+            <h1>UnivMeta</h1>
+            <h2>Enhancing Efficiency and Accuracy in University Processes</h2>
+            <p>Bachelor of Computer Applications</p>
+            <p>Department of Computer Applications Presents</p>
+        </div>
+        <nav>
+            <a href="#branding-section">Home</a>
+            <a href="#pdf-viewer">Presentations</a>
+            <a href="#footer">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+        <!-- Branding Section -->
+        <section class="branding-section" id="branding-section">
+            <img id="placeholder-image" src="http://localhost:3078/Kalasalingam_Black.png" alt="University Logo Placeholder">
+            <h3>P2BL-PRESENTATION</h3>
+            <p>Course Name: <strong>Java Programming</strong></p>
+            <p>Course Code: <strong>212BCA2303</strong></p>
+            <p><strong>Course Incharge:</strong> Dr. K. Indhumathi</p>
+            <p>Assistant Professor</p>
+            <p>Kalasalingam Academy of Research and Education</p>
+        </section>
+
+        <!-- File Upload Section -->
+        <div class="file-upload">
+            <label for="upload">Presentations</label>
+            <input type="file" id="upload" accept=".pdf,.ppt,.pptx">
+        </div>
+
+        <!-- File Viewer Section -->
+        <section id="pdf-viewer">
+            <iframe id="file-viewer" src="A PBL PRESENTATION_BY UNIVMETA_20241009_081637_0000.pdf"></iframe>
+        </section>
+
+        <!-- Image Scrolling Section (Image Carousel) -->
+        <section class="image-slider"> 
+    <div class="image-container">
+        <img src="IMAGES/Review I.png" alt="Image 1">
+        <p class="image-caption">Review I</p>
+    </div>
+    <div class="image-container">
+        <img src="IMAGES/Review II.png" alt="Image 2">
+        <p class="image-caption">Review II</p>
+    </div>
+    <div class="image-container">
+        <img src="IMAGES/Review III.png" alt="Image 3">
+        <p class="image-caption">Review III</p>
+    </div>
+    <div class="image-container">
+        <img src="IMAGES/Review IV.png" alt="Image 4">
+        <p class="image-caption">Review IV</p>
+    </div>
+    <div class="image-container">
+        <img src="IMAGES/Home Page.png" alt="Image 5">
+        <p class="image-caption">Home Page</p>
+    </div>
+</section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Email: <a href="mailto:univmetacorporate@gmail.com">univmetacorporate@gmail.com</a></p>
+        <p>Website: <a href="#">www.univmeta.xyz</a></p>
+        <p>All Rights Reserved &copy; 2024 UnivMeta.xyz</p>
+        <p class="credits">Developed and Maintained by <a href="http://localhost:3078/Developers%20Details%20UnivMeta/developers.html" target="_blank">AFAS Teams</a></p>
+    </footer>
+</body>
+</html>

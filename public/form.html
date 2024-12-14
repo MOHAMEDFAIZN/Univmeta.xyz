@@ -1,0 +1,176 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms Section - UnivMeta</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 10px;
+            padding: 40px;
+            background: linear-gradient(135deg, #ffcc00, #e7e7e7);
+        }
+
+        .section-heading {
+            font-size: 2.0em;
+            margin-bottom: 35px;
+            text-align: center;
+            color: #333;
+        }
+
+        .forms-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* This ensures 3 columns in the row */
+            gap: 25px;
+            justify-items: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .form-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 270px;
+            display: flex;
+            flex-direction: column; /* Align children vertically */
+            justify-content: space-between; /* Distribute space between elements */
+            height: 190px; /* Fixed height to make all cards uniform */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: static;
+        }
+
+        .form-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-box h3 {
+            margin-top: 0;
+            font-size: 1.6em;
+            color: #007BFF;
+        }
+
+        .form-box p {
+            margin: 0px 0;
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.4;
+            flex-grow: 1; /* Allow paragraph to take up available space */
+        }
+
+        .form-box .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #007BFF, #28a745);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .form-box .btn:hover {
+            background: linear-gradient(90deg, #0056b3, #1e7e34);
+        }
+
+        /* Different styles for each card */
+        .form-box.type1 {
+            border-left: 0px solid #0a0a0a;
+        }
+
+        .form-box.type2 {
+            border-left: 0px solid #101110;
+        }
+
+        .form-box.type3 {
+            border-left: 0px solid #0a0a0a;
+        }
+
+        .form-box.type4 {
+            border-left: 0px solid #000000;
+        }
+
+        .form-box.type5 {
+            border-left: 0px solid #000000;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 1024px) {
+            .forms-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .forms-container {
+                grid-template-columns: 1fr; /* 1 column on small screens */
+            }
+        }
+
+        /* Copyright styling */
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="section-heading">Forms Section - UnivMeta</h1>
+
+    <div class="forms-container">
+        <div class="form-box type1">
+            <h3>Bonafide Certificate</h3>
+            <p>Apply for a Bonafide Certificate for official purposes like scholarship applications, visa processing, or bank account creation.</p>
+            <a href="http://localhost:3078/Student/Bonafide%20Form.html" class="btn">Get Form</a>
+        </div>
+
+        <div class="form-box type3">
+            <h3>Leave Application</h3>
+            <p>Submit a leave request for personal, medical, or official reasons with prior approval.</p>
+            <a href="leave_form.html" class="btn">Get Form</a>
+        </div>
+
+        <div class="form-box type2">
+            <h3>On Duty</h3>
+            <p>Record official duties or assignments outside regular schedules, such as attending events or meetings.</p>
+            <a href="http://localhost:3078/Student/On%20Duty%20Form.html" class="btn">Get Form</a>
+        </div>
+
+        <!-- Additional Cards -->
+        <div class="form-box type4">
+            <h3>Duplicate ID Card</h3>
+            <p>Request a duplicate ID card if your original has been lost, damaged, or stolen.</p>
+            <a href="http://localhost:3078/Student/Duplicate%20Id%20Form.html" class="btn">Get Form</a>
+        </div>
+
+        <div class="form-box type5">
+            <h3>Soon..No Due Certificates</h3>
+            <p>Apply for a No Due Certificate to ensure clearance from all departments and sections.</p>
+            <a href="#" class="btn">Future Enhancements</a>
+        </div>
+
+        <!-- New Internship Application Card -->
+        <div class="form-box type6">
+            <h3>Placement Data Management System</h3>
+            <p>Apply for an internship opportunity to gain hands-on experience in your field of study.</p>
+            <a href="Student/internship.html" class="btn">UnivMeta Future Project</a>
+        </div>
+    </div>
+
+    <!-- Copyright Section -->
+    <div class="copyright">
+        <br>
+        <strong>© 2024 UnivMeta.xyz. | Developed and Maintained by AFAS Teams</strong>
+        
+    </div>
+
+</body>
+</html>

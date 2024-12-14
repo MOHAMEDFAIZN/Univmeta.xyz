@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        h3{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            padding: 20px;
+        }
+
+        .notification-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .notification-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-card .icon {
+            font-size: 24px;
+            color: #ffee07;
+            margin-right: 15px;
+        }
+
+        .notification-card .content {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-card .content .text {
+            color: #343a40;
+        }
+
+        .notification-card .content .time {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-left: auto;
+        }
+
+        .notification-card.fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .notification-card.fade-out {
+            animation: fadeOut 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+ 
+
+    <div class="container">
+        <h3>Notifications</h3>
+
+        <div class="notification-card fade-in">
+            <div class="content">
+                <i class="fas fa-info-circle icon"></i>
+                <div class="text">Your application has been reviewed.</div>
+                <div class="time">2 hours ago</div>
+            </div>
+        </div>
+
+        <div class="notification-card fade-in">
+            <div class="content">
+                <i class="fas fa-check-circle icon"></i>
+                <div class="text">Your form has been approved.</div>
+                <div class="time">1 day ago</div>
+            </div>
+        </div>
+
+        <div class="notification-card fade-in">
+            <div class="content">
+                <i class="fas fa-exclamation-circle icon"></i>
+                <div class="text">New request pending for review.</div>
+                <div class="time">3 days ago</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

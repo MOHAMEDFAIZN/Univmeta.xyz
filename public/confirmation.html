@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Confirmation | UnivMeta</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2e3b4e, #4e5b6b);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container */
+        .confirmation-container {
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .confirmation-container h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+
+        .confirmation-container p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-container .highlight {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .back-button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Footer Style */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 12px;
+            color: #bbb;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .confirmation-container {
+                padding: 20px;
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="confirmation-container">
+        <h1>Thank You for Choosing UnivMeta!</h1>
+        <p>Your leave application has been <span class="highlight">submitted successfully</span>.</p>
+        <p>You can check the status of your application anytime at the <strong>Form Status</strong> page.</p>
+        <a href="form.html" class="back-button">Back to Form</a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 UnivMeta. All rights reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+
+</body>
+</html>

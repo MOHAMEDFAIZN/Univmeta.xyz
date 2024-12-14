@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonafide Certificate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 600px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .signature img {
+            max-width: 150px;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+
+        .seal {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .seal img {
+            max-width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="certificateContainer">
+        <div class="header">
+            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="College Logo">
+            <p><strong>Anand Nagar, Krishnankoil - 626126. Srivilliputtur (Via), Virudhunagar (Dt), Tamil Nadu | info@kalasalingam.ac.in | www.kalasalingam.ac.in</strong></p>
+        </div>
+        <h2>Bonafide Certificate</h2>
+        <p><strong>Certificate No:</strong> {{certificateNo}}</p>
+        <p><strong>Date:</strong> {{issueDate}}</p>
+        <p>
+            This is to certify that <strong>{{studentName}}</strong>, 
+            Reg. No. <strong>{{registerNo}}</strong>, 
+            S/o/D/o Mr./Ms. <strong>{{parentName}}</strong>, 
+            is a bonafide student of this institution studying in Year 
+            <strong>{{year}}</strong>, 
+            Bachelor of <strong>{{course}}</strong>, 
+            during the academic year <strong>{{academicYear}}</strong>.
+        </p>
+
+        <!-- Fee Details Table -->
+        <div class="table-container">
+            <h3>Fee Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Details</th>
+                        <th>Year</th>
+                        <th>Grand Total (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{feeRows}}
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td></td>
+                        <td><strong>{{grandTotal}}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            This certificate is issued on the request of the student for the purpose of 
+            <strong>{{purpose}}</strong>.
+        </p>
+        <br>
+        <div class="seal">
+            <img src="http://localhost:3078/Seal.png" alt="University Seal">
+        </div>
+        <p class="signature">
+            <img src="http://localhost:3078/Signature_Vasudevan.png" alt="Signature of Dr. Vasudevan">
+            Dr. V Vasudevan<br>
+            Registrar<br>
+            KARE, Krishnankoil
+        </p>
+    </div>
+</body>
+
+</html>

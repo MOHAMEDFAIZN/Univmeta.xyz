@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnivMeta Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e7e7e7;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            position: fixed;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 10px;
+            z-index: 999;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+        }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .sidebar .profile h5 {
+            margin: 15px 0 5px;
+            font-size: 18px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar a i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #f4f6f9;
+            border-radius: 0px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .header nav {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header nav a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .header nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Home Section */
+        .home-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 79vh;
+            background-color: #f9f9f9;
+        }
+
+        .home-card {
+            background: linear-gradient(145deg, #e0e0e0, #ffffff);
+            box-shadow: 10px 10px 20px #bebebe, -10px -10px 20px #ffffff;
+            border-radius: 15px;
+            text-align: center;
+            width: 300px;
+            padding: 60px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .home-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-card img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 35px;
+            border-radius: 50%;
+        }
+
+        .home-card h4 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .home-card p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            color: #000000;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 21px;
+            text-align: center;
+            padding: 0px;
+            background-color: #e7e7e7;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            border-top: 0px solid #ddd;
+        }
+
+        .footer p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <img src="http://localhost:3078/Admin%20Profile.png" alt="Profile Image">
+            <h5 id="studentRole">Student</h5>
+            <p id="sidebarUserName" class="username">Loading...</p> <!-- Updated id -->
+        </div>
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <a href="Student/Student Notification.html"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="form.html"><i class="fas fa-file-alt"></i> Application Forms</a>
+        <a href="Student/student-application-review.html"><i class="fas fa-envelope"></i> Form Status</a>
+        <a href="Student/Applications Review Bonafide.html"><i class="fas fa-file-alt"></i> Bonafide Applications</a>
+        <a href="Student/change-password.html"><i class="fas fa-key"></i> Change Password</a>
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1>UnivMeta Dashboard</h1>
+            <nav>
+                <a href="#">Home</a> / <a href="#">Dashboard</a>
+            </nav>
+        </div>
+
+        <!-- Home Section -->
+        <div class="home-section">
+            <div class="home-card">
+                <img src="http://localhost:3078/Admin%20Profile.png" alt="Profile">
+                <h4 id="studentName">Loading...</h4> <!-- Student name -->
+                <p id="userName">Loading...</p> <!-- Username -->
+                <p id="studentID">Student ID: Loading...</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 UnivMeta.xyz. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const studentName = localStorage.getItem('studentName');
+            const studentID = localStorage.getItem('studentID');
+            const username = localStorage.getItem('username');
+    
+            if (studentName && studentID && username) {
+                // Update Sidebar
+                document.getElementById('sidebarUserName').innerText = username;
+                // Update HTML elements with user data
+                document.getElementById('studentName').innerText = studentName;
+                document.getElementById('studentID').innerText = `Student ID: ${studentID}`; // Add clarification
+                document.getElementById('userName').innerText = username;
+            } else {
+                // Redirect to login page if user is not logged in
+                alert('User not logged in!');
+                window.location.href = '/login.html';
+            }
+        };
+    
+        function logout() {
+            // Clear localStorage and redirect to login page
+            localStorage.clear();
+            window.location.href = '/login.html';
+            alert("You have logged out from UnivMeta Dashboard.");
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Application Review</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 30px auto;
+            max-width: 90%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-group .btn {
+            width: 200px;
+            text-align: center;
+        }
+
+        .table-wrapper {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            text-align: left;
+            border: 2px solid #dee2e6;
+        }
+
+        .table thead {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .status-approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            color: #0e0e0e;
+            font-weight: bold;
+        }
+
+        .download-btn:hover {
+            text-decoration: none;
+        }
+
+        .loading-message {
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination .page-item .page-link {
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+
+            .table-wrapper {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Submitted Application Review</h2>
+
+        <!-- Buttons to toggle between applications -->
+        <div class="btn-group">
+            <button id="leaveApplicationsBtn" class="btn btn-primary rounded-pill" style="background: linear-gradient(to right, #4682b4, #1e252c); border: none;" onclick="showApplications('leave')">
+                Leave Applications
+            </button>
+            
+            <button id="onDutyFormsBtn" class="btn btn-primary rounded-pill" style="background: linear-gradient(to right, #4682b4, #1e252c);  border: none;" onclick="showApplications('event')">
+                Event Participation Applications
+            </button>
+                
+        </div>
+
+        <!-- Loading message -->
+        <div id="loadingMessage" class="loading-message" style="display: none;">Loading applications...</div>
+
+        <!-- Table wrapper -->
+        <div class="table-wrapper">
+            <table id="applicationsTable" class="table table-bordered" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Application Details</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="application-table">
+                    <!-- Content will be dynamically populated -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav id="paginationNav" class="pagination" style="display: none;">
+            <!-- Dynamic pagination buttons -->
+        </nav>
+    </div>
+
+    <script>
+        let currentApplicationType = 'leave';
+        let applications = [];
+        let currentPage = 1;
+        const rowsPerPage = 15;
+
+        async function fetchApplications(applicationType) {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const applicationsTable = document.getElementById('applicationsTable');
+            const applicationTableBody = document.getElementById('application-table');
+            const paginationNav = document.getElementById('paginationNav');
+
+            loadingMessage.style.display = 'block';
+            applicationsTable.style.display = 'none';
+            paginationNav.style.display = 'none';
+            applicationTableBody.innerHTML = '';
+
+            try {
+                const response = await fetch(`/student-applications/${applicationType}`);
+                if (!response.ok) throw new Error('Failed to fetch applications');
+                applications = await response.json();
+
+                if (applications.length === 0) {
+                    applicationTableBody.innerHTML = '<tr><td colspan="5" class="text-center">No applications found</td></tr>';
+                } else {
+                    renderTableRows();
+                    renderPagination();
+                }
+
+                loadingMessage.style.display = 'none';
+                applicationsTable.style.display = 'table';
+                paginationNav.style.display = 'flex';
+            } catch (error) {
+                console.error('Error fetching applications:', error);
+                loadingMessage.textContent = 'No Applications Found. You can Submit Your OD Form Through Univmeta Exclusive Form Section.';
+            }
+        }
+
+        function renderTableRows() {
+            const applicationTableBody = document.getElementById('application-table');
+            applicationTableBody.innerHTML = '';
+
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedApplications = applications.slice(start, end);
+
+            paginatedApplications.forEach(app => {
+                const formattedSubmissionDate = app.submission_date ? new Date(app.submission_date).toLocaleDateString() : 'N/A';
+                const formattedEventDate = app.event_date ? new Date(app.event_date).toLocaleDateString() : 'N/A';
+
+                const applicationDetails = currentApplicationType === 'event'
+                    ? `<p><strong>Event Name:</strong> ${app.type || 'N/A'}</p>
+                       <p><strong>Organizing Department:</strong> ${app.reason || 'N/A'}</p>
+                       <p><strong>Event Date:</strong> ${formattedEventDate}</p>
+                       <p><strong>Student Name:</strong> ${app.name || 'N/A'}</p>
+                       <p><strong>Student Reg No:</strong> ${app.student_reg_no || 'N/A'}</p>`
+                    : `<p><strong>Leave Type:</strong> ${app.type || 'N/A'}</p>
+                       <p><strong>Reason:</strong> ${app.reason || 'N/A'}</p>
+                       <p><strong>Start Date:</strong> ${app.startDate || 'N/A'}</p>
+                       <p><strong>End Date:</strong> ${app.endDate || 'N/A'}</p>
+                       <p><strong>Register No:</strong> ${app.registerNo || 'N/A'}</p>
+                       <p><strong>Contact No:</strong> ${app.contactNo || 'N/A'}</p>
+                       <p><strong>Parent Contact No:</strong> ${app.parentContactNo || 'N/A'}</p>
+                       <p><strong>Parent Contact No:</strong> ${app.parentContactNo || 'N/A'}</p>
+                       <p><strong>Email:</strong> ${app.email || 'N/A'}</p>
+                       <p><strong>Department:</strong> ${app.department || 'N/A'}</p>`;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${app.id}</td>
+                    <td>${applicationDetails}</td>
+                    <td>${formattedSubmissionDate}</td>
+                    <td class="${app.status === 'Approved' ? 'status-approved' : app.status === 'Rejected' ? 'status-rejected' : 'status-pending'}">${app.status}</td>
+                    <td>
+                        ${app.status === 'Approved' ? `<a href="/download-${currentApplicationType}-certificate/${app.id}" class="download-btn"><i class="fas fa-download"></i> Download</a>` : app.status}
+                    </td>
+                `;
+                applicationTableBody.appendChild(row);
+            });
+        }
+
+        function renderPagination() {
+            const paginationNav = document.getElementById('paginationNav');
+            paginationNav.innerHTML = '';
+
+            const totalPages = Math.ceil(applications.length / rowsPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = document.createElement('button');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<span>${i}</span>`;
+                pageItem.addEventListener('click', () => {
+                    currentPage = i;
+                    renderTableRows();
+                    renderPagination();
+                });
+                paginationNav.appendChild(pageItem);
+            }
+        }
+
+        function showApplications(applicationType) {
+            currentApplicationType = applicationType;
+            currentPage = 1;
+            fetchApplications(applicationType);
+        }
+
+        window.onload = () => fetchApplications(currentApplicationType);
+    </script>
+</body>
+
+</html>

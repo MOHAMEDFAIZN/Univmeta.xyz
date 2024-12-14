@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Review</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .table tbody tr {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-2px);
+        }
+
+        .icon-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .icon-button:hover {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+
+        .approve-icon {
+            color: #007bff; /* Blue color for approve icon */
+        }
+
+        .reject-icon {
+            color: #000000; /* Red color for reject icon */
+        }
+
+        .edit-icon {
+            color: #17a2b8; /* Cyan color for edit icon */
+        }
+
+        .view-icon {
+            color: #28a745; /* Green color for view icon */
+        }
+
+        .approve-animation {
+            animation: approveAnimation 1s ease forwards;
+        }
+
+        @keyframes approveAnimation {
+            from {
+                background-color: #ffffff;
+                transform: scale(1);
+            }
+            to {
+                background-color: #d4edda;
+                transform: scale(1.05);
+            }
+        }
+
+        .reject-animation {
+            animation: rejectAnimation 1s ease forwards;
+        }
+
+        @keyframes rejectAnimation {
+            from {
+                background-color: #ffffff;
+                transform: scale(1);
+            }
+            to {
+                background-color: #f8d7da;
+                transform: scale(1.05);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .expand-animation {
+            animation: expandAnimation 0.5s ease forwards;
+        }
+
+        @keyframes expandAnimation {
+            from {
+                transform: scale(0.95);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="fade-in">Application Review</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Faculty Name</th>
+                    <th>Application Details</th>
+                    <th>Submitted Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Repeat the rows with different IDs and details -->
+                <tr id="row-1" class="expand-animation">
+                    <td>John Doe</td>
+                    <td>Application for Course A</td>
+                    <td>10:00 AM</td>
+                    <td id="status-1">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(1)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(1)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(1)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(1)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+                <tr id="row-2" class="expand-animation">
+                    <td>Jane Smith</td>
+                    <td>Application for Course B</td>
+                    <td>11:30 AM</td>
+                    <td id="status-2">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(2)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(2)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(2)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(2)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+                <tr id="row-3" class="expand-animation">
+                    <td>Emily Johnson</td>
+                    <td>Application for Course C</td>
+                    <td>1:00 PM</td>
+                    <td id="status-3">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(3)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(3)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(3)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(3)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+                <tr id="row-4" class="expand-animation">
+                    <td>Michael Brown</td>
+                    <td>Application for Course D</td>
+                    <td>2:30 PM</td>
+                    <td id="status-4">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(4)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(4)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(4)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(4)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+                <tr id="row-5" class="expand-animation">
+                    <td>Jessica Davis</td>
+                    <td>Application for Course E</td>
+                    <td>3:45 PM</td>
+                    <td id="status-5">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(5)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(5)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(5)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(5)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+                <tr id="row-6" class="expand-animation">
+                    <td>Daniel Wilson</td>
+                    <td>Application for Course F</td>
+                    <td>4:00 PM</td>
+                    <td id="status-6">Pending</td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewApplication(6)"><i class="fas fa-eye"></i></button>
+                        <button class="icon-button edit-icon" onclick="editApplication(6)"><i class="fas fa-edit"></i></button>
+                        <button class="icon-button approve-icon" onclick="approveApplication(6)"><i class="fas fa-check-circle"></i></button>
+                        <button class="icon-button reject-icon" onclick="rejectApplication(6)"><i class="fas fa-times-circle"></i></button>
+                    </td>
+                </tr>
+

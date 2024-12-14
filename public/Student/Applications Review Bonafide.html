@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonafide Application Review</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table thead {
+            background-color: #020202;
+            color: #ffffff;
+        }
+
+        .status-approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            color: #000000;
+        }
+
+        .download-btn:hover {
+            text-decoration: none;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-5">Bonafide Application Review</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Application ID</th>
+                    <th>Application Details</th>
+                    <th>Submitted Date</th>
+                    <th>Faculty Status</th>
+                    <th>Admin Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="application-table">
+                <!-- Rows will be dynamically populated using JavaScript -->
+            </tbody>
+        </table>
+        <!-- Pagination Controls -->
+        <nav>
+            <ul class="pagination" id="pagination">
+                <!-- Pagination buttons will be dynamically populated -->
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        const rowsPerPage = 10; // Number of rows per page
+        let currentPage = 1;
+        let applications = []; // Array to store fetched applications
+
+        // Format date function
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const parsedDate = new Date(dateString);
+            return isNaN(parsedDate)
+                ? 'Invalid Date'
+                : parsedDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+        }
+
+        // Render table rows for the current page
+        function renderTableRows() {
+            const tableBody = document.getElementById('application-table');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = Math.min(startIndex + rowsPerPage, applications.length);
+
+            let hasPendingApplications = false;
+
+            // Check if there are any pending applications
+            for (let i = 0; i < applications.length; i++) {
+                const app = applications[i];
+                if (app.status === 'Pending' || app.status2 === 'Pending') {
+                    hasPendingApplications = true;
+                    break;
+                }
+            }
+
+            // If no applications or no pending applications
+            if (applications.length === 0 || !hasPendingApplications) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No pending applications found</td></tr>';
+            } else {
+                // Populate rows with data
+                for (let i = startIndex; i < endIndex; i++) {
+                    const app = applications[i];
+                    const formattedSubmissionDate = formatDate(app.date);
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${app.id}</td>
+                        <td>
+                            <p><strong>Name:</strong> ${app.name || 'N/A'}</p>
+                            <p><strong>Register Number:</strong> ${app.registerNumber || 'N/A'}</p>
+                            <p><strong>Academic Year:</strong> ${app.yearSemester || 'N/A'}</p>
+                            <p><strong>Gender:</strong> ${app.gender || 'N/A'}</p>
+                            <p><strong>Reason:</strong> ${app.reason || 'N/A'}</p>
+                            <p><strong>Guardian Name:</strong> ${app.guardianName || 'N/A'}</p>
+                            <p><strong>Contact No:</strong> ${app.mobileNumber || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${app.email || 'N/A'}</p>
+                            <p><strong>Received Earlier:</strong> ${app.bonafideReceived || 'N/A'}</p>
+                            <p><strong>Reason:</strong> ${app.bonafideReason || 'N/A'}</p>
+                        </td>
+                        <td>${formattedSubmissionDate}</td>
+                        <td class="${
+                            app.status === 'Approved'
+                                ? 'status-approved'
+                                : app.status === 'Rejected'
+                                ? 'status-rejected'
+                                : 'status-pending'
+                        }">${app.status}</td>
+                        <td class="${
+                            app.status2 === 'Approved'
+                                ? 'status-approved'
+                                : app.status2 === 'Rejected'
+                                ? 'status-rejected'
+                                : 'status-pending'
+                        }">${app.status2}</td>
+                        <td>
+                            ${
+                                app.status2 === 'Approved'
+                                    ? `<a href="/download-bonafide-application/${app.id}" class="download-btn" target="_blank"><i class="fas fa-download"></i> Download</a>`
+                                    : app.status2 === 'Rejected'
+                                    ? '<span class="status-rejected">Rejected</span>'
+                                    : '<span class="status-pending">Pending</span>'
+                            }
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+            }
+        }
+
+        // Render pagination controls
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // Clear existing buttons
+
+            const totalPages = Math.ceil(applications.length / rowsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a href="#" class="page-link">${i}</a>`;
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderTableRows();
+                    renderPagination();
+                });
+                pagination.appendChild(li);
+            }
+        }
+
+        // Fetch applications and initialize the table
+        async function fetchApplications() {
+            try {
+                const response = await fetch('http://localhost:3078/student-applications');
+                if (!response.ok) throw new Error('Failed to fetch applications');
+
+                applications = await response.json();
+                renderTableRows();
+                renderPagination();
+            } catch (error) {
+                console.error('Error fetching applications:', error);
+            }
+        }
+
+        window.onload = fetchApplications;
+    </script>
+</body>
+
+</html>

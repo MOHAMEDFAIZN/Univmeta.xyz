@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for visibility */
+            padding: 20px;
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        /* Watermark as background using ::before pseudo-element */
+        .form-container::before {
+            content: '';
+            background: url('http://localhost:3078/Klu%20Black%20Logo.png') no-repeat center center;
+            background-size: 400px; /* Adjust size of the watermark */
+            opacity: 10; /* Makes the watermark faint */
+            pointer-events: none; /* Ensures it doesn't interfere with form content */
+            z-index: -1; /* Sends the watermark behind form content */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8); /* Slight transparency */
+        }
+        .form-group input[type="submit"] {
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Top logo section -->
+        <div class="logo-container">
+            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="College Logo">
+        </div>
+        <h1>Leave Application Form</h1>
+        <form action="/submit" method="POST">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="registerNo">Register Number:</label>
+                <input type="text" id="registerNo" name="registerNo" required>
+            </div>
+            <div class="form-group">
+                <label for="contactNo">Contact Number:</label>
+                <input type="tel" id="contactNo" name="contactNo" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
+            </div>
+            <div class="form-group">
+                <label for="parentContactNo">Parent's Contact Number:</label>
+                <input type="tel" id="parentContactNo" name="parentContactNo" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option value="" disabled selected>Select a Department</option>
+                    <option value="BCA">BCA</option>
+                    <option value="B.Tech in Computer Science and Engineering">B.Tech in Computer Science and Engineering</option>
+                    <option value="B.Tech in Electronics and Communication Engineering">B.Tech in Electronics and Communication Engineering</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="leaveType">Type of Leave:</label>
+                <select id="leaveType" name="leaveType" required>
+                    <option value="" disabled selected>Select Leave Type</option>
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Casual Leave">Casual Leave</option>
+                    <option value="Annual Leave">Annual Leave</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Leave Start Date:</label>
+                <input type="date" id="startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+                <label for="endDate">Leave End Date:</label>
+                <input type="date" id="endDate" name="endDate" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason for Leave:</label>
+                <textarea id="reason" name="reason" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

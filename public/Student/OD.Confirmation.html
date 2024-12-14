@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Confirmation | UnivMeta.xyz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #fff; /* White background */
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #000; /* Black box */
+            color: #fff; /* White text */
+            border-radius: 15px;
+            padding: 40px 30px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* Make the logo round */
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #fff; /* White border around the image */
+            transition: transform 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            color: #ddd;
+        }
+
+        .application-id {
+            font-weight: bold;
+            color: #00ffcc;
+        }
+
+        .btn-primary {
+            background-color: #fff; /* White button */
+            color: #000; /* Black text */
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: 2px solid #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #00ffcc;
+            color: #000;
+            text-decoration: none;
+        }
+
+        footer {
+            margin-top: 0px;
+            font-size: 1.4rem;
+            color: #aaa;
+        }
+
+        footer a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Placeholder for Round Logo -->
+        <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="UnivMeta Logo" class="brand-logo">
+        <h1>Application Confirmation</h1>
+        <p class="message">Your application has been successfully submitted!</p>
+        <p>Application ID: <span class="application-id" id="applicationId"></span></p>
+        <a href="http://localhost:3078/Student/On%20Duty%20Form.html" class="btn btn-primary mt-3">Submit Another Form</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 UnivMeta.xyz. All Rights Reserved. <b>| <a href="#">Contact Support</a></p>
+    </footer>
+
+    <script>
+        // Extract applicationId from the URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const applicationId = params.get('applicationId');
+
+        // Display applicationId on the page
+        document.getElementById('applicationId').textContent = applicationId || 'N/A';
+    </script>
+</body>
+
+</html>
