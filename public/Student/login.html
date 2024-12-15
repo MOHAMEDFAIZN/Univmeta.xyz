@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <style>
         body {
-            background-image: url('Background Image.jpg'); /* Placeholder for background image */
+            background-image: url('https://www.univmeta.xyz/Background%20Image.jpg'); /* Placeholder for background image */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -87,12 +87,12 @@
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="login-outer-container text-center">
             <div class="d-flex align-items-center mb-4">
-                <img src="http://localhost:3078/UNIVMETA_BLACK.png" alt="logo" class="rounded-circle" style="height: 75px; width: 75px;">
+                <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="logo" class="rounded-circle" style="height: 75px; width: 75px;">
                 <h4 class="font-weight-bold ml-3 mb-0" id="AFAS">UnivMeta - AFAS</h4>
             </div>
             <div class="row login-container">
                 <div class="col-md-6 login-image d-none d-md-block">
-                    <img src="Sign up.png" alt="Login Image" class="img-fluid">
+                    <img src="https://www.univmeta.xyz/Student/Student%20Assest/Student%20Sign%20up.png" alt="Login Image" class="img-fluid">
                 </div>
                 <div class="col-md-6 login-form">
                     <h2>Student Login</h2>
@@ -112,7 +112,7 @@
     </div>
 
     <div class="bottom-bar">
-        © 2024 All rights reserved | <a href="http://localhost:3078/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Team</a>
+        © 2024 All rights reserved | <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Team</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -129,7 +129,7 @@
             try {
                 responseDiv.innerText = 'Logging in...';
     
-                const response = await fetch('http://localhost:3078/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

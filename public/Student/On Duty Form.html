@@ -150,7 +150,7 @@
             const requestData = Object.fromEntries(formData.entries());
     
             try {
-                const response = await fetch('http://localhost:3078/submit-event-form', {
+                const response = await fetch('/submit-event-form', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestData),

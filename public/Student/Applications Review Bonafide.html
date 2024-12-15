@@ -205,7 +205,7 @@
         // Fetch applications and initialize the table
         async function fetchApplications() {
             try {
-                const response = await fetch('http://localhost:3078/student-applications');
+                const response = await fetch('/student-applications');
                 if (!response.ok) throw new Error('Failed to fetch applications');
 
                 applications = await response.json();

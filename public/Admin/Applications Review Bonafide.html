@@ -200,7 +200,7 @@
     // Function to Fetch Applications
     async function fetchApplications() {
       try {
-        const response = await fetch('http://localhost:3078/admin-applications');
+        const response = await fetch('/admin-applications');
         const applications = await response.json();
         const tableBody = document.getElementById('application-table');
         tableBody.innerHTML = '';
@@ -243,7 +243,7 @@
 
     async function performAction() {
       try {
-        const response = await fetch('http://localhost:3078/update-admin-status', {
+        const response = await fetch('/update-admin-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ applicationId: selectedApplicationId, status2: currentActionType })
