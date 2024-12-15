@@ -285,7 +285,7 @@
             tableWrapper.style.display = 'none';
 
             try {
-                const response = await fetch(`http://localhost:3078/api/faculty/pending-applications/${applicationType}`);
+                const response = await fetch(`/api/faculty/pending-applications/${applicationType}`);
                 if (!response.ok) throw new Error('Failed to fetch applications');
 
                 applicationsData = await response.json();
@@ -306,7 +306,7 @@
 
         async function updateStatus(applicationId, newStatus, applicationType) {
             try {
-                const response = await fetch('http://localhost:3078/api/faculty/update-status', {
+                const response = await fetch('/api/faculty/update-status', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

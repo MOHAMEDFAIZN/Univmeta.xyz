@@ -204,7 +204,7 @@
             tableWrapper.style.display = 'none';
 
             try {
-                const response = await fetch('http://localhost:3078/api/faculty/pending-bonafide-requisitions', {
+                const response = await fetch('/api/faculty/pending-bonafide-requisitions', {
                     method: 'GET',
                     credentials: 'include' // Include session cookie
                 });
@@ -264,7 +264,7 @@
 
         async function viewDetails(applicationId) {
             try {
-                const response = await fetch(`http://localhost:3078/api/faculty/application/${applicationId}`, {
+                const response = await fetch(`/api/faculty/application/${applicationId}`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -293,7 +293,7 @@
             const requisitionId = document.getElementById('applicationIdInput').value;
 
             try {
-                const response = await fetch('http://localhost:3078/api/faculty/approve-requisition', {
+                const response = await fetch('/api/faculty/approve-requisition', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ requisitionId, status: newStatus })
