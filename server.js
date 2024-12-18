@@ -1298,7 +1298,7 @@ app.post('/api/student/submit-bonafide-requisition', (req, res) => {
                             <div class="email-container">
                                 <!-- Header -->
                                 <div class="header">
-                                    <img src="https://via.placeholder.com/60" alt="UnivMeta Logo">
+                                    <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo">
                                     <h1>UnivMeta | Bonafide Requisition</h1>
                                 </div>
                 
@@ -1661,7 +1661,7 @@ const mailOptions = {
             <div class="email-container">
                 <!-- Header -->
                 <div class="header">
-                    <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="UnivMeta Logo">
+                    <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo">
                     <h1>Bonafide Requisition</h1>
                     <p>UnivMeta - Streamlining University Processes</p>
                 </div>
