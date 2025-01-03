@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <title>About - UnivMeta</title>
+  <style>
+    /* Global Styling */
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.6;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+header {
+  background-color: #000;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header .header-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        header .header-text span {
+            color: #bbb;
+        }
+.header-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-left .site-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.header-left .nav-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+  background-color: #333; /* Grey background for nav-links */
+  padding: 5px 10px; /* Adds padding inside the grey background */
+  border-radius: 5px; /* Optional: Rounded corners for the nav background */
+}
+
+.header-left .nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 5px 10px; /* Adds padding around each link */
+  border-radius: 3px; /* Optional: Rounded corners for each link */
+}
+
+.header-left .nav-links a:hover {
+  text-decoration: none; /* Removes underline on hover */
+  background-color: #555; /* Adds a darker grey background on hover */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-right .login-register { 
+  background: transparent; 
+  border: 1px solid white; 
+  padding: 8px 20px; 
+  color: white; 
+  border-radius: 5px; 
+  font-size: 1rem; 
+  font-weight: bold; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+}
+
+.header-right .login-register:hover {
+  background: white; 
+  color: #000; /* Black text for contrast */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); /* Subtle glow effect */
+  transform: scale(1.05); /* Slight scaling for visual feedback */
+}
+
+
+header img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+
+  /* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-image: url('http://localhost:3078/About%20Images/240_F_587608148_vttaUIYVPG7jnnnwXI6nGv79zRWgKT6N.jpg'); /* Replace with relevant image */
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  height: 60vh; /* Full viewport height */
+  padding: 40px; /* Padding to add space around the content */
+}
+
+/* Left side text container */
+.hero-text {
+  flex: 1;
+  max-width: 50%; /* Take up half of the section */
+  padding-right: 20px; /* Space between text and image */
+  z-index: 10; /* Ensure text stays above image */
+}
+
+/* Heading styles */
+.hero-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+/* Paragraph text styles */
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* Button styles */
+.hero .cta-btn {
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column; /* Stack text and image vertically */
+    text-align: center;
+    padding: 100px 20px; /* Reduced padding for mobile */
+  }
+
+  .hero-text {
+    max-width: 100%;
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .hero-image {
+    height: 300px; /* Smaller image height for mobile */
+  }
+}
+
+
+
+    /* About Section */
+#about {
+  background-color: #f8f9fa;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.about-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1200px;
+  align-items: center;
+}
+
+.about-text {
+  flex: 1 1 60%;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  color: #003366;
+  margin-bottom: 20px;
+}
+
+.about-text p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.about-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-text ul li {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.about-text ul li strong {
+  color: #007bff;
+}
+
+.features-section { 
+    /* Maintain intended padding */
+    padding: 30px 0px;
+
+    /* Remove unwanted margins from this section itself */
+    margin: 0;
+
+    /* Add a background for visibility */
+    background-color: #f5f5f5;
+}
+
+/* Prevent spacing issues with adjacent elements */
+.features-section + * {
+    margin-top: 0;
+}
+
+.features-section:first-child {
+    margin-top: 0; /* Avoid unintended extra space at the top */
+}
+
+.features-section:last-child {
+    margin-bottom: 0; /* Avoid unintended extra space at the bottom */
+}
+
+/* Reset margins for direct child elements, but allow flexibility */
+.features-section > * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Styling for titles within the features section */
+.features-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #000000;
+    text-align: center; /* Ensure consistent title alignment */
+}
+
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px 0px; 
+    justify-items: center; /* Align items in the center */
+}
+
+
+.feature-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px; /* Uniform padding inside the card */
+    margin: 0px 0; /* Reduce vertical spacing between cards */
+    width: 90%;
+    max-width: 300px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+    text-align: center; /* Ensure text alignment is centered */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Feature icons */
+.feature-icon {
+    font-size: 2.5rem;
+    color: #000000;
+    margin-bottom: px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Ensures centering within the card */
+}
+
+/* Headings within cards */
+.feature-card h3 {
+    font-size: 1.25rem;
+    color: #000000;
+    margin-bottom: 0px;
+}
+
+/* Paragraphs within cards */
+.feature-card p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0; /* Ensure no extra margin adds misalignment */
+}
+
+/* Ensure no global margins or paddings interfere with layout */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+    /* Mission & Vision Section */
+#mission-vision {
+  background-color: #f8f9fa;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+#mission-vision .section-title {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  color: #000000;
+}
+
+.mission-vision-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.mission,
+.vision {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.icon-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.icon-container i {
+    font-size: 3rem; /* Adjust size */
+    color: #000000; /* Set color */
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.icon-container i:hover {
+    color: #000000; /* Darker color on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+
+.text-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.text-content p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+/* Container for the Tech Stack Section */
+.tech-stack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff; /* Dark background for the whole section */
+  padding: 80px;
+  width: 100%;
+}
+
+/* Left section for fixed text */
+.tech-stack-left {
+  color: #000000;
+  font-size: 24px;
+  font-weight: bold;
+  width: 30%; /* Fixed width for the text section */
+}
+
+/* Right section for scrolling tech stack items */
+.tech-stack-right {
+  width: 70%; /* This section takes up the remaining space */
+  overflow: hidden; /* Hide the overflow to prevent showing the starting part of scrolling */
+  position: relative;
+  background-color: #ffffff; /* Same black background for consistency */
+}
+
+/* Scrollable container for images and text */
+.scroll-container {
+  display: flex;
+  align-items: center;
+  animation: scroll-left 20s linear infinite; /* Animation for continuous scrolling */
+  width: fit-content; /* Adjust width to the content */
+}
+
+/* Each tech stack item (image and text) */
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 120px;
+  text-align: center;
+  margin-right: 40px; /* Space between each item */
+}
+
+/* Tech stack images */
+.item img {
+  width: 50px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Tech stack text */
+.item span {
+  color: #000000;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* Continuous left-to-right scrolling animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0); /* Start from the beginning */
+  }
+  100% {
+    transform: translateX(-100%); /* Scroll all the way to the left */
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .tech-stack-left {
+    font-size: 18px; /* Adjust font size for mobile */
+  }
+
+  .item img {
+    width: 40px; /* Smaller image size for mobile */
+  }
+
+  .item span {
+    font-size: 12px; /* Adjust text size for mobile */
+  }
+}
+
+
+
+/* General Footer Styles */
+footer {
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+  padding: 60px 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.footer-section {
+  width: 30%; /* Reduced width for each section to fit all sections */
+}
+
+.footer-section h4 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.footer-section p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #ccc; /* Lighter text for readability */
+}
+
+.footer-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 15px;
+}
+
+.footer-section ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #3498db; /* Change color on hover */
+}
+
+/* Product Info Section Styling */
+.footer-section.product-info {
+  text-align: left; /* Align text to the left */
+}
+
+.footer-section.product-info p {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #ccc; /* Light grey color for footer text */
+  text-align: center;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.footer-bottom a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.3s;
+}
+
+.footer-bottom a:hover {
+  color: #3498db; /* Blue color on hover */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .footer-section {
+    width: 100%;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    margin-top: 30px;
+  }
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+        <div class="header-text">
+            UnivMeta<span>.xyz</span>
+        </div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#tech-stack">Tech Stack</a>
+        <a href="#mission-vision">Mission & Vision</a>
+        <a href="#footer-container">Contact Us</a>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="Registration.html" class="login-register-link">
+        <button class="login-register">Login / Register</button>
+    </a>    
+      <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo">
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+<section class="hero">
+    <div class="hero-text">
+        <h2>Empower Your Campus with Academic Automation</h2>
+        <p>Streamline your academic processes with UnivMeta's cutting-edge solutions.</p>
+        <a href="#features" class="cta-btn">Learn More</a>
+    </div>
+    <div class="hero-image"></div>
+</section>
+
+
+ <!-- About Section -->
+<section id="about">
+    <div class="about-container">
+      <div class="about-text">
+        <h2>About UnivMeta</h2>
+        <p>
+          UnivMeta is revolutionizing academic workflows with innovative solutions tailored for educational institutions. 
+          Our platform automates processes, streamlines form handling, and delivers real-time insights, enabling 
+          institutions to focus on their core mission—education.
+        </p>
+        <ul>
+          <li><strong>Efficiency:</strong> Reduce manual tasks and save time with smart automation.</li>
+          <li><strong>Scalability:</strong> Adaptable solutions to meet the needs of small colleges to large universities.</li>
+          <li><strong>Security:</strong> Ensuring data integrity and privacy with robust measures.</li>
+        </ul>
+        <p>
+          UnivMeta is your partner in building a smarter, more efficient future.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+
+ <!-- Features Section -->
+<section id="features" class="features-section">
+    <h2 class="features-title">Why Choose UnivMeta?</h2>
+    <div class="features-container">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <i class="fas fa-robot feature-icon"></i>
+        <h3>Automated Form Handling</h3>
+        <p>Streamline administrative processes with our intelligent automation tools, saving time and reducing manual effort.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <i class="fas fa-envelope feature-icon"></i>
+        <h3>Email Notifications</h3>
+        <p>Stay informed with real-time email updates for every step in the workflow, ensuring seamless communication.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <i class="fas fa-cloud feature-icon"></i>
+        <h3>Secure Cloud Hosting</h3>
+        <p>Enjoy peace of mind with top-notch security and scalable cloud hosting for your data and forms.</p>
+      </div>
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <i class="fas fa-shield-alt feature-icon"></i>
+        <h3>Firewall Security</h3>
+        <p>Protect your data with an advanced firewall system, ensuring robust security for your digital infrastructure.</p>
+      </div>
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <i class="fas fa-chart-line feature-icon"></i>
+        <h3>Advanced Analytics</h3>
+        <p>Access in-depth insights and analytics to make data-driven decisions for your institution's success.</p>
+      </div>
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <i class="fas fa-file-pdf feature-icon"></i>
+        <h3>Certificate in PDF</h3>
+        <p>Generate high-quality certificates using Puppeteer for students and staff in just one click.</p>
+      </div>
+      <!-- Feature 7 -->
+      <div class="feature-card">
+        <i class="fab fa-whatsapp feature-icon"></i>
+        <h3>WhatsApp Notifications</h3>
+        <p>Send instant updates and notifications directly to students and faculty via WhatsApp.</p>
+      </div>
+      <!-- Feature 8 -->
+      <div class="feature-card">
+        <i class="fas fa-user-graduate feature-icon"></i>
+        <h3>Student Dashboard</h3>
+        <p>Provide students with an intuitive dashboard for reviewing forms and tracking progress.</p>
+      </div>
+      <!-- Feature 9 -->
+      <div class="feature-card">
+        <i class="fas fa-chalkboard-teacher feature-icon"></i>
+        <h3>Faculty Dashboard</h3>
+        <p>Empower faculty with tools to manage class data, view submissions, and download reports.</p>
+      </div>
+      <!-- Feature 10 -->
+      <div class="feature-card">
+        <i class="fas fa-user-cog feature-icon"></i>
+        <h3>Admin Dashboard</h3>
+        <p>Enable admins to monitor activity, oversee performance, and control system settings with ease.</p>
+      </div>
+      <!-- Feature 11 -->
+      <div class="feature-card">
+        <i class="fas fa-file-excel feature-icon"></i>
+        <h3>Excel Reports</h3>
+        <p>Generate detailed reports and export them as Excel files for comprehensive data management.</p>
+      </div>
+      <!-- Feature 12 -->
+      <div class="feature-card">
+        <i class="fas fa-database feature-icon"></i>
+        <h3>Data Monitoring</h3>
+        <p>Monitor your institution's data and track key metrics to stay ahead in decision-making.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="tech-stack" class="tech-stack">
+    <!-- Left text container -->
+    <div class="tech-stack-left">
+        <h2>Our Tech Stack</h2>
+    </div>
+  
+    <!-- Right scrolling container for images and text -->
+    <div class="tech-stack-right">
+        <div class="scroll-container">
+            <div class="item">
+                <img src="About Images/nodedotjs.svg" alt="Node.js">
+                <span>Node.js</span>
+            </div>
+            <div class="item">
+                <img src="About Images/react.svg" alt="React">
+                <span>React</span>
+            </div>
+            <div class="item">
+                <img src="About Images/express-original.svg" alt="Express">
+                <span>Express</span>
+            </div>
+            <div class="item">
+                <img src="About Images/javascript.svg" alt="Javascript">
+                <span>Javascript</span>
+            </div>
+            <div class="item">
+                <img src="About Images/html5.svg" alt="Html">
+                <span>Html</span>
+            </div>
+            <div class="item">
+                <img src="About Images/css.svg" alt="CSS">
+                <span>CSS</span>
+            </div>
+            <div class="item">
+                <img src="About Images/tailwindcss.svg" alt="TailWind CSS">
+                <span>TailWind CSS</span>
+            </div>
+            <div class="item">
+                <img src="About Images/googleanalytics.svg" alt="Google Analytics">
+                <span>Google Analytics</span>
+            </div>
+            <div class="item">
+                <img src="About Images/microsoft-azure-svgrepo-com.svg" alt="Microsoft Azure">
+                <span>Microsoft Azure</span>
+            </div>
+            <div class="item">
+                <img src="About Images/mysql.svg" alt="MY SQl">
+                <span>MY SQl</span>
+            </div>
+            <div class="item">
+                <img src="About Images/bootstrap.svg" alt="Bootstrap">
+                <span>Bootstrap</span>
+            </div>
+            <div class="item">
+                <img src="About Images/puppeteer.svg" alt="Puppeteer">
+                <span>Puppeteer</span>
+            </div>
+            <div class="item">
+                <img src="About Images/d1995000-0ab7-11ea-8ed3-04a082c36b0d.png" alt="NodeMailer">
+                <span>NodeMailer</span>
+            </div>
+            <div class="item">
+                <img src="About Images/twilio.svg" alt="Twilio">
+                <span>Twilio</span>
+            </div>
+            <div class="item">
+                <img src="About Images/cloudflare.svg" alt="Cloudflare">
+                <span>Cloudflare</span>
+            </div>
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  
+<section id="mission-vision"> 
+  <h2 class="section-title">Our Mission & Vision</h2>
+  <div class="mission-vision-content">
+    <!-- Mission Section -->
+    <div class="mission">
+      <div class="icon-container">
+        <i class="fas fa-bullseye" aria-hidden="true"></i>
+      </div>
+      <div class="text-content">
+        <h3>Mission</h3>
+        <p>To empower educational institutions by automating academic workflows and enhancing efficiency through cutting-edge technology.</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <!-- Vision Section -->
+    <div class="vision">
+      <div class="icon-container">
+        <i class="fas fa-eye" aria-hidden="true"></i>
+      </div>
+      <div class="text-content">
+        <h3>Vision</h3>
+        <p>To become a global leader in academic automation, simplifying educational processes for students and administrators worldwide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    
+ <!-- Footer -->
+<footer>
+    <div id="footer-container" class="footer-container">
+      <!-- About Section -->
+      <div class="footer-section about">
+        <h4>About UnivMeta</h4>
+        <p>
+          UnivMeta empowers educational institutions with cutting-edge academic workflow automation solutions, making processes efficient and seamless. Our platform integrates powerful tools to help colleges, universities, and academic professionals enhance their workflows and drive innovation.
+        </p>
+      </div>
+  
+      <!-- Quick Links -->
+      <div class="footer-section links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#mission-vision">Mission & Vision</a></li>
+          <li><a href="#footer-container">Contact</a></li>
+        </ul>
+      </div>
+  
+      <!-- Product Info Section -->
+      <div class="footer-section product-info">
+        <h4>Product of BCA</h4>
+        <p>
+          This platform is a product of the Bachelor of Computer Applications (BCA) program at KAREBCA, developed by the talented batch of 2023-2026. The project showcases the skills, innovation, and dedication of the developers in creating a cutting-edge solution for the education sector.
+        </p>
+      </div>
+    </div>
+  
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2024 UnivMeta.xyz. All rights reserved. | <a href="Privacy Policy.html">Privacy Policy</a> | <a href="Terms of Use.html">Terms of Use</a></p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

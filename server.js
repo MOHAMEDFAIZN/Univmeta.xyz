@@ -1,4 +1,11 @@
 require('dotenv').config();  // Load environment variables from .env file
+
+const twilio = require('twilio'); // Twilio module for sending WhatsApp messages
+
+// Twilio configuration for WhatsApp sandbox
+const twilioClient = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const twilioWhatsAppNumber = process.env.TWILIO_WHATSAPP_NUMBER;
+
 const express = require('express');
 const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
@@ -39,12 +46,12 @@ app.use(session({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MYSQL DATABASE CONNECTION //////////////////////////////////////////////////////////////////////////////////////
 const connection = mysql.createConnection({
-    host: process.env.DB_HOST,  // Use environment variable for DB host
-    user: process.env.DB_USER,  // Use environment variable for DB user
-    password: process.env.DB_PASSWORD,  // Use environment variable for DB password
-    database: process.env.DB_NAME,  // Use environment variable for DB name
-    port: process.env.DB_PORT,  // Use environment variable for DB port
-    connectTimeout: 10000
+    host: process.env.DB_HOST,  
+    user: process.env.DB_USER,  
+    password: process.env.DB_PASSWORD,  
+    database: process.env.DB_NAME,  
+    port: process.env.DB_PORT,  
+    connectTimeout: 30000
 });
 
 connection.connect(err => {
@@ -170,7 +177,6 @@ app.post('/faculty/login', (req, res) => {
 });
 
 
-  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ADMIN LOGIN PAGE ROUTE //////////////////////////////////////////////////////////////////////////////////////////////
 // Handle Admin Login 
@@ -217,7 +223,6 @@ app.post('/admin/login', (req, res) => {
 });
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FACULTY DASHBOARD PAGE /////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/faculty-dashboard', (req, res) => {
@@ -229,7 +234,6 @@ app.get('/faculty-dashboard', (req, res) => {
     console.log('Session valid. Serving dashboard.');
     res.sendFile(path.join(__dirname, 'public', 'faculty', 'Faculty Dashboard.html'));
 });
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -473,85 +477,140 @@ app.post('/api/faculty/update-status', (req, res) => {
 ////////////////////////// SUBMIT ROUTES FOR LEAVE //////////////////////////////////////////////////////
 ///////////////////////// LEAVE APPLICATION SUBMIT /////////////////////////////////////////////////////
 // Handle the form submission POST request
-app.post('/submit', (req, res) => {  
+
+// To track processed requests by session or user
+let processedRequests = new Set();
+
+app.post('/submit', (req, res) => {
     // Check if student is logged in
     if (!req.session.user) {
         return res.status(401).json({ status: 'error', message: 'Student not logged in' });
     }
 
-    // Extract student and faculty data from the student session
-    const studentId = req.session.user.id;  // Student ID from session
-    const facultyId = req.session.user.faculty_id; // Faculty ID from student session
+    // Extract student ID from session
+    const studentId = req.session.user.id; // Student ID from session
 
-    // If no faculty_id exists in the session, return error
-    if (!facultyId) {
-        return res.status(401).json({ status: 'error', message: 'Faculty ID not found in session' });
-    }
-
-    const formData = req.body;  // Extract form data from the request body
-
-    // Validate all required fields
-    if (
-        !formData.name ||
-        !formData.registerNo ||
-        !formData.contactNo ||
-        !formData.email ||
-        !formData.parentContactNo ||
-        !formData.department ||
-        !formData.leaveType ||
-        !formData.startDate ||
-        !formData.endDate ||
-        !formData.reason
-    ) {
-        return res.status(400).json({ status: 'error', message: 'Required fields are missing' });
-    }
-
-    // SQL query to insert leave application with faculty_id from session
-    const query = `
-        INSERT INTO leave_applications 
-        (student_id, faculty_id, name, registerNo, contactNo, parentContactNo, email, department, leaveType, startDate, endDate, reason, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')
-    `;
-
-    // Execute the query with required parameters
-    connection.query(
-        query,
-        [
-            studentId,                // student_id from session
-            facultyId,                // faculty_id from student session
-            formData.name,
-            formData.registerNo,
-            formData.contactNo,
-            formData.parentContactNo,
-            formData.email,
-            formData.department,
-            formData.leaveType,
-            formData.startDate,
-            formData.endDate,
-            formData.reason
-        ],
-        (err, result) => {
-            if (err) {
-                console.error('Database error:', err); // Log error for debugging
-                return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-            }
-
-            // After successful submission, insert notification for the faculty
-            const notificationQuery = `
-                INSERT INTO notifications (user_id, message, type, created_at) 
-                VALUES (?, ?, 'application', NOW())
-            `;
-            const notificationMessage = `A new leave application has been submitted by ${formData.name}.`;
-
-            connection.query(notificationQuery, [facultyId, notificationMessage], (notifErr) => {
-                if (notifErr) {
-                    console.error('Notification error:', notifErr); // Log notification error
-                }
-                // Redirect to confirmation page regardless of notification success
-                res.redirect('/confirmation.html');
-            });
+     // Fetch faculty ID and phone number
+     const fetchFacultyQuery = `
+     SELECT s.faculty_id, f.phone_no AS faculty_phone
+     FROM univmeta.students s
+     INNER JOIN univmeta.faculty f ON s.faculty_id = f.faculty_id
+     WHERE s.id = ?
+ `;
+    connection.query(fetchFacultyQuery, [studentId], (fetchErr, results) => {
+        if (fetchErr || results.length === 0) {
+            console.error('Error fetching faculty details:', fetchErr || 'No faculty found');
+            return res.status(500).json({ status: 'error', message: 'Unable to fetch faculty details' });
         }
-    );
+
+        const { faculty_id: facultyId, faculty_phone: facultyPhone } = results[0]; // Extract faculty ID and phone number
+        const formData = req.body; // Extract form data from the request body
+
+        // Validate required fields
+        if (
+            !formData.name ||
+            !formData.registerNo ||
+            !formData.contactNo ||
+            !formData.email ||
+            !formData.parentContactNo ||
+            !formData.department ||
+            !formData.leaveType ||
+            !formData.startDate ||
+            !formData.endDate ||
+            !formData.reason
+        ) {
+            return res.status(400).json({ status: 'error', message: 'Required fields are missing' });
+        }
+
+        // SQL query to insert leave application
+        const insertLeaveQuery = `
+            INSERT INTO leave_applications 
+            (student_id, faculty_id, name, registerNo, contactNo, parentContactNo, email, department, leaveType, startDate, endDate, reason, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')
+        `;
+
+        connection.query(
+            insertLeaveQuery,
+            [
+                studentId,                // student_id from session
+                facultyId,                // faculty_id from query
+                formData.name,
+                formData.registerNo,
+                formData.contactNo,
+                formData.parentContactNo,
+                formData.email,
+                formData.department,
+                formData.leaveType,
+                formData.startDate,
+                formData.endDate,
+                formData.reason
+            ],
+            (insertErr, result) => {
+                if (insertErr) {
+                    console.error('Database error:', insertErr); // Log error for debugging
+                    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+                }
+
+                const notificationMessage = `A new leave application has been submitted by ${formData.name}.`;
+
+                 // Detailed message for WhatsApp
+                 const whatsappMessage = `
+                 📢 *Leave Application Notification*  
+                 Hello,  
+                 
+                 You have received a new leave application from your student on *univmeta.xyz*.  
+                 
+                 📝 *Details of the Application:*  
+                 👤 *Name:* ${formData.name}  
+                 🎓 *Register No:* ${formData.registerNo}  
+                 📱 *Contact No:* ${formData.contactNo}  
+                 📧 *Email:* ${formData.email}  
+                 🏫 *Department:* ${formData.department}  
+                 📅 *Leave Type:* ${formData.leaveType}  
+                 🗓️ *From:* ${formData.startDate}  
+                 🗓️ *To:* ${formData.endDate}  
+                 🛑 *Reason:* ${formData.reason}  
+                 
+                 Please review the application and take necessary action.  
+                 
+                 *Visit your dashboard on univmeta.xyz to process the application.*  
+                 
+                 Thank you,  
+                 Team *univmeta.xyz* 🌟
+                                 `;
+
+                // Insert notification for the faculty
+                const notificationQuery = `
+                    INSERT INTO notifications (user_id, message, type, created_at) 
+                    VALUES (?, ?, 'application', NOW())
+                `;
+                connection.query(notificationQuery, [facultyId, notificationMessage], (notifErr) => {
+                    if (notifErr) {
+                        console.error('Notification error:', notifErr); // Log notification error
+                    }
+
+                    // Send WhatsApp message to the faculty
+                    twilioClient.messages
+                        .create({
+                            body: whatsappMessage, // Full detailed message for WhatsApp
+                            from: twilioWhatsAppNumber,
+                            to: `whatsapp:${facultyPhone}`,
+                        })
+                        .then((message) => {
+                            console.log('WhatsApp message sent:', message.sid);
+                        })
+                        .catch((waErr) => {
+                            console.error('WhatsApp sending error:', waErr);
+                        });
+
+                    const applicationId = result.insertId; // Get the inserted application ID
+
+                    // Respond with the applicationId for client-side redirection
+                    return res.json({ applicationId: applicationId });
+                });
+            }
+        );
+    });
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -728,7 +787,8 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////// EVEN PARTICIPATION APPROVAL SUBMIT ////////////////////////////////////////
+///////////////////// EVENT PARTICIPATION APPROVAL SUBMIT ////////////////////////////////////////
+// Submit Event Form Route
 // Submit Event Form Route
 app.post('/submit-event-form', (req, res) => { 
     const {
@@ -821,6 +881,108 @@ app.post('/submit-event-form', (req, res) => {
                     return res.status(500).json({ status: 'error', message: 'Failed to send notification' });
                 }
 
+                 // Fetch faculty and student email addresses
+                const fetchFacultyQuery = `
+                SELECT students.faculty_id, faculty.username AS facultyEmail, students.username AS studentEmail 
+                FROM students 
+                JOIN faculty ON students.faculty_id = faculty.faculty_id 
+                WHERE students.id = ?
+            `;
+
+            connection.query(fetchFacultyQuery, [studentId], (fetchErr, results) => {
+                if (fetchErr) {
+                    console.error('Error fetching emails:', fetchErr);
+                    return res.status(500).json({ status: 'error', message: 'Failed to fetch email details' });
+                }
+
+                if (results.length === 0) {
+                    return res.status(404).json({ status: 'error', message: 'Faculty or student not found' });
+                }
+
+                const facultyEmail = results[0].facultyEmail;
+                const studentEmail = results[0].studentEmail;
+
+                // Email setup
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASSWORD // Update with your email password
+                    }
+                });
+
+                // Email to Faculty
+                const mailOptionsFaculty = {
+                    from: process.env.EMAIL_USER,
+                    to: facultyEmail,
+                    subject: 'UnivMeta | New Event Application Requires Your Review',
+                    html: `
+                        <div style="font-family: 'Arial', sans-serif; background-color: #f4f4f9; padding: 20px;">
+                            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                                <div style="text-align: center;">
+                                    <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
+                                </div>
+                                <h3 style="color: #333333; text-align: center;">New Event Application</h3>
+                                <p style="color: #555555; text-align: center;">A new event application has been submitted and requires your attention.</p>
+                                <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
+                                <p style="color: #333333; line-height: 1.6;">
+                                    <strong>Student Name:</strong> ${studentName}<br>
+                                    <strong>Register Number:</strong> ${studentRegNo}<br>
+                                    <strong>Event Name:</strong> ${eventName}<br>
+                                    <strong>Event Date:</strong> ${eventDate}<br>
+                                    <strong>Department:</strong> ${organizingDepartment}
+                                </p>
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <a href="http://localhost:3078/faculty-dashboard" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Review Now</a>
+                                </div>
+                                <p style="color: #999999; font-size: 0.85em; text-align: center;">Thank you for supporting UnivMeta’s mission to enhance academic engagement.</p>
+                            </div>
+                        </div>
+                    `
+                };
+
+                // Email to Student
+                const mailOptionsStudent = { 
+                    from: process.env.EMAIL_USER,
+                    to: studentEmail,
+                    subject: 'UnivMeta | Your Event Application Has Been Submitted',
+                    html: `
+                        <div style="font-family: 'Arial', sans-serif; background-color: #f4f4f9; padding: 20px;">
+                            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                                <div style="text-align: center;">
+                                    <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
+                                </div>
+                                <h3 style="color: #333333; text-align: center;">Your Application is Under Review</h3>
+                                <p style="color: #555555; text-align: center;">Thank you for submitting your event application. Here are the details:</p>
+                                <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
+                                <p style="color: #333333; line-height: 1.6;">
+                                    <strong>Event Name:</strong> ${eventName}<br>
+                                    <strong>Event Date:</strong> ${eventDate}<br>
+                                    <strong>Department:</strong> ${organizingDepartment}
+                                </p>
+                                <p style="color: #555555; text-align: center;">Your application is being reviewed by the faculty. You can track its progress in your dashboard.</p>
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <a href="http://localhost:3078/student-dashboard" style="background-color: #28a745; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Track Application</a>
+                                </div>
+                                <p style="color: #999999; font-size: 0.85em; text-align: center;">Thank you for being an active participant in UnivMeta.</p>
+                            </div>
+                        </div>
+                    `
+                };
+
+                // Send emails to both faculty and student
+                transporter.sendMail(mailOptionsFaculty, (facultyErr) => {
+                    if (facultyErr) {
+                        console.error('Failed to send faculty email:', facultyErr);
+                    }
+                });
+
+                transporter.sendMail(mailOptionsStudent, (studentErr) => {
+                    if (studentErr) {
+                        console.error('Failed to send student email:', studentErr);
+                    }
+                });
+
                 // Send a success response to the student
                 res.status(201).json({ 
                     status: 'success', 
@@ -828,9 +990,11 @@ app.post('/submit-event-form', (req, res) => {
                     applicationId: result.insertId 
                 });
             });
+        });
         }
     );
 });
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// NOTIFICATION SECTION FOR LEAVE/EVENT /////////////////////////////////////////////
@@ -867,7 +1031,7 @@ app.get('/api/notifications', (req, res) => {
 });
 
 
-/////////////////////////////// CHANGE PASSWORD SECTION//////////////////////////////////////////////////////////
+/////////////////////////////// CHANGE PASSWORD SECTION //////////////////////////////////////////////////////////
 //////////////////////////////// STUDENT CHANGE PASSWORD ////////////////////////////////////////////////////////
 app.post('/change-password', (req, res) => {
     const { currentPassword, newPassword } = req.body;
@@ -1048,8 +1212,8 @@ app.post('/admin/change-password', (req, res) => {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'univmetacorporate@gmail.com', // Host email address
-        pass: 'gooh prvg ohvz fhho' // Host email password
+        user: process.env.EMAIL_USER, // Host email address
+        pass: process.env.EMAIL_PASSWORD // Host email password
     }
 });
 
@@ -1209,14 +1373,14 @@ app.post('/api/student/submit-bonafide-requisition', (req, res) => {
 
                 // Send notification emails
                 const mailOptionsFaculty = {
-                    from: 'univmetacorporate@gmail.com',
+                    from: process.env.EMAIL_USER,
                     to: facultyEmail,
                     subject: 'New Bonafide Requisition Submitted',
                     text: `Dear Faculty,\n\nA new Bonafide Requisition has been submitted by student: ${name}. Please review the request.`,
                 };
 
                 const mailOptionsStudent = { 
-                    from: 'univmetacorporate@gmail.com',
+                    from: process.env.EMAIL_USER,
                     to: studentEmail,
                     subject: 'UnivMeta | Bonafide Requisition Submitted',
                     html: `
@@ -1541,7 +1705,7 @@ app.post('/api/faculty/approve-requisition', (req, res) => {
 
                    // Send notification email
 const mailOptions = {
-    from: 'univmetacorporate@gmail.com', // Sender address
+    from: process.env.EMAIL_USER, // Sender address
     to: studentEmail, // Recipient address
     subject: `UnivMeta | Bonafide Requisition Status Update`,
     html: `
@@ -2060,7 +2224,7 @@ app.get('/api/event-applications/rejected', (req, res) => {
     });
 });
 
-/////////////////////////// EVENT VEIW APPLICATIONS //////////////////////////////////////
+/////////////////////////// EVENT VEIW APPLICATIONS ROUTE //////////////////////////////////////
 // Route to fetch all Event Applications
 app.get('/api/event-applications', (req, res) => {
     const query = 'SELECT * FROM univmeta.event_applications;';
@@ -2101,7 +2265,7 @@ app.get('/api/leave-applications/stats', (req, res) => {
     });
   });
   
-  /////////////////////////// LEAVE VIEW APPLICATIONS ///////////////////////////////////////
+  /////////////////////////// LEAVE VIEW APPLICATIONS ROUTE ///////////////////////////////////////
   // Route: Fetch All Leave Applications
   app.get('/api/leave-applications', (req, res) => {
     const fetchQuery = `
@@ -2187,6 +2351,128 @@ app.get('/api/leave-applications/stats', (req, res) => {
     });
   });
 ///////////////////////////////////// REPORT SECTION END LEAVE/ EVENT //////////////////////////////////
+//////////////////////////////////// PRODUCT UNIVMETA STARTS REGISTRATION PROCESS /////////////////////////////
+// Student Registration Endpoint
+app.post("/register/student", (req, res) => {
+    const { register_number, username, password, name, faculty_id, department } = req.body;
+
+    if (!register_number || !username || !password || !name || !faculty_id || !department) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const studentQuery = `
+        INSERT INTO students (username, password, name, faculty_id, department)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
+    connection.query(
+        studentQuery,
+        [username, password, name, faculty_id, department],
+        (err, result) => {
+            if (err) {
+                console.error("Error inserting student record:", err.message);
+                return res.status(500).json({ message: "Failed to register student." });
+            }
+
+
+            res.status(201).json({ message: "Student registered successfully!", studentId: result.insertId });
+        }
+    );
+});
+
+// Faculty Registration Endpoint
+app.post("/register/faculty", (req, res) => {
+    const { faculty_id, username, password, name, department, phone_no } = req.body;
+
+    if (!faculty_id || !username || !password || !name || !department || !phone_no) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const facultyQuery = `
+        INSERT INTO faculty (faculty_id, username, password, name, department, phone_no)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    connection.query(
+        facultyQuery,
+        [faculty_id, username, password, name, department, phone_no],
+        (err, result) => {
+            if (err) {
+                console.error("Error inserting faculty record:", err.message);
+                return res.status(500).json({ message: "Failed to register faculty." });
+            }
+            
+
+            res.status(201).json({ message: "Faculty registered successfully!", facultyId: result.insertId });
+        }
+    );
+});
+///////////////////////////////////////////// MAIL /////////////////////////////////////////
+function sendConfirmationEmail(to, name) { 
+    const mailOptions = {
+        from: `"UnivMeta Registration" <${process.env.EMAIL_USER}>`,
+        to: to,
+        subject: "Welcome to UnivMeta.xyz - Registration Confirmation",
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+                <div style="background-color: #222; color: #fff; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0;">UnivMeta<span style="color: #bbb;">.xyz</span></h1>
+                </div>
+                <div style="padding: 20px;">
+                    <p>Dear <strong>${name}</strong>,</p>
+                    <p>Thank you for registering with <strong>UnivMeta.xyz</strong>. We are excited to have you as part of our community.</p>
+                    <p>To receive important updates and notifications directly through WhatsApp, please follow these simple steps:</p>
+                    
+                    <!-- WhatsApp Section -->
+                    <div style="background-color: #25D366; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                        <p style="font-size: 18px; color: #fff; margin-bottom: 10px;">Stay Updated with UnivMeta Notifications!</p>
+                        <p style="font-size: 16px; color: #fff; margin-bottom: 20px;">Click the button below or simply send <strong>join location-sport</strong> to our WhatsApp number to start receiving notifications.</p>
+                        <a href="https://wa.me/14155238886?text=join%20location-sport" target="_blank" style="background-color: #128C7E; color: #fff; padding: 12px 25px; border-radius: 50px; font-size: 16px; text-decoration: none; display: inline-block;">
+                            <strong>Join Now on WhatsApp</strong>
+                        </a>
+                    </div>
+
+                    <!-- Regular Content -->
+                    <p>By subscribing, you'll receive real-time notifications for upcoming events, news, and other important updates directly via WhatsApp.</p>
+                    <p>If you have any questions or need support, don't hesitate to contact us at <a href="mailto:support@univmeta.xyz" style="color: #007BFF;">support@univmeta.xyz</a>.</p>
+                    <p>We look forward to keeping you connected with the latest happenings at UnivMeta!</p>
+                    <p>Best regards,<br><strong>UnivMeta Team</strong></p>
+                </div>
+                <div style="background-color: #f5f5f5; padding: 10px; text-align: center; font-size: 12px; color: #555;">
+                    <p>&copy; 2024 UnivMeta<span style="color: #bbb;">.xyz</span>. All Rights Reserved.</p>
+                    <p>Visit us at <a href="https://www.univmeta.xyz" style="color: #007BFF;">www.univmeta.xyz</a></p>
+                </div>
+            </div>
+        `
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.error("Error sending email:", err.message);
+        } else {
+            console.log("Email sent successfully:", info.response);
+        }
+    });
+}
+
+///// FETCHING AVAILABLE FACULTY ///////////////////////////////////////////////////////////////////
+// Route to fetch faculty data 
+app.get('/fetch/faculty-data', (req, res) => {
+    const query = 'SELECT faculty_id AS id, name FROM faculty';
+    
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err.stack);
+            res.status(500).json({ error: 'Database query failed' });
+            return;
+        }
+        
+        res.json({ faculty: results });
+    });
+});
+
+
+////////////////////// REGISTRATION END //////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// Logout Route (Handles all roles) ////////////////////////////////////////////////////

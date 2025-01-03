@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnivMeta - Registration Portal</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png"> <!-- Replace with the actual path to your favicon -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #000;
+        }
+
+        /* Header */
+        header {
+            background-color: #222;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: 2px solid #444;
+        }
+
+        header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        header .header-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        header .header-text span {
+            color: #bbb;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        input, select {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        input:focus, select:focus {
+            border-color: #555;
+            outline: none;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #444;
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #666;
+            transform: translateY(-3px);
+        }
+
+        /* Toggle Button */
+        .toggle-btn {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .toggle-btn a {
+            color: #444;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .toggle-btn a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal button {
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            background-color: #222;
+            padding: 20px;
+            text-align: center;
+            color: #bbb;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo">
+        <div class="header-text">
+            UnivMeta<span>.xyz</span>
+        </div>
+    </header>
+
+    <!-- Student Registration Form -->
+    <div class="container" id="student-container">
+        <h1>Student Registration</h1>
+        <form id="student-form">
+            <label for="student-reg-number">Register Number</label>
+            <input type="text" id="student-reg-number" placeholder="Enter your Register Number" required oninput="autoFillStudentFields()">
+
+            <label for="student-username">Username</label>
+            <input type="email" id="student-username" readonly>
+
+            <label for="student-password">Password</label>
+            <input type="text" id="student-password" readonly>
+
+            <label for="student-name">Name</label>
+            <input type="text" id="student-name" placeholder="Enter your Name" required>
+
+            <label for="student-department">Department</label>
+            <select id="student-department">
+                <option value="">Select Department</option>
+                <option value="CSE">Computer Science and Engineering</option>
+                <option value="ECE">Electronics and Communication Engineering</option>
+                <option value="EEE">Electrical and Electronics Engineering</option>
+                <option value="MECH">Mechanical Engineering</option>
+                <option value="CIVIL">Civil Engineering</option>
+            </select>
+
+            <!-- Faculty Select Dropdown -->
+<label for="faculty-id-dropdown">Faculty ID</label>
+<select id="faculty-id-dropdown">
+    <option value="">Loading...</option>
+</select>
+
+            <button type="button" onclick="registerStudent()">Register as Student</button>
+        </form>
+        <div class="toggle-btn">
+            <p>Are you a faculty? <a href="#" onclick="toggleForm('faculty')">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Faculty Registration Form -->
+    <div class="container" id="faculty-container" style="display: none;">
+        <h1>Faculty Registration</h1>
+        <form id="faculty-form">
+            <label for="faculty-id">Faculty ID</label>
+            <input type="text" id="faculty-id" placeholder="Enter your Faculty ID" required>
+
+            <label for="faculty-username">Username (Email)</label>
+            <input type="email" id="faculty-username" placeholder="Enter your email" required>
+
+            <label for="faculty-password">Password</label>
+            <input type="password" id="faculty-password" placeholder="Enter your password" required>
+
+            <label for="faculty-name">Name</label>
+            <input type="text" id="faculty-name" placeholder="Enter your Name" required>
+
+            <label for="faculty-department">Department</label>
+            <select id="faculty-department">
+                <option value="">Select Department</option>
+                <option value="CSE">Computer Science and Engineering</option>
+                <option value="ECE">Electronics and Communication Engineering</option>
+                <option value="EEE">Electrical and Electronics Engineering</option>
+                <option value="MECH">Mechanical Engineering</option>
+                <option value="CIVIL">Civil Engineering</option>
+            </select>
+
+            <label for="faculty-phone">Phone Number</label>
+            <input type="tel" id="faculty-phone" placeholder="Enter your Phone Number" required>
+
+            <button type="button" onclick="registerFaculty()">Register as Faculty</button>
+        </form>
+        <div class="toggle-btn">
+            <p>Are you a student? <a href="#" onclick="toggleForm('student')">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="confirmation-modal">
+        <p id="confirmation-message">Registration Successful!</p>
+        <button onclick="closeModal()">Close</button>
+    </div>
+
+    <footer>
+        &copy; 2024 UnivMeta<span>.xyz</span>. All Rights Reserved. 
+        <br>
+        Visit us at: <a href="https://www.univmeta.xyz">www.univmeta.xyz</a> | Contact: <a href="mailto:info@univmeta.xyz">info@univmeta.xyz</a>
+    </footer>
+
+    <script>
+         document.addEventListener('DOMContentLoaded', () => {
+        fetchFacultyData(); // Fetch faculty data when the page is loaded
+    });
+        function toggleForm(formType) {
+            if (formType === 'faculty') {
+                document.getElementById('student-container').style.display = 'none';
+                document.getElementById('faculty-container').style.display = 'block';
+            } else {
+                document.getElementById('faculty-container').style.display = 'none';
+                document.getElementById('student-container').style.display = 'block';
+            }
+        }
+
+        function autoFillStudentFields() {
+            const regNumber = document.getElementById('student-reg-number').value;
+            const email = `${regNumber}@klu.ac.in`;
+            document.getElementById('student-username').value = email;
+            document.getElementById('student-password').value = regNumber;
+        }
+         
+        function fetchFacultyData() {
+    fetch('/fetch/faculty-data') // Endpoint should return { "faculty": [{"id": 1, "name": "Dr. A"}, ...] }
+        .then(response => response.json())
+        .then(data => {
+            const facultySelect = document.getElementById('faculty-id-dropdown');
+            facultySelect.innerHTML = '<option value="">Select Faculty</option>'; // Clear and add default option
+            data.faculty.forEach(faculty => {
+                facultySelect.innerHTML += `<option value="${faculty.id}">${faculty.id} - ${faculty.name}</option>`;
+            });
+        })
+        .catch(error => console.error('Error fetching faculty data:', error));
+}
+
+
+
+        function showModal(message) {
+            const modal = document.getElementById('confirmation-modal');
+            const messageElem = document.getElementById('confirmation-message');
+            messageElem.textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.remove('active');
+        }
+
+        function registerStudent() {
+            const data = {
+                register_number: document.getElementById('student-reg-number').value,
+                username: document.getElementById('student-username').value,
+                password: document.getElementById('student-password').value,
+                name: document.getElementById('student-name').value,
+                department: document.getElementById('student-department').value,
+                faculty_id: document.getElementById('faculty-id-dropdown').value
+            };
+
+            fetch('/register/student', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                showModal(data.message || 'Student Registered Successfully!');
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function registerFaculty() {
+            const data = {
+                faculty_id: document.getElementById('faculty-id').value,
+                username: document.getElementById('faculty-username').value,
+                password: document.getElementById('faculty-password').value,
+                name: document.getElementById('faculty-name').value,
+                department: document.getElementById('faculty-department').value,
+                phone_no: document.getElementById('faculty-phone').value
+            };
+
+            fetch('/register/faculty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                showModal(data.message || 'Faculty Registered Successfully!');
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

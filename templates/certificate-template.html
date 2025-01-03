@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generated Leave Application</title>
+    <title>Leave Application</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -12,16 +12,31 @@
             position: relative;
         }
         .container {
-            max-width: 798px;
-            margin: auto;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 0;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
-        }
+    max-width: 798px;
+    margin: auto;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+.container::before {
+    position: absolute;
+    top: 70px;
+    left: 70px;
+    width: 80%;
+    height: 80%;
+    z-index: -1; /* No need for +1; use numeric values */
+    background: url('https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
+    background-size: 40%; /* Adjust size as needed */
+    opacity: 0.1; /* Make the image visible */
+    pointer-events: none; /* Ensure it doesn't block interactions with other elements */
+    content: ""; /* Required to make ::before visible */
+}
+
         .header {
             text-align: center;
             margin-bottom: 0;
@@ -64,25 +79,13 @@
             max-height: 100%;
             object-fit: contain;
         }
-        .watermark {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            background: url('http://localhost:3078/watermark_image.png') no-repeat center center;
-            background-size: 70%; /* Adjust size as needed */
-            opacity: 0.1;
-            pointer-events: none;
-        }
+        
     </style>
 </head>
 <body>
-    <div class="watermark"></div>
     <div class="container">
         <div class="header">
-            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="College Logo">
+            <img src="https://www.univmeta.xyz/General%20Assest/Kalasalingam_Black.png" alt="College Logo">
         </div>
         <h2>Approved Application</h2>
         <p><strong>Date:</strong> {{date}}</p>
@@ -109,7 +112,7 @@
         <br>
         <p class="signature">Yours sincerely,<br>{{name}}</p>
         <div class="sign-placeholder">
-            <img src="http://localhost:3078/Student/IMAGES/Faculty%20Advisor.jpg" alt="Signature Placeholder">
+            <img src="https://www.univmeta.xyz/Student/Student%20Assest/Faculty%20Advisor.jpg" alt="Signature Placeholder">
         </div>
     </div>
 </body>

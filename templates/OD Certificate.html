@@ -21,6 +21,19 @@
             page-break-after: always;
             min-height: 700px; /* Increased height */
         }
+        .certificate-container::before {
+    position: absolute;
+    top: 90px;
+    left: 90px;
+    width: 80%;
+    height: 80%;
+    z-index: 1; /* No need for +1; use numeric values */
+    background: url('https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
+    background-size: 40%; /* Adjust size as needed */
+    opacity: 0.1; /* Make the image visible */
+    pointer-events: none; /* Ensure it doesn't block interactions with other elements */
+    content: ""; /* Required to make ::before visible */
+}
 
         .header {
             text-align: center;
@@ -109,7 +122,7 @@
     <div class="certificate-container">
         <!-- Header with Image -->
         <div class="header">
-            <img src="http://localhost:3078/Kalasalingam_Black.png" alt="Institution Logo" />
+            <img src="https://www.univmeta.xyz/General%20Assest/Kalasalingam_Black.png" alt="Institution Logo" />
             <h1>Event Participation Approval Certificate</h1>
         </div>
 
@@ -153,13 +166,13 @@
         <div class="signature-section">
             <div class="signature">
                 <!-- Image for Class Coordinator -->
-                <img src="http://localhost:3078/Student/IMAGES/Faculty%20Advisor.jpg" alt="Class Coordinator Image">
+                <img src="https://www.univmeta.xyz/Student/Student%20Assest/Faculty%20Advisor.jpg" alt="Class Coordinator Image">
                 <p>Class Coordinator</p>
                 <div class="signature-line"></div>
             </div>
             <div class="signature">
                 <!-- Image for Head of the Department -->
-                <img src="http://localhost:3078/Student/IMAGES/HOD.jpg" alt="HOD Image">
+                <img src="https://www.univmeta.xyz/Student/Student%20Assest/HOD.jpg" alt="HOD Image">
                 <p>Head of the Department</p>
                 <div class="signature-line"></div>
             </div>

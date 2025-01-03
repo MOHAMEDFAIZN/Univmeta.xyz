@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submission Confirmation | UnivMeta</title>
+    <title>Leave Submission Confirmation</title>
     <style>
         /* General Reset */
         * {
@@ -15,8 +15,8 @@
         /* Body Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2e3b4e, #4e5b6b);
-            color: #fff;
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,20 +26,21 @@
 
         /* Container */
         .confirmation-container {
-            background-color: #ffffff;
-            color: #333;
+            background-color: #1c1c1c; /* Dark gray background */
+            color: #fff; /* White text */
             border-radius: 12px;
             padding: 30px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
             text-align: center;
+            border: 1px solid #555; /* Border to differentiate container */
         }
 
         .confirmation-container h1 {
             font-size: 28px;
             margin-bottom: 15px;
-            color: #4CAF50;
+            color: #4CAF50; /* Green text for headings */
         }
 
         .confirmation-container p {
@@ -49,11 +50,17 @@
 
         .confirmation-container .highlight {
             font-weight: bold;
-            color: #4CAF50;
+            color: #4CAF50; /* Highlighted text in green */
+        }
+
+        .confirmation-container .application-id {
+            font-size: 18px;
+            margin: 15px 0;
+            color: #ddd; /* Slightly lighter text for Application ID */
         }
 
         .back-button {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Green button */
             color: #fff;
             padding: 12px 25px;
             text-decoration: none;
@@ -64,7 +71,7 @@
         }
 
         .back-button:hover {
-            background-color: #45a049;
+            background-color: #45a049; /* Darker green on hover */
         }
 
         /* Footer Style */
@@ -95,7 +102,9 @@
     <div class="confirmation-container">
         <h1>Thank You for Choosing UnivMeta!</h1>
         <p>Your leave application has been <span class="highlight">submitted successfully</span>.</p>
-        <p>You can check the status of your application anytime at the <strong>Form Status</strong> page.</p>
+        <!-- Dynamic Application ID -->
+        <p class="application-id">Application ID: <span id="applicationId">Loading...</span></p>
+        <p>You can check the status of your application anytime on the <strong>Form Status</strong> page.</p>
         <a href="form.html" class="back-button">Back to Form</a>
     </div>
 
@@ -103,5 +112,12 @@
         <p>&copy; 2024 UnivMeta. All rights reserved. <a href="#">Privacy Policy</a></p>
     </div>
 
+    <script>
+        
+        const params = new URLSearchParams(window.location.search);
+        const applicationId = params.get('applicationId');
+        document.getElementById('applicationId').textContent = applicationId;
+   
+    </script>
 </body>
 </html>

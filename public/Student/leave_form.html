@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +13,9 @@
             padding: 0;
             color: #333;
         }
+
         .form-container {
-            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for visibility */
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 20px;
             margin: 50px auto;
             max-width: 600px;
@@ -21,40 +23,46 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
         }
-        /* Watermark as background using ::before pseudo-element */
+
         .form-container::before {
             content: '';
             background: url('https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
-            background-size: 400px; /* Adjust size of the watermark */
-            opacity: 10; /* Makes the watermark faint */
-            pointer-events: none; /* Ensures it doesn't interfere with form content */
-            z-index: -1; /* Sends the watermark behind form content */
+            background-size: 400px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: -1;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
         }
+
         .logo-container {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .logo-container img {
             max-width: 100%;
             height: auto;
         }
+
         h1 {
             text-align: center;
             color: #4a4a4a;
             margin-top: 0;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             font-weight: bold;
         }
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -63,8 +71,9 @@
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.8); /* Slight transparency */
+            background-color: rgba(255, 255, 255, 0.8);
         }
+
         .form-group input[type="submit"] {
             background-color: #000000;
             color: white;
@@ -75,19 +84,134 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
         .form-group input[type="submit"]:hover {
             background-color: #45a049;
         }
+
+        #processing-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1000;
+}
+
+#processing-modal.show {
+    display: block; /* Show modal when 'show' class is added */
+}
+
+.spinner {
+    margin: 10px auto 20px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+.success-icon {
+    font-size: 50px;
+    color: #45a049;
+    margin-bottom: 10px;
+    display: none; /* Hide success icon initially */
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
     </style>
+    <script>
+      let formSubmitted = false;
+
+      async function handleSubmit(event) {
+          event.preventDefault();
+      
+          if (formSubmitted) {
+              const confirmResubmit = confirm("You have already submitted the form. Do you want to submit it again?");
+              if (!confirmResubmit) {
+                  return;
+              }
+          }
+      
+          formSubmitted = true;
+      
+          const modal = document.getElementById('processing-modal');
+          const spinner = document.querySelector('.spinner');
+          const message = document.getElementById('processing-message');
+          const successIcon = document.getElementById('success-icon');
+          const form = event.target; // Reference to the form element
+      
+          // Show modal
+          modal.classList.add('show');
+          spinner.style.display = 'block'; // Ensure spinner is shown
+          successIcon.style.display = 'none'; // Hide success icon initially
+          message.textContent = 'Processing your request...'; // Update the message
+      
+          try {
+              // Collect form data
+              const formData = new FormData(form);
+              const requestData = Object.fromEntries(formData.entries());
+      
+              // Simulate submission delay with a timeout
+              await new Promise((resolve) => setTimeout(resolve, 10000)); // Simulating server delay for spinner
+      
+              // Simulate server response
+              const response = await fetch('/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(requestData),
+              });
+      
+              if (response.ok) {
+                  const result = await response.json();
+      
+                  // Success Response
+                  spinner.style.display = 'none'; // Hide spinner
+                  successIcon.style.display = 'block'; // Show success icon
+                  message.textContent = 'Successfully Submitted!';
+      
+                  setTimeout(() => {
+                      form.reset(); // Clear all form fields
+                      modal.classList.remove('show'); // Hide the modal
+                      const applicationId = result.applicationId || '123'; // Replace '123' with dynamic ID if available
+                      window.location.href = `/Student/confirmation.html?applicationId=${applicationId}`;
+                  }, 5000); // Show success message for 2 seconds
+              } else {
+                  throw new Error('Submission failed');
+              }
+          } catch (error) {
+              modal.classList.remove('show');
+              alert('An error occurred: ' + error.message);
+              console.error(error);
+          }
+      }
+    </script>
+
+    
 </head>
+
 <body>
     <div class="form-container">
-        <!-- Top logo section -->
         <div class="logo-container">
             <img src="https://www.univmeta.xyz/General%20Assest/Kalasalingam_Black.png" alt="College Logo">
         </div>
         <h1>Leave Application Form</h1>
-        <form action="/submit" method="POST">
+        <form action="/submit" method="POST" onsubmit="handleSubmit(event)">
             <div class="form-group">
                 <label for="date">Date:</label>
                 <input type="date" id="date" name="date" required>
@@ -147,5 +271,11 @@
             </div>
         </form>
     </div>
+    <div id="processing-modal">
+        <div class="spinner"></div>
+        <div id="success-icon" class="success-icon" style="display: none;">✔</div>
+        <div id="processing-message">Processing your request...</div>
+    </div>
 </body>
+
 </html>
