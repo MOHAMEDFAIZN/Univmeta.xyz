@@ -39,7 +39,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,  // Use the session secret from .env
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }  // Set to true in production with HTTPS
+    cookie: { secure: true }  // Set to true in production with HTTPS
 }));
 
 
@@ -671,11 +671,12 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 // Launch Puppeteer to generate a PDF from the HTML content
                 const browser = await puppeteer.launch({
                     headless: true,
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+                    debug: true,
                 });
 
                 const page = await browser.newPage();
-                await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle0' });
+                await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
 
                 const pdfBuffer = await page.pdf({
                     format: 'A4',
