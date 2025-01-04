@@ -672,6 +672,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 const browser = await puppeteer.launch({
                     headless: true,
                     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+                    executablePath: puppeteer.executablePath(),
                     debug: true,
                 });
 
