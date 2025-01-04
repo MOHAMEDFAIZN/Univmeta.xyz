@@ -23,3 +23,6 @@ apt-get install -y \
 # Clean up the apt cache to reduce image size
 apt-get clean
 rm -rf /var/lib/apt/lists/*
+
+# Install the required Puppeteer browser version
+npx puppeteer browsers install chrome
