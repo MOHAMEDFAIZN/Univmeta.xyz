@@ -684,7 +684,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         printBackground: true,
                         margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-                    
+
                 await browser.close();
 
                 // Set response headers to download the PDF
@@ -701,6 +701,14 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
             }
         });
     });
+});
+
+app.get('/check-puppeteer', async (req, res) => {
+    const puppeteer = require('puppeteer');
+    const browserFetcher = puppeteer.createBrowserFetcher();
+    const localRevisions = await browserFetcher.localRevisions();
+
+    res.json({ localRevisions });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
