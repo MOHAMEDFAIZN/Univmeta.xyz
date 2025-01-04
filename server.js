@@ -671,8 +671,9 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 // Launch Puppeteer to generate a PDF from the HTML content
                 const browser = await puppeteer.launch({
                     headless: true,
+                    executablePath: 'C:\\Users\\mhedf\\.cache\\puppeteer\\chrome\\win64-131.0.6778.85\\chrome-win64\\chrome.exe',
                     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-                    executablePath: puppeteer.executablePath(),
+
                     debug: true,
                 });
 
