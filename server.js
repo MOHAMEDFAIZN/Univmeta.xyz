@@ -667,26 +667,29 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 .replace('{{reason}}', application.reason)
                 .replace('{{name}}', application.name);
 
-            try {
-                // Launch Puppeteer to generate a PDF from the HTML content
-                const browser = await puppeteer.launch({
-                    headless: true,
-                    executablePath: 'C:/Users/mhedf/.cache/puppeteer/chrome/win64-131.0.6778.85/chrome-win64/chrome.exe',
-
-                    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-
-                    debug: true,
-                });
-
-                const page = await browser.newPage();
-                await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
-
-                const pdfBuffer = await page.pdf({
-                    format: 'A4',
-                    printBackground: true,
-                    margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
-                });
-                console.log('Browser launched successfully!');
+                try {
+                    // Debugging: Check available local revisions
+                    const browserFetcher = puppeteer.createBrowserFetcher();
+                    const localRevisions = await browserFetcher.localRevisions();
+                    console.log('Available local revisions:', localRevisions);
+    
+                    // Launch Puppeteer to generate a PDF from the HTML content
+                    const browser = await puppeteer.launch({
+                        headless: true,
+                        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+                    });
+    
+                    console.log('Launched browser!');
+    
+                    const page = await browser.newPage();
+                    await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
+    
+                    const pdfBuffer = await page.pdf({
+                        format: 'A4',
+                        printBackground: true,
+                        margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
+                    });
+    
                 await browser.close();
 
                 // Set response headers to download the PDF
