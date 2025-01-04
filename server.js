@@ -668,12 +668,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 .replace('{{name}}', application.name);
 
                 try {
-                    // Debugging: Check available local revisions
-                    const browserFetcher = puppeteer.createBrowserFetcher();
-                    const localRevisions = await browserFetcher.localRevisions();
-                    console.log('Available local revisions:', localRevisions);
-    
-                    // Launch Puppeteer to generate a PDF from the HTML content
+                    // Launch Puppeteer
                     const browser = await puppeteer.launch({
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
@@ -689,7 +684,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         printBackground: true,
                         margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-    
+                    
                 await browser.close();
 
                 // Set response headers to download the PDF
