@@ -669,33 +669,40 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
 
                 try {
                     console.log("Launching Puppeteer...");
-                  
+                
                     // Log the Puppeteer executable path and environment variables
-                    console.log('Puppeteer executable path:', puppeteer.executablePath());
+                    console.log('Puppeteer executable path:', process.env.PUPPETEER_EXECUTABLE_PATH);
                     console.log('Puppeteer cache directory:', process.env.PUPPETEER_CACHE_DIR);
-                  
-                    // To log the Puppeteer version using npm package info
+                
+                    // Log the Puppeteer version from the npm package
                     const puppeteerVersion = require('puppeteer/package.json').version;
                     console.log('Puppeteer version:', puppeteerVersion);
-                  
+                
+                    // Check if the PUPPETEER_EXECUTABLE_PATH is set, if not log a warning
+                    if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
+                        console.warn('PUPPETEER_EXECUTABLE_PATH environment variable is not set.');
+                    }
+                
+                    // Launch Puppeteer with the environment variable for the executable path
                     const browser = await puppeteer.launch({
-                      headless: true,
-                      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+                        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,  // Use the environment variable for the path
+                        headless: true,
+                        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
-                  
+                
                     console.log('Browser launched successfully.');
-                  
+                
                     const page = await browser.newPage();
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
-                  
+                
                     const pdfBuffer = await page.pdf({
-                      format: 'A4',
-                      printBackground: true,
-                      margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
+                        format: 'A4',
+                        printBackground: true,
+                        margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-                  
-
-                await browser.close();
+                
+                    await browser.close();
+                    
 
                 // Set response headers to download the PDF
                 res.setHeader('Content-Type', 'application/pdf');
