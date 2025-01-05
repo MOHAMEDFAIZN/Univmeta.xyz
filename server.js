@@ -669,15 +669,15 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
 
                 try {
                     console.log("Launching Puppeteer...");
-                
+                    
                     // Log the Puppeteer executable path and environment variables
                     console.log('Puppeteer executable path:', process.env.PUPPETEER_EXECUTABLE_PATH);
                     console.log('Puppeteer cache directory:', process.env.PUPPETEER_CACHE_DIR);
-                
+                    
                     // Log the Puppeteer version from the npm package
                     const puppeteerVersion = require('puppeteer/package.json').version;
                     console.log('Puppeteer version:', puppeteerVersion);
-                
+                    
                     // Check if the PUPPETEER_EXECUTABLE_PATH is set, if not log a warning
                     if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
                         console.warn('PUPPETEER_EXECUTABLE_PATH environment variable is not set.');
@@ -686,48 +686,52 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                     // Verify if the Chrome binary exists
                     const fs = require('fs');
                     const chromePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+                    console.log(`Checking if Chrome binary exists at: ${chromePath}`);
                     const chromeExists = chromePath && fs.existsSync(chromePath);
                 
                     if (!chromeExists) {
                         console.error('Chrome binary not found at the specified path:', chromePath);
                         return res.status(500).send('Chrome binary not found. Please verify the installation.');
                     }
-                
+                    
+                    console.log('Launching browser...');
                     // Launch Puppeteer with the environment variable for the executable path
                     const browser = await puppeteer.launch({
                         executablePath: chromePath,  // Use the environment variable for the path
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
-                
+                    
                     console.log('Browser launched successfully.');
-                
+                    
                     const page = await browser.newPage();
                     console.log('Setting page content...');
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
-                
+                    
                     console.log('Generating PDF...');
                     const pdfBuffer = await page.pdf({
                         format: 'A4',
                         printBackground: true,
                         margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-                
+                    
+                    console.log('Closing browser...');
                     await browser.close();
                     console.log('Browser closed. PDF generated successfully.');
-                
+                    
                     // Set response headers to download the PDF
                     res.setHeader('Content-Type', 'application/pdf');
                     res.setHeader('Content-Disposition', 'attachment; filename="leave-application.pdf"');
                     res.setHeader('Content-Length', pdfBuffer.length);
-                
+                    
                     // Send the PDF buffer as the response
                     res.status(200).end(pdfBuffer);
-                
+                    
                 } catch (pdfErr) {
                     console.error('Error generating PDF:', pdfErr);
                     return res.status(500).send('Error generating PDF.');
                 }
+                
                 
         });
     });
