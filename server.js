@@ -683,9 +683,19 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         console.warn('PUPPETEER_EXECUTABLE_PATH environment variable is not set.');
                     }
                 
+                    // Verify if the Chrome binary exists
+                    const fs = require('fs');
+                    const chromePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+                    const chromeExists = chromePath && fs.existsSync(chromePath);
+                
+                    if (!chromeExists) {
+                        console.error('Chrome binary not found at the specified path:', chromePath);
+                        return res.status(500).send('Chrome binary not found. Please verify the installation.');
+                    }
+                
                     // Launch Puppeteer with the environment variable for the executable path
                     const browser = await puppeteer.launch({
-                        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,  // Use the environment variable for the path
+                        executablePath: chromePath,  // Use the environment variable for the path
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
@@ -693,8 +703,10 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                     console.log('Browser launched successfully.');
                 
                     const page = await browser.newPage();
+                    console.log('Setting page content...');
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
                 
+                    console.log('Generating PDF...');
                     const pdfBuffer = await page.pdf({
                         format: 'A4',
                         printBackground: true,
@@ -702,31 +714,26 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                     });
                 
                     await browser.close();
-                    
-
-                // Set response headers to download the PDF
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'attachment; filename="leave-application.pdf"');
-                res.setHeader('Content-Length', pdfBuffer.length);
-
-                // Send the PDF buffer as the response
-                res.status(200).end(pdfBuffer);
-
-            } catch (pdfErr) {
-                console.error('Error generating PDF:', pdfErr);
-                return res.status(500).send('Error generating PDF.');
-            }
+                    console.log('Browser closed. PDF generated successfully.');
+                
+                    // Set response headers to download the PDF
+                    res.setHeader('Content-Type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename="leave-application.pdf"');
+                    res.setHeader('Content-Length', pdfBuffer.length);
+                
+                    // Send the PDF buffer as the response
+                    res.status(200).end(pdfBuffer);
+                
+                } catch (pdfErr) {
+                    console.error('Error generating PDF:', pdfErr);
+                    return res.status(500).send('Error generating PDF.');
+                }
+                
         });
     });
 });
 
-app.get('/check-puppeteer', async (req, res) => {
-    const puppeteer = require('puppeteer');
-    const browserFetcher = puppeteer.createBrowserFetcher();
-    const localRevisions = await browserFetcher.localRevisions();
 
-    res.json({ localRevisions });
-});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

@@ -30,7 +30,6 @@
     "mysql2": "^3.11.5",
     "nodemailer": "^6.9.16",
     "puppeteer": "^23.11.1",
-    "puppeteer-core": "^23.11.1",
     "twilio": "^5.4.0"
   }
 }
