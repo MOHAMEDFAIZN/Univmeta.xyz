@@ -670,6 +670,10 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 try {
                     // Launch Puppeteer (no need to specify executablePath since puppeteer handles it)
                     console.log("Launching Puppeteer...");
+                    console.log('Puppeteer version:', puppeteer.version());
+                    console.log('Puppeteer executable path:', puppeteer.executablePath());
+                    console.log('Puppeteer cache directory:', process.env.PUPPETEER_CACHE_DIR);
+
                     const browser = await puppeteer.launch({
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
@@ -685,7 +689,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         printBackground: true,
                         margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-                    
+
                 await browser.close();
 
                 // Set response headers to download the PDF
