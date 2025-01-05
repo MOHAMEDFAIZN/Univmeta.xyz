@@ -668,27 +668,32 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 .replace('{{name}}', application.name);
 
                 try {
-                    // Launch Puppeteer (no need to specify executablePath since puppeteer handles it)
                     console.log("Launching Puppeteer...");
-                    console.log('Puppeteer version:', puppeteer.version());
+                  
+                    // Log the Puppeteer executable path and environment variables
                     console.log('Puppeteer executable path:', puppeteer.executablePath());
                     console.log('Puppeteer cache directory:', process.env.PUPPETEER_CACHE_DIR);
-
+                  
+                    // To log the Puppeteer version using npm package info
+                    const puppeteerVersion = require('puppeteer/package.json').version;
+                    console.log('Puppeteer version:', puppeteerVersion);
+                  
                     const browser = await puppeteer.launch({
-                        headless: true,
-                        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+                      headless: true,
+                      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
-    
-                    console.log('Using browser executable path:', puppeteer.executablePath()); // Log the executable path
-    
+                  
+                    console.log('Browser launched successfully.');
+                  
                     const page = await browser.newPage();
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
-    
+                  
                     const pdfBuffer = await page.pdf({
-                        format: 'A4',
-                        printBackground: true,
-                        margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
+                      format: 'A4',
+                      printBackground: true,
+                      margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
+                  
 
                 await browser.close();
 
