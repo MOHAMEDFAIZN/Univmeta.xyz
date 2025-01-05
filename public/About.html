@@ -17,6 +17,7 @@
       color: #333;
     }
 
+/* Base Styles */
 header {
   background-color: #000;
   color: white;
@@ -27,15 +28,16 @@ header {
 }
 
 header .header-text {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: #fff;
-        }
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #fff;
+}
 
-        header .header-text span {
-            color: #bbb;
-        }
+header .header-text span {
+  color: #bbb;
+}
+
 .header-left {
   display: flex;
   flex-direction: column;
@@ -51,22 +53,22 @@ header .header-text {
   display: flex;
   gap: 15px;
   margin-top: 5px;
-  background-color: #333; /* Grey background for nav-links */
-  padding: 5px 10px; /* Adds padding inside the grey background */
-  border-radius: 5px; /* Optional: Rounded corners for the nav background */
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .header-left .nav-links a {
   color: white;
   text-decoration: none;
   font-size: 0.9rem;
-  padding: 5px 10px; /* Adds padding around each link */
-  border-radius: 3px; /* Optional: Rounded corners for each link */
+  padding: 5px 10px;
+  border-radius: 3px;
 }
 
 .header-left .nav-links a:hover {
-  text-decoration: none; /* Removes underline on hover */
-  background-color: #555; /* Adds a darker grey background on hover */
+  text-decoration: none;
+  background-color: #555;
 }
 
 .header-right {
@@ -75,25 +77,24 @@ header .header-text {
   gap: 15px;
 }
 
-.header-right .login-register { 
-  background: transparent; 
-  border: 1px solid white; 
-  padding: 8px 20px; 
-  color: white; 
-  border-radius: 5px; 
-  font-size: 1rem; 
-  font-weight: bold; 
-  cursor: pointer; 
-  transition: all 0.3s ease; 
+.header-right .login-register {
+  background: transparent;
+  border: 1px solid white;
+  padding: 8px 20px;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .header-right .login-register:hover {
-  background: white; 
-  color: #000; /* Black text for contrast */
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); /* Subtle glow effect */
-  transform: scale(1.05); /* Slight scaling for visual feedback */
+  background: white;
+  color: #000;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
-
 
 header img {
   width: 50px;
@@ -101,6 +102,73 @@ header img {
   border-radius: 50%;
 }
 
+/* Responsive Styles for Smaller Devices */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .header-left .site-name {
+    font-size: 1rem;
+  }
+
+  .header-left .nav-links {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .header-left .nav-links a {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .header-right .login-register {
+    font-size: 0.9rem;
+    padding: 6px 15px;
+  }
+
+  header img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  header .header-text {
+    font-size: 22px;
+  }
+
+  .header-left .nav-links {
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .header-left .nav-links a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-right .login-register {
+    width: 100%;
+    text-align: center;
+  }
+}
 
   /* Hero Section */
 .hero {
@@ -390,7 +458,7 @@ body {
   justify-content: space-between;
   background-color: #ffffff; /* Dark background for the whole section */
   padding: 80px;
-  width: 100%;
+  width: 89.4%;
 }
 
 /* Left section for fixed text */
@@ -455,8 +523,11 @@ body {
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .tech-stack-left {
-    font-size: 18px; /* Adjust font size for mobile */
+  .tech-stack {
+    padding: 20px; /* Reduce padding for mobile */
+    width: 100%; /* Ensure full-width on smaller screens */
+    box-sizing: border-box; /* Include padding in the width calculation */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
   }
 
   .item img {
@@ -566,21 +637,138 @@ footer {
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .footer-container {
+    display: flex; /* Ensure flexbox layout */
     flex-direction: column;
     align-items: center;
-    padding: 0 20px;
+    gap: 20px; /* Add spacing between sections */
+    padding: 20px; /* Use consistent padding */
+    box-sizing: border-box; /* Include padding in total width */
   }
 
   .footer-section {
-    width: 100%;
-    margin-bottom: 30px;
+    width: 100%; /* Ensure sections span full width */
+    margin: 0 auto 20px; /* Center-align with bottom spacing */
     text-align: center;
   }
 
   .footer-bottom {
-    margin-top: 30px;
+    width: 100%; /* Consistent width */
+    margin: 20px 0 0; /* Top margin for spacing */
+    text-align: center; /* Ensure centered text */
   }
 }
+ /*product*/
+ /* General Styles */
+body {
+
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Section Styling */
+.exclusive-product-section {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-header h2 {
+  font-size: 2.8rem;
+  color: #000000;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.section-header p {
+  font-size: 1.2rem;
+  color: #000000;
+  font-weight: normal;
+}
+
+/* Product Cards */
+.product-card {
+  display: inline-block;
+  width: 300px;
+  margin: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.product-image img {
+  width: 50%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.product-details {
+  padding: 20px;
+}
+
+.product-title {
+  font-size: 1.6rem;
+  color: #000000;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+.product-description {
+  font-size: 1rem;
+  color: #777;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.coming-soon {
+  color: #000000;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.btn-learn-more {
+  background-color: #0056b3;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.btn-learn-more:hover {
+  background-color: #000000;
+}
+
+/* Future Product Styling */
+.future-product {
+  border: 3px dashed #000000;
+  background-color: #ffffff;
+}
+
+.future-product .product-title {
+  color: #000000;
+}
+
+.future-product .product-description {
+  font-style: italic;
+  color: #666;
+}
+
+
+
   </style>
 </head>
 
@@ -795,6 +983,42 @@ footer {
         </div>
     </div>
 </div>
+
+<section class="exclusive-product-section">
+  <div class="section-header">
+    <h2>Our Products & Future Innovations</h2>
+    <p>Transforming the future of education with cutting-edge solutions</p>
+  </div>
+
+  <!-- AFAS Product Card -->
+  <div class="product-card current-product">
+    <div class="product-image">
+      <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="AFAS" />
+    </div>
+    <div class="product-details">
+      <h3 class="product-title">AFAS (Academic Form Automation System)</h3>
+      <p class="product-description">
+        Automating academic form processes with seamless integration into your institution’s workflow, reducing paperwork, and enhancing student experience.
+      </p>
+      <a href="https://www.univmeta.xyz/" class="btn-learn-more">Learn More</a>
+    </div>
+  </div>
+
+  <!-- PMS Future Product Card -->
+  <div class="product-card future-product">
+    <div class="product-image">
+      <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="PMS" />
+    </div>
+    <div class="product-details">
+      <h3 class="product-title">PMS (Placement Management System)</h3>
+      <p class="product-description">
+        <strong>Coming in May 2025:</strong> A comprehensive platform to streamline the placement process for students and recruiters, enhancing placement success.
+      </p>
+      <p class="coming-soon">Exciting features coming soon! Stay tuned.</p>
+    </div>
+  </div>
+</section>
+
 
 
   
