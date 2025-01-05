@@ -670,7 +670,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 try {
                     // Launch Puppeteer
                     const browser = await puppeteer.launch({
-                        executablePath: puppeteer.executablePath(),
+                        executablePath: '/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome',
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });

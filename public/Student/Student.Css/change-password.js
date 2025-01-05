@@ -16,7 +16,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
 
     try {
         responseMessage.innerText = 'Updating password...';
-        const response = await fetch('http://localhost:3078/change-password', {
+        const response = await fetch('/Student/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

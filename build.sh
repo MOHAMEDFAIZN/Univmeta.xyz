@@ -24,5 +24,8 @@ apt-get install -y \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
+# Set Puppeteer cache directory
+export PUPPETEER_CACHE_DIR=/opt/render/.cache/puppeteer
+
 # Install the required Puppeteer browser version
 npx puppeteer browsers install chrome
