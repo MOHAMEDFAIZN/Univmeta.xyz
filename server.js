@@ -668,14 +668,14 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 .replace('{{name}}', application.name);
 
                 try {
-                    // Launch Puppeteer
+                    // Launch Puppeteer (no need to specify executablePath since puppeteer handles it)
+                    console.log("Launching Puppeteer...");
                     const browser = await puppeteer.launch({
-                        executablePath: '/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome',
                         headless: true,
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
     
-                    console.log("Using Chrome executable at:", puppeteer.executablePath());
+                    console.log('Using browser executable path:', puppeteer.executablePath()); // Log the executable path
     
                     const page = await browser.newPage();
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });
@@ -685,7 +685,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         printBackground: true,
                         margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
                     });
-
+                    
                 await browser.close();
 
                 // Set response headers to download the PDF
