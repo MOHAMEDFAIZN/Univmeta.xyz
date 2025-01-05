@@ -675,7 +675,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
                     });
     
-                    console.log('Launched browser!');
+                    console.log("Using Chrome executable at:", puppeteer.executablePath());
     
                     const page = await browser.newPage();
                     await page.setContent(leaveApplicationContent, { waitUntil: 'networkidle2', timeout: 60000 });

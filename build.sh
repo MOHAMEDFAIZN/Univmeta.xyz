@@ -29,3 +29,11 @@ export PUPPETEER_CACHE_DIR=/opt/render/.cache/puppeteer
 
 # Install the required Puppeteer browser version
 npx puppeteer browsers install chrome
+
+# Verify if the Chrome binary exists
+if [ -f "/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome" ]; then
+    echo "Chrome binary installed successfully."
+else
+    echo "Chrome binary not found at the expected path."
+    exit 1
+fi
