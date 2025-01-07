@@ -385,6 +385,73 @@ body {
     margin: 0;
     padding: 0;
 }
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  /* Features Section Adjustments for Mobile */
+  .features-section {
+    padding: 20px 15px; /* Reduce padding for smaller screens */
+  }
+
+  /* Title Styling */
+  .features-title {
+    font-size: 1.5rem; /* Smaller font size for titles on mobile */
+    margin-bottom: 20px; /* Adjust spacing for better balance */
+  }
+
+  /* Features Container */
+  .features-container {
+    grid-template-columns: 1fr; /* Single column layout for mobile */
+    gap: 20px; /* Add spacing between items */
+  }
+
+  /* Feature Card Adjustments */
+  .feature-card {
+    padding: 15px; /* Reduce padding inside cards */
+    width: 100%; /* Full width for mobile view */
+    max-width: none; /* Remove max-width constraint */
+  }
+
+  /* Feature Icon Styling */
+  .feature-icon {
+    font-size: 2rem; /* Slightly smaller icons for mobile */
+    margin-bottom: 15px; /* Add spacing below the icon */
+  }
+
+  /* Card Title */
+  .feature-card h3 {
+    font-size: 1.1rem; /* Reduce heading size slightly */
+    margin-bottom: 10px; /* Adjust spacing below the heading */
+  }
+
+  /* Card Paragraph */
+  .feature-card p {
+    font-size: 0.85rem; /* Smaller text size for better readability */
+  }
+}
+
+/* Further Optimizations for Extra Small Screens */
+@media (max-width: 480px) {
+  .features-title {
+    font-size: 1.25rem; /* Smaller title font size */
+    margin-bottom: 15px; /* Reduce margin for balance */
+  }
+
+  .feature-icon {
+    font-size: 1.8rem; /* Further reduce icon size */
+  }
+
+  .feature-card {
+    padding: 10px; /* Compact padding for extra small screens */
+  }
+
+  .feature-card h3 {
+    font-size: 1rem; /* Compact heading size */
+  }
+
+  .feature-card p {
+    font-size: 0.8rem; /* Compact paragraph size */
+  }
+}
 
 
 
@@ -769,6 +836,99 @@ body {
 
 
 
+
+.cta-btn {
+    background-color: #ffffff;
+    color: #1abc9c;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cta-btn:hover {
+    background-color: #16a085;
+    color: #ffffff;
+}
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: auto; /* Allow scrolling inside the modal */
+}
+
+.modal-content {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    position: relative;
+    max-height: 80%; /* Restrict height to 80% of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling for long content */
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.modal-content h3 {
+    margin: 10px 0;
+    font-size: 1.5rem;
+    color: #444;
+}
+
+.modal-content h4 {
+    margin: 15px 0 10px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.modal-content p, .modal-content ul {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+.modal-content ul {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* Ensure the page behind the modal doesn't scroll */
+body.modal-open {
+    overflow: hidden;
+}
+
   </style>
 </head>
 
@@ -796,15 +956,99 @@ body {
     </div>
   </header>
 
-  <!-- Hero Section -->
+ <!-- Hero Section -->
 <section class="hero">
-    <div class="hero-text">
-        <h2>Empower Your Campus with Academic Automation</h2>
-        <p>Streamline your academic processes with UnivMeta's cutting-edge solutions.</p>
-        <a href="#features" class="cta-btn">Learn More</a>
-    </div>
-    <div class="hero-image"></div>
+  <div class="hero-text">
+      <h2>Empower Your Campus with Academic Automation</h2>
+      <p>Streamline your academic processes with UnivMeta's cutting-edge solutions.</p>
+      <!-- Button to trigger modal -->
+      <button class="cta-btn" id="open-modal">Business Model</button>
+  </div>
+  <div class="hero-image"></div>
 </section>
+
+
+<!-- Modal Popup -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+      <span class="close-btn" id="close-modal">&times;</span>
+      <h2>A Business Model Canvas for UnivMeta</h2>
+      
+      <div class="modal-body">
+          <h4>1. Key Partnerships</h4>
+          <ul>
+              <li>Universities and Colleges: Institutions that will adopt the AFAS platform.</li>
+              <li>Technology Providers: Cloud hosting services (e.g., AWS, Azure).</li>
+              <li>API Providers: To integrate with student information systems (SIS) or financial platforms.</li>
+          </ul>
+
+          <h4>2. Key Activities</h4>
+          <ul>
+              <li>Platform Development and Maintenance: Regular updates to ensure scalability and security.</li>
+              <li>Customer Onboarding: Training sessions for administrative staff and faculty.</li>
+              
+              <li>Data Analytics: Real-time analytics for academic performance and administrative insights.</li>
+              <li>Marketing and Outreach: Target campaigns to higher education institutions globally.</li>
+          </ul>
+
+          <h4>3. Value Propositions</h4>
+          <ul>
+              <li>Automation and Efficiency: Streamlines administrative tasks, reducing errors and delays.</li>
+              <li>Scalability: Easily adaptable to institutions of any size.</li>
+              <li>Cost-Effective Solution: Subscription-based model affordable for all institutions.</li>
+              <li>Data Security: End-to-end encryption and compliance with global data standards.</li>
+              <li>User-Friendly Interface: Accessible to students, faculty, and staff with minimal learning curve.</li>
+          </ul>
+
+          <h4>4. Customer Relationships</h4>
+          <ul>
+             
+              <li>User Training: Workshops and webinars for effective usage.</li>
+              <li>Feedback Mechanisms: Regular feedback loops to improve features and user experience.</li>
+              
+          </ul>
+
+          <h4>5. Customer Segments</h4>
+          <ul>
+              <li><strong>Primary:</strong> Universities and colleges (public and private). Higher education institutions focusing on digital transformation.</li>
+              <li><strong>Secondary:</strong> Students (18–30 years). Faculty and administrative staff in educational institutions.</li>
+          </ul>
+
+          <h4>6. Channels</h4>
+          <ul>
+              <li>Direct Sales: Partnerships with universities and colleges.</li>
+              <li>Digital Marketing: Social media campaigns, SEO optimization, and targeted ads.</li>
+              <li>Educational Events: Participation in education expos and conferences.</li>
+              
+              <li>Webinars and Demo Sessions: To showcase platform capabilities.</li>
+          </ul>
+        
+          <h4>7. Key Resources</h4>
+          <ul>
+            <li><strong>Technical Resources:</strong> Java microservices and MERN stack (MongoDB, Express.js, React.js, Node.js) for a scalable backend and responsive frontend, hosted on AWS/Azure with secure API integrations.</li>
+            <li><strong>Human Resources:</strong> Java and MERN developers, full-stack engineers, and customer support teams for seamless development, maintenance, and client onboarding.</li>
+            <li><strong>Financial Resources & Partnerships:</strong> Subscription-based revenue, initial funding, and collaborations with API providers, cloud hosting platforms, and digital signature vendors.</li>
+          </ul>
+
+          <h4>8. Cost Structure</h4>
+          <ul>
+              <li>Platform Development Costs: Software development and cloud infrastructure expenses.</li>
+              <li>Marketing and Outreach: Advertising campaigns, partnerships, and events.</li>
+              <li>Support and Maintenance: Technical support and regular system updates.</li>
+              <li>Compliance Costs: Meeting data protection and educational regulations.</li>
+              <li>Training and Onboarding: Resources for customer education and engagement.</li>
+          </ul>
+
+          <h4>9. Revenue Streams</h4>
+          <ul>
+              <li>Per-Student Subscription Fee: A scalable pricing model for universities.</li>
+              <li>Custom Integrations: Charges for advanced API integrations.</li>
+              
+          </ul>
+      </div>
+  </div>
+</div>
+
 
 
  <!-- About Section -->
@@ -978,7 +1222,18 @@ body {
                 <img src="About Images/cloudflare.svg" alt="Cloudflare">
                 <span>Cloudflare</span>
             </div>
-            
+            <div class="item">
+              <img src="About Images/amp.svg" alt="AMP">
+              <span>AMP</span>
+          </div>
+          <div class="item">
+            <img src="About Images/java.png" alt="Java">
+            <span>Java</span>
+        </div>
+        <div class="item">
+          <img src="About Images/mongodb.svg" alt="MongoDB">
+          <span>MongoDB</span>
+      </div>
             </div>
         </div>
     </div>
@@ -1086,6 +1341,36 @@ body {
       <p>&copy; 2024 UnivMeta.xyz. All rights reserved. | <a href="Privacy Policy.html">Privacy Policy</a> | <a href="Terms of Use.html">Terms of Use</a></p>
     </div>
   </footer>
+
+
+<!-- JavaScript -->
+<script>
+  // Get the modal, open button, and close button
+const modal = document.getElementById("modal");
+const openModal = document.getElementById("open-modal");
+const closeModal = document.getElementById("close-modal");
+
+// Open modal when button is clicked
+openModal.addEventListener("click", () => {
+    modal.style.display = "flex"; // Show modal
+    document.body.classList.add("modal-open"); // Prevent page scrolling
+});
+
+// Close modal when close button is clicked
+closeModal.addEventListener("click", () => {
+    modal.style.display = "none"; // Hide modal
+    document.body.classList.remove("modal-open"); // Allow page scrolling
+});
+
+// Close modal when clicking outside the content area
+window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+        modal.style.display = "none";
+        document.body.classList.remove("modal-open");
+    }
+});
+
+</script>
 
 </body>
 
