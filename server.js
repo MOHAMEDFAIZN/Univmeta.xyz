@@ -26,6 +26,9 @@ const PORT = process.env.PORT || 3078;  // Use environment variable for port
 // Initialize multer
 const upload = multer(); 
 
+// Define the correct path to the database directory
+const databasePath = path.join(__dirname); // Adjust if needed
+
 // Middleware setup
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,6 +36,8 @@ app.use(express.json({ limit: '10mb' }));  // Increase the limit if necessary
 app.use(upload.none()); // This will handle `multipart/form-data` and turn it into `req.body`
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());  // Adds security headers
+// Serve static files from the correct directory
+app.use(express.static(databasePath));
 
 // Session setup
 app.use(session({
@@ -62,6 +67,15 @@ connection.connect(err => {
     console.log('Connected to MySQL database');
 });
 
+// Serve robots.txt explicitly
+app.get('/robots.txt', (req, res) => {
+    res.sendFile(path.join(databasePath, 'robots.txt'));
+});
+
+// Serve sitemap.xml explicitly
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(databasePath, 'sitemap.xml'));
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // HOME PAGE //////////////////////////////////////////////////////////////////////////////////////////////////////
