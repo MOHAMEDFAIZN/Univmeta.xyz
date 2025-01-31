@@ -19,6 +19,7 @@ const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
 const fs = require('fs');
+const { chromium } = require('playwright');
 
 const app = express();
 const PORT = process.env.PORT || 3078;  // Use environment variable for port
