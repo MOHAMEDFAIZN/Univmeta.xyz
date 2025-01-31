@@ -769,25 +769,26 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
                 .replace('{{studentRegNo}}', application.student_reg_no || 'N/A') // Assuming 'student_reg_no' field exists
                 .replace('{{studentName}}', application.student_name || 'N/A'); // Assuming 'student_name' field exists
 
-            try {
-                console.log("Using Chrome Executable:", 'C:/Users/mhedf/.cache/puppeteer/chrome/win64-132.0.6834.110/chrome-win64/chrome.exe');
+                const chromium = require('chrome-aws-lambda');
 
-const browser = await puppeteer.launch({
-    executablePath: 'C:/Users/mhedf/.cache/puppeteer/chrome/win64-132.0.6834.110/chrome-win64/chrome.exe',
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-});
-
-const page = await browser.newPage();
-await page.setContent(eventCertificateContent, { waitUntil: 'networkidle0' });
-
-const pdfBuffer = await page.pdf({
-    format: 'A4',
-    printBackground: true,
-    margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
-});
-
-await browser.close();
+                try {
+                    const browser = await chromium.puppeteer.launch({
+                        executablePath: await chromium.executablePath || null,
+                        headless: true,
+                        args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+                    });
+                
+                    const page = await browser.newPage();
+                    await page.setContent(eventCertificateContent, { waitUntil: 'networkidle0' });
+                
+                    const pdfBuffer = await page.pdf({
+                        format: 'A4',
+                        printBackground: true,
+                        margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
+                    });
+                
+                    await browser.close();
+                
 
 
                 // Set headers for PDF response
