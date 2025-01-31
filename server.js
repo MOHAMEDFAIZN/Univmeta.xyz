@@ -723,10 +723,51 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// DOWNLOAD EVENT PARTICIPATION ////////////////////////////////////////////////////
 // Function to format the date (same as in the leave applications)
-function formatDate(date) {
+// Format the date
+function formatDate(date) { 
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(date).toLocaleDateString('en-US', options);
 }
+
+// Generate PDF function
+const generatePDF = async (content, res) => {
+    try {
+        // Launch the browser instance
+        const browser = await chromium.launch({
+            headless: true, 
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+
+        // Create a new page
+        const page = await browser.newPage();
+
+        // Set the HTML content of the page
+        await page.setContent(content, { waitUntil: 'networkidle0' });
+
+        // Generate the PDF buffer
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
+        });
+
+        // Close the browser
+        await browser.close();
+
+        // Set headers for PDF response
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="event-application-certificate.pdf"');
+        res.setHeader('Content-Length', pdfBuffer.length);
+
+        // Send the PDF buffer as the response
+        res.status(200).end(pdfBuffer);
+
+    } catch (error) {
+        // Handle any errors
+        console.error('Error generating PDF:', error);
+        res.status(500).send('Error generating PDF.');
+    }
+};
 
 // Route to download Event Application Certificate
 app.get('/download-event-certificate/:applicationId', async (req, res) => {
@@ -760,52 +801,23 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
 
             // Replace placeholders in the template with application data
             const eventCertificateContent = template
-                .replace('{{submissionDate}}', formatDate(application.submission_date) || 'N/A') // Assuming 'submission_date' field exists
-                .replace('{{eventName}}', application.event_name || 'N/A') // Assuming 'event_name' field exists
-                .replace('{{eventDate}}', formatDate(application.event_date) || 'N/A') // Assuming 'event_date' field exists
-                .replace('{{organizingDepartment}}', application.organizing_department || 'N/A') // Assuming 'organizing_department' field exists
-                .replace('{{numberOfDays}}', application.number_of_days || 'N/A') // Assuming 'number_of_days' field exists
-                .replace('{{eventType}}', application.event_type || 'N/A') // Assuming 'event_type' field exists
-                .replace('{{studentRegNo}}', application.student_reg_no || 'N/A') // Assuming 'student_reg_no' field exists
-                .replace('{{studentName}}', application.student_name || 'N/A'); // Assuming 'student_name' field exists
+                .replace('{{submissionDate}}', formatDate(application.submission_date) || 'N/A')
+                .replace('{{eventName}}', application.event_name || 'N/A')
+                .replace('{{eventDate}}', formatDate(application.event_date) || 'N/A')
+                .replace('{{organizingDepartment}}', application.organizing_department || 'N/A')
+                .replace('{{numberOfDays}}', application.number_of_days || 'N/A')
+                .replace('{{eventType}}', application.event_type || 'N/A')
+                .replace('{{studentRegNo}}', application.student_reg_no || 'N/A')
+                .replace('{{studentName}}', application.student_name || 'N/A');
 
-                const chromium = require('chrome-aws-lambda');
-
-                try {
-                    const browser = await chromium.puppeteer.launch({
-                        executablePath: await chromium.executablePath || null,
-                        headless: true,
-                        args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
-                    });
-                
-                    const page = await browser.newPage();
-                    await page.setContent(eventCertificateContent, { waitUntil: 'networkidle0' });
-                
-                    const pdfBuffer = await page.pdf({
-                        format: 'A4',
-                        printBackground: true,
-                        margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
-                    });
-                
-                    await browser.close();
-                
-
-
-                // Set headers for PDF response
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'attachment; filename="event-application-certificate.pdf"');
-                res.setHeader('Content-Length', pdfBuffer.length);
-
-                // Send the PDF buffer to the browser
-                res.status(200).end(pdfBuffer);
-
-            } catch (pdfErr) {
-                console.error('Error generating PDF:', pdfErr);
-                return res.status(500).send('Error generating PDF.');
-            }
+            // Call the generatePDF function with the content and response
+            await generatePDF(eventCertificateContent, res);
         });
     });
 });
+
+module.exports = app;
+                
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
