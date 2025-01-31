@@ -749,6 +749,7 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
 
         // Path to the event certificate template file
         const templateFilePath = path.join(__dirname, 'templates', 'OD Certificate.html');
+        console.log('Template Path:', templateFilePath);
 
         // Read the template file
         fs.readFile(templateFilePath, 'utf-8', async (err, template) => {
