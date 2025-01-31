@@ -770,22 +770,25 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
                 .replace('{{studentName}}', application.student_name || 'N/A'); // Assuming 'student_name' field exists
 
             try {
-                // Generate the PDF from the template
-                const browser = await puppeteer.launch({
-                    headless: true,
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                });
+                console.log("Using Chrome Executable:", 'C:/Users/mhedf/.cache/puppeteer/chrome/win64-132.0.6834.110/chrome-win64/chrome.exe');
 
-                const page = await browser.newPage();
-                await page.setContent(eventCertificateContent, { waitUntil: 'networkidle0' });
+const browser = await puppeteer.launch({
+    executablePath: 'C:/Users/mhedf/.cache/puppeteer/chrome/win64-132.0.6834.110/chrome-win64/chrome.exe',
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
 
-                const pdfBuffer = await page.pdf({
-                    format: 'A4',
-                    printBackground: true,
-                    margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
-                });
+const page = await browser.newPage();
+await page.setContent(eventCertificateContent, { waitUntil: 'networkidle0' });
 
-                await browser.close();
+const pdfBuffer = await page.pdf({
+    format: 'A4',
+    printBackground: true,
+    margin: { top: '5mm', bottom: '5mm', left: '5mm', right: '5mm' },
+});
+
+await browser.close();
+
 
                 // Set headers for PDF response
                 res.setHeader('Content-Type', 'application/pdf');
