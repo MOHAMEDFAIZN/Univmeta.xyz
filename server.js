@@ -2390,6 +2390,7 @@ app.post("/register/student", (req, res) => {
                 console.error("Error inserting student record:", err.message);
                 return res.status(500).json({ message: "Failed to register student." });
             }
+            
             // ✅ Use `username` as the email parameter
             sendConfirmationEmail(username, name);
  
