@@ -738,7 +738,7 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
 
 ///////printleave//
 
-app.get('/print-leave-certificate/:applicationId', async (req, res) => {
+app.get('/print-leave-certificate/:applicationId', async (req, res) => { 
     const applicationId = req.params.applicationId;
 
     const query = 'SELECT * FROM leave_applications WHERE id = ?';
@@ -762,76 +762,148 @@ app.get('/print-leave-certificate/:applicationId', async (req, res) => {
                 return res.status(500).send('Error reading the template file.');
             }
 
-            const logoURL = "https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png";
-
+            
             const certificateContent = template
-                .replace('{{logo}}', `<img src="${logoURL}" alt="University Logo" style="max-width: 150px;">`)
+                
                 .replace('{{date}}', new Date().toLocaleDateString())
                 .replace('{{department}}', application.department)
                 .replace('{{name}}', application.name)
                 .replace('{{registerNo}}', application.registerNo)
+                .replace('{{department}}', application.department)
+                .replace('{{name}}', application.name)
+                .replace('{{department}}', application.department)
                 .replace('{{contactNo}}', application.contactNo)
                 .replace('{{parentContactNo}}', application.parentContactNo)
                 .replace('{{email}}', application.email)
                 .replace('{{leaveType}}', application.leaveType)
                 .replace('{{startDate}}', formatDate(application.startDate))
                 .replace('{{endDate}}', formatDate(application.endDate))
-                .replace('{{reason}}', application.reason);
+                .replace('{{reason}}', application.reason)
+                .replace('{{name}}', application.name);
 
-            res.send(`
-                <html>
-                <head>
-                    <title>Print Certificate</title>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-                    <style>
-                        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-                        .print-container {
-                            position: fixed;
-                            top: 20px;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            z-index: 1000;
-                        }
-                        .print-btn { 
-                            background-color: #007bff; 
-                            color: white; 
-                            padding: 12px 20px; 
-                            font-size: 16px; 
-                            cursor: pointer;
-                            border-radius: 5px;
-                            border: none;
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                        }
-                        .print-btn:hover { background-color: #0056b3; }
-                        @media print {
-                            .print-container { display: none; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="print-container">
-                        <button id="printButton" class="print-btn">
-                            <i class="fas fa-print"></i> Print Certificate
-                        </button>
-                    </div>
-
-                    <div>${certificateContent}</div>
-
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            document.getElementById("printButton").addEventListener("click", function () {
-                                window.print();
-                            });
-                        });
-                    </script>
-                </body>
-                </html>
-            `);
+                res.send(`
+                    <html>
+                    <head>
+                        <title>Print Certificate</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                        <script src="/js/print.js" defer></script> <!-- External script for print button -->
+                        <style>
+                            /* Ensure A4 size print layout */
+                            @page { size: A4; margin: 0; } 
+    
+                            /* General Styling */
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                margin: 0; 
+                                padding: 0;
+                                background: white;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: flex-start;
+                                min-height: 100vh;
+                                width: 100vw;
+                                overflow: auto; /* Enables scrolling */
+                            }
+    
+                            /* Print button styling */
+                            .print-container {
+                                position: absolute;
+                                top: 20px;
+                                left: 20px;
+                                z-index: 1000;
+                            }
+                            .print-btn { 
+                                background-color: black; 
+                                color: white; 
+                                padding: 10px 15px; 
+                                font-size: 14px; 
+                                cursor: pointer;
+                                border-radius: 5px;
+                                border: none;
+                                display: flex;
+                                align-items: center;
+                                gap: 5px;
+                            }
+                            .print-btn:hover { background-color: #333; }
+    
+                            /* Certificate container */
+                            .certificate-container {
+                                width: 100%;
+                                max-width: 800px;
+                                padding: 20px;
+                                
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                            }
+    
+                            /* Footer */
+                            .footer {
+                                text-align: center;
+                                font-size: 14px;
+                                color: gray;
+                                padding: 10px;
+                                width: 100%;
+                                position: relative;
+                                bottom: 0;
+                            }
+    
+                            /* Print formatting */
+                            @media print {
+                                .print-container { display: none; } /* Hide print button */
+                                body {
+                                    width: 210mm;
+                                    height: 297mm;
+                                    margin: 0;
+                                    padding: 0;
+                                    transform: scale(1); /* Ensures exact fit */
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+                                    overflow: hidden; /* Prevents extra pages */
+                                }
+                                .certificate-container {
+                                    width: 100%;
+                                    height: 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+                                }
+                                .footer {
+                                    position: absolute;
+                                    bottom: 10px;
+                                    width: 100%;
+                                    font-size: 14px;
+                                    color: black;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <!-- Print button at the top-left -->
+                        <div class="print-container">
+                            <button id="printButton" class="print-btn">
+                                <i class="fas fa-print"></i> Print Certificate
+                            </button>
+                        </div>
+    
+                        <!-- Certificate Content -->
+                        <div class="certificate-container">${certificateContent}</div>
+    
+                        <!-- Footer (Always Visible) -->
+                        <div class="footer">Powered by UnivMeta</div>
+                    </body>
+                    </html>
+                `);
+            });
         });
     });
-});
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
