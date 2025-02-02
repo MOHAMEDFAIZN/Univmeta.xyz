@@ -60,12 +60,31 @@ const connection = mysql.createConnection({
     connectTimeout: 30000
 });
 
+// Second MySQL Connection (studentinfo - Student Information)
+const studentDB = mysql.createConnection({
+    host: process.env.DB_HOST,  
+    user: process.env.DB_USER,  
+    password: process.env.DB_PASSWORD,  
+    database: 'studentinfo',  // Second database
+    port: process.env.DB_PORT,  
+    connectTimeout: 30000
+});
+
 connection.connect(err => {
     if (err) {
         console.error('Error connecting to MySQL:', err);
         return;
     }
     console.log('Connected to MySQL database');
+});
+
+// Connect to studentinfo (Student Management)
+studentDB.connect(err => {
+    if (err) {
+        console.error('Error connecting to studentinfo database:', err);
+        return;
+    }
+    console.log('Connected to studentinfo database');
 });
 
 // Serve robots.txt explicitly
@@ -633,7 +652,6 @@ app.post('/submit', (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// LEAVE APPLICATION DOWNLOAD ///////////////////////////////////////////////////////
 // Function to format date in the desired format (e.g., "Wed Feb 22 2024")
-// Function to format date in the desired format (e.g., "Wed Feb 22 2024")
 function formatDate(date) {
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(date).toLocaleDateString('en-US', options);
@@ -713,6 +731,104 @@ app.get('/download-leave-certificate/:applicationId', async (req, res) => {
                 console.error('Error generating PDF:', pdfErr);
                 return res.status(500).send('Error generating PDF.');
             }
+        });
+    });
+});
+
+
+///////printleave//
+
+app.get('/print-leave-certificate/:applicationId', async (req, res) => {
+    const applicationId = req.params.applicationId;
+
+    const query = 'SELECT * FROM leave_applications WHERE id = ?';
+    connection.query(query, [applicationId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return res.status(500).send('Error fetching data from the database.');
+        }
+
+        if (results.length === 0 || results[0].status !== 'Approved') {
+            console.error(`Leave application not approved or does not exist. Application ID: ${applicationId}`);
+            return res.status(400).send('Leave application not approved or does not exist.');
+        }
+
+        const application = results[0];
+        const templateFilePath = path.join(__dirname, 'templates', 'certificate-template.html');
+
+        fs.readFile(templateFilePath, 'utf-8', (err, template) => {
+            if (err) {
+                console.error('Template file read error:', err.message);
+                return res.status(500).send('Error reading the template file.');
+            }
+
+            const logoURL = "https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png";
+
+            const certificateContent = template
+                .replace('{{logo}}', `<img src="${logoURL}" alt="University Logo" style="max-width: 150px;">`)
+                .replace('{{date}}', new Date().toLocaleDateString())
+                .replace('{{department}}', application.department)
+                .replace('{{name}}', application.name)
+                .replace('{{registerNo}}', application.registerNo)
+                .replace('{{contactNo}}', application.contactNo)
+                .replace('{{parentContactNo}}', application.parentContactNo)
+                .replace('{{email}}', application.email)
+                .replace('{{leaveType}}', application.leaveType)
+                .replace('{{startDate}}', formatDate(application.startDate))
+                .replace('{{endDate}}', formatDate(application.endDate))
+                .replace('{{reason}}', application.reason);
+
+            res.send(`
+                <html>
+                <head>
+                    <title>Print Certificate</title>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+                        .print-container {
+                            position: fixed;
+                            top: 20px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 1000;
+                        }
+                        .print-btn { 
+                            background-color: #007bff; 
+                            color: white; 
+                            padding: 12px 20px; 
+                            font-size: 16px; 
+                            cursor: pointer;
+                            border-radius: 5px;
+                            border: none;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                        }
+                        .print-btn:hover { background-color: #0056b3; }
+                        @media print {
+                            .print-container { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-container">
+                        <button id="printButton" class="print-btn">
+                            <i class="fas fa-print"></i> Print Certificate
+                        </button>
+                    </div>
+
+                    <div>${certificateContent}</div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            document.getElementById("printButton").addEventListener("click", function () {
+                                window.print();
+                            });
+                        });
+                    </script>
+                </body>
+                </html>
+            `);
         });
     });
 });
@@ -2114,6 +2230,76 @@ app.get('/api/student-applications/total-applications', (req, res) => {
       res.status(200).json({ rejectedForms: results[0].rejectedForms });
     });
   });
+/// faculty///
+  // Middleware to check faculty authentication
+const authenticateFaculty = (req, res, next) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+    next();
+};
+
+// 1️⃣ Route: Get total bonafide applications for the logged-in faculty
+app.get('/api/faculty-bonafide/total', authenticateFaculty, (req, res) => {
+    const facultyId = req.session.faculty.faculty_id;
+    const query = `SELECT COUNT(*) AS totalApplications FROM bonafiderequisition WHERE faculty_id = ?;`;
+
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching total applications:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.status(200).json({ totalApplications: results[0].totalApplications || 0 });
+    });
+});
+
+// 2️⃣ Route: Get pending bonafide applications for the logged-in faculty
+app.get('/api/faculty-bonafide/pending', authenticateFaculty, (req, res) => {
+    const facultyId = req.session.faculty.faculty_id;
+    const query = `SELECT COUNT(*) AS pendingApplications FROM bonafiderequisition WHERE status = 'Pending' AND faculty_id = ?;`;
+
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching pending applications:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.status(200).json({ pendingApplications: results[0].pendingApplications || 0 });
+    });
+});
+
+// 3️⃣ Route: Get approved bonafide applications for the logged-in faculty
+app.get('/api/faculty-bonafide/approved', authenticateFaculty, (req, res) => {
+    const facultyId = req.session.faculty.faculty_id;
+    const query = `SELECT COUNT(*) AS approvedApplications FROM bonafiderequisition WHERE status = 'Approved' AND faculty_id = ?;`;
+
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching approved applications:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.status(200).json({ approvedApplications: results[0].approvedApplications || 0 });
+    });
+});
+
+// 4️⃣ Route: Get rejected bonafide applications for the logged-in faculty
+app.get('/api/faculty-bonafide/rejected', authenticateFaculty, (req, res) => {
+    const facultyId = req.session.faculty.faculty_id;
+    const query = `SELECT COUNT(*) AS rejectedApplications FROM bonafiderequisition WHERE status = 'Rejected' AND faculty_id = ?;`;
+
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching rejected applications:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.status(200).json({ rejectedApplications: results[0].rejectedApplications || 0 });
+    });
+});
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////
   app.get('/api/export-bonafide', async (req, res) => {
     try {
@@ -2259,6 +2445,86 @@ app.get('/api/event-applications/rejected', (req, res) => {
     });
 });
 
+
+///// faculty
+// Route to fetch total event applications for the logged-in faculty
+app.get('/API/faculty/event-applications/total', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+    console.log(`Fetching total applications for faculty: ${facultyId}`);
+
+    const query = 'SELECT COUNT(*) AS totalApplications FROM univmeta.event_applications WHERE faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching total applications:', error);
+            res.status(500).send('Error fetching total applications');
+        } else {
+            res.json({ totalApplications: results[0].totalApplications });
+        }
+    });
+});
+
+// Route to fetch pending event applications for the logged-in faculty
+app.get('/API/faculty/event-applications/pending', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS pendingApplications FROM univmeta.event_applications WHERE status = "Pending" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching pending applications:', error);
+            res.status(500).send('Error fetching pending applications');
+        } else {
+            res.json({ pendingApplications: results[0].pendingApplications });
+        }
+    });
+});
+
+// Route to fetch approved event applications for the logged-in faculty
+app.get('/API/faculty/event-applications/approved', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS approvedApplications FROM univmeta.event_applications WHERE status = "Approved" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching approved applications:', error);
+            res.status(500).send('Error fetching approved applications');
+        } else {
+            res.json({ approvedApplications: results[0].approvedApplications });
+        }
+    });
+});
+
+// Route to fetch rejected event applications for the logged-in faculty
+app.get('/API/faculty/event-applications/rejected', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS rejectedApplications FROM univmeta.event_applications WHERE status = "Rejected" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching rejected applications:', error);
+            res.status(500).send('Error fetching rejected applications');
+        } else {
+            res.json({ rejectedApplications: results[0].rejectedApplications });
+        }
+    });
+});
+
+
 /////////////////////////// EVENT VEIW APPLICATIONS ROUTE //////////////////////////////////////
 // Route to fetch all Event Applications
 app.get('/api/event-applications', (req, res) => {
@@ -2300,6 +2566,83 @@ app.get('/api/leave-applications/stats', (req, res) => {
     });
   });
   
+
+  //// faculty/// 
+  app.get('/API/faculty/leave-applications/approved', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS approvedLeaveApplications FROM univmeta.leave_applications WHERE status = "Approved" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching approved leave applications:', error);
+            res.status(500).send('Error fetching approved leave applications');
+        } else {
+            res.json({ approvedLeaveApplications: results[0].approvedLeaveApplications });
+        }
+    });
+});
+
+app.get('/API/faculty/leave-applications/rejected', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS rejectedLeaveApplications FROM univmeta.leave_applications WHERE status = "Rejected" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching rejected leave applications:', error);
+            res.status(500).send('Error fetching rejected leave applications');
+        } else {
+            res.json({ rejectedLeaveApplications: results[0].rejectedLeaveApplications });
+        }
+    });
+});
+
+app.get('/API/faculty/leave-applications/pending', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+
+    const query = 'SELECT COUNT(*) AS pendingLeaveApplications FROM univmeta.leave_applications WHERE status = "Pending" AND faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching pending leave applications:', error);
+            res.status(500).send('Error fetching pending leave applications');
+        } else {
+            res.json({ pendingLeaveApplications: results[0].pendingLeaveApplications });
+        }
+    });
+});
+
+app.get('/API/faculty/leave-applications/total', (req, res) => {
+    if (!req.session.faculty || !req.session.faculty.faculty_id) {
+        return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
+    }
+
+    const facultyId = req.session.faculty.faculty_id;
+    console.log(`Fetching total leave applications for faculty: ${facultyId}`);
+
+    const query = 'SELECT COUNT(*) AS totalLeaveApplications FROM univmeta.leave_applications WHERE faculty_id = ?';
+    connection.query(query, [facultyId], (error, results) => {
+        if (error) {
+            console.error('Error fetching total leave applications:', error);
+            res.status(500).send('Error fetching total leave applications');
+        } else {
+            res.json({ totalLeaveApplications: results[0].totalLeaveApplications });
+        }
+    });
+});
+
+
+
   /////////////////////////// LEAVE VIEW APPLICATIONS ROUTE ///////////////////////////////////////
   // Route: Fetch All Leave Applications
   app.get('/api/leave-applications', (req, res) => {
@@ -2514,6 +2857,22 @@ app.get('/fetch/faculty-data', (req, res) => {
     });
 });
 
+/////////////////////// student information system ///////////////////////////////////////////
+// Route to fetch student details from studentinfo by registration number
+app.get('/students/:register_number', (req, res) => {
+    const registerNumber = req.params.register_number;
+    const sql = 'SELECT * FROM students WHERE register_number = ?';
+
+    studentDB.query(sql, [registerNumber], (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Database query error' });
+        } else if (result.length === 0) {
+            res.status(404).json({ message: 'Student not found' });
+        } else {
+            res.json(result[0]); // Return student details
+        }
+    });
+});
 
 ////////////////////// REGISTRATION END //////////////////////////////////////////////////////////////////////
 

@@ -218,48 +218,52 @@
             }
         }
 
-        function renderTableRows() {
-            const applicationTableBody = document.getElementById('application-table');
-            applicationTableBody.innerHTML = '';
+        function renderTableRows() { 
+    const applicationTableBody = document.getElementById('application-table');
+    applicationTableBody.innerHTML = '';
 
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const paginatedApplications = applications.slice(start, end);
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedApplications = applications.slice(start, end);
 
-            paginatedApplications.forEach(app => {
-                const formattedSubmissionDate = app.submission_date ? new Date(app.submission_date).toLocaleDateString() : 'N/A';
-                const formattedEventDate = app.event_date ? new Date(app.event_date).toLocaleDateString() : 'N/A';
+    paginatedApplications.forEach(app => {
+        const formattedSubmissionDate = app.submission_date ? new Date(app.submission_date).toLocaleDateString() : 'N/A';
+        const formattedEventDate = app.event_date ? new Date(app.event_date).toLocaleDateString() : 'N/A';
 
-                const applicationDetails = currentApplicationType === 'event'
-                    ? `<p><strong>Event Name:</strong> ${app.type || 'N/A'}</p>
-                       <p><strong>Organizing Department:</strong> ${app.reason || 'N/A'}</p>
-                       <p><strong>Event Date:</strong> ${formattedEventDate}</p>
-                       <p><strong>Student Name:</strong> ${app.name || 'N/A'}</p>
-                       <p><strong>Student Reg No:</strong> ${app.student_reg_no || 'N/A'}</p>`
-                    : `<p><strong>Leave Type:</strong> ${app.type || 'N/A'}</p>
-                       <p><strong>Reason:</strong> ${app.reason || 'N/A'}</p>
-                       <p><strong>Start Date:</strong> ${app.startDate || 'N/A'}</p>
-                       <p><strong>End Date:</strong> ${app.endDate || 'N/A'}</p>
-                       <p><strong>Register No:</strong> ${app.registerNo || 'N/A'}</p>
-                       <p><strong>Contact No:</strong> ${app.contactNo || 'N/A'}</p>
-                       <p><strong>Parent Contact No:</strong> ${app.parentContactNo || 'N/A'}</p>
-                       <p><strong>Parent Contact No:</strong> ${app.parentContactNo || 'N/A'}</p>
-                       <p><strong>Email:</strong> ${app.email || 'N/A'}</p>
-                       <p><strong>Department:</strong> ${app.department || 'N/A'}</p>`;
+        const applicationDetails = currentApplicationType === 'event'
+            ? `<p><strong>Event Name:</strong> ${app.type || 'N/A'}</p>
+               <p><strong>Organizing Department:</strong> ${app.reason || 'N/A'}</p>
+               <p><strong>Event Date:</strong> ${formattedEventDate}</p>
+               <p><strong>Student Name:</strong> ${app.name || 'N/A'}</p>
+               <p><strong>Student Reg No:</strong> ${app.student_reg_no || 'N/A'}</p>`
+            : `<p><strong>Leave Type:</strong> ${app.type || 'N/A'}</p>
+               <p><strong>Reason:</strong> ${app.reason || 'N/A'}</p>
+               <p><strong>Start Date:</strong> ${app.startDate || 'N/A'}</p>
+               <p><strong>End Date:</strong> ${app.endDate || 'N/A'}</p>
+               <p><strong>Register No:</strong> ${app.registerNo || 'N/A'}</p>
+               <p><strong>Contact No:</strong> ${app.contactNo || 'N/A'}</p>
+               <p><strong>Email:</strong> ${app.email || 'N/A'}</p>
+               <p><strong>Department:</strong> ${app.department || 'N/A'}</p>`;
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${app.id}</td>
-                    <td>${applicationDetails}</td>
-                    <td>${formattedSubmissionDate}</td>
-                    <td class="${app.status === 'Approved' ? 'status-approved' : app.status === 'Rejected' ? 'status-rejected' : 'status-pending'}">${app.status}</td>
-                    <td>
-                        ${app.status === 'Approved' ? `<a href="/download-${currentApplicationType}-certificate/${app.id}" class="download-btn"><i class="fas fa-download"></i> Download</a>` : app.status}
-                    </td>
-                `;
-                applicationTableBody.appendChild(row);
-            });
-        }
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${app.id}</td>
+            <td>${applicationDetails}</td>
+            <td>${formattedSubmissionDate}</td>
+            <td class="${app.status === 'Approved' ? 'status-approved' : app.status === 'Rejected' ? 'status-rejected' : 'status-pending'}">${app.status}</td>
+            <td>
+                ${app.status === 'Approved' ? `
+                    <a href="/download-${currentApplicationType}-certificate/${app.id}" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                    <button class="btn btn-secondary btn-sm ml-2" onclick="window.open('/print-leave-certificate/${app.id}', '_blank')">
+                        <i class="fas fa-print"></i> Print
+                    </button>` : app.status}
+            </td>
+        `;
+        applicationTableBody.appendChild(row);
+    });
+}
+
+
 
         function renderPagination() {
             const paginationNav = document.getElementById('paginationNav');

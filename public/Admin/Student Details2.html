@@ -1,0 +1,136 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #ff9800;
+            margin-top: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff9800;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+        .student-card {
+            display: none;
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+        .error {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Student Search</h1>
+    <div class="container">
+        <input type="text" id="registerNumber" placeholder="Enter Registration Number">
+        <button onclick="fetchStudent()">Search</button>
+        
+        <div id="studentDetails" class="student-card">
+            <p><strong>Registration Number:</strong> <span id="regNumber"></span></p>
+            <p><strong>Aadhar Number:</strong> <span id="aadharNumber"></span></p>
+            <p><strong>Name:</strong> <span id="name"></span></p>
+            <p><strong>Degree Programme:</strong> <span id="degreeProgramme"></span></p>
+            <p><strong>Batch:</strong> <span id="batch"></span></p>
+            <p><strong>Section:</strong> <span id="section"></span></p>
+            <p><strong>Faculty Advisor:</strong> <span id="facultyAdvisor"></span></p>
+            <p><strong>DOB:</strong> <span id="dob"></span></p>
+            <p><strong>Gender:</strong> <span id="gender"></span></p>
+            <p><strong>Nationality:</strong> <span id="nationality"></span></p>
+            <p><strong>Religion:</strong> <span id="religion"></span></p>
+            <p><strong>Community:</strong> <span id="community"></span></p>
+            <p><strong>Caste:</strong> <span id="caste"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+        </div>
+        <p id="errorMessage" class="error"></p>
+    </div>
+
+    <script>
+        function fetchStudent() {
+            const registerNumber = document.getElementById("registerNumber").value;
+            const studentDetails = document.getElementById("studentDetails");
+            const errorMessage = document.getElementById("errorMessage");
+
+            if (registerNumber.trim() === "") {
+                errorMessage.textContent = "Please enter a registration number!";
+                studentDetails.style.display = "none";
+                return;
+            }
+
+            fetch(`http://localhost:3078/students/${registerNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error || data.message) {
+                        errorMessage.textContent = "Student not found!";
+                        studentDetails.style.display = "none";
+                    } else {
+                        document.getElementById("regNumber").textContent = data.register_number;
+                        document.getElementById("aadharNumber").textContent = data.aadhar_number;
+                        document.getElementById("name").textContent = data.name;
+                        document.getElementById("degreeProgramme").textContent = data.degree_programme;
+                        document.getElementById("batch").textContent = data.batch;
+                        document.getElementById("section").textContent = data.section;
+                        document.getElementById("facultyAdvisor").textContent = data.faculty_advisor;
+                        document.getElementById("dob").textContent = data.dob;
+                        document.getElementById("gender").textContent = data.gender;
+                        document.getElementById("nationality").textContent = data.nationality;
+                        document.getElementById("religion").textContent = data.religion;
+                        document.getElementById("community").textContent = data.community;
+                        document.getElementById("caste").textContent = data.caste;
+                        document.getElementById("address").textContent = data.address;
+
+                        studentDetails.style.display = "block";
+                        errorMessage.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching student:", error);
+                    errorMessage.textContent = "Error fetching data!";
+                    studentDetails.style.display = "none";
+                });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnivMeta Faculty Dashboard</title>
+    <style>
+        /* Black and White Theme */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: #2c2c2c;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-box h3 {
+            margin: 0 0 10px;
+        }
+
+        .stat-box p {
+            font-size: 22px;
+            margin: 0;
+        }
+
+        /* Specific Background Colors for Different Statuses */
+        .total { background: #757575; color: #fff; }
+        .pending { background: #b3b3b3; color: #121212; }
+        .approved { background: #4caf50; color: #fff; }
+        .rejected { background: #f44336; color: #fff; }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UnivMeta Bonafide Applications</h1>
+        <div class="stats-container">
+            <div class="stat-box total" id="total">
+                <h3>Total Applications</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box pending" id="pending">
+                <h3>Pending</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box approved" id="approved">
+                <h3>Approved</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box rejected" id="rejected">
+                <h3>Rejected</h3>
+                <p>0</p>
+            </div>
+        </div>
+        <div class="footer">Powered by UnivMeta</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const fetchData = async (endpoint, elementId) => {
+                try {
+                    let response = await fetch(endpoint);
+                    let data = await response.json();
+                    document.getElementById(elementId).querySelector("p").innerText = data[Object.keys(data)[0]] || 0;
+                } catch (error) {
+                    console.error(`Error fetching ${elementId}:`, error);
+                }
+            };
+
+            fetchData("/api/univmeta/faculty-bonafide/total", "total");
+            fetchData("/api/univmeta/faculty-bonafide/pending", "pending");
+            fetchData("/api/univmeta/faculty-bonafide/approved", "approved");
+            fetchData("/api/univmeta/faculty-bonafide/rejected", "rejected");
+        });
+    </script>
+</body>
+</html>

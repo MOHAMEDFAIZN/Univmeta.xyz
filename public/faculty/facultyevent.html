@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Event Applications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .stat-box {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .total { background: #cce5ff; }
+        .pending { background: #fff3cd; }
+        .approved { background: #d4edda; }
+        .rejected { background: #f8d7da; }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Faculty Event Applications</h2>
+        <div id="error" class="error"></div>
+        <div class="stats">
+            <div class="stat-box total">Total: <span id="total">0</span></div>
+            <div class="stat-box pending">Pending: <span id="pending">0</span></div>
+            <div class="stat-box approved">Approved: <span id="approved">0</span></div>
+            <div class="stat-box rejected">Rejected: <span id="rejected">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchStats() {
+            try {
+                const responses = await Promise.all([
+                    fetch('/API/faculty/event-applications/total').then(res => res.json()),
+                    fetch('/API/faculty/event-applications/pending').then(res => res.json()),
+                    fetch('/API/faculty/event-applications/approved').then(res => res.json()),
+                    fetch('/API/faculty/event-applications/rejected').then(res => res.json())
+                ]);
+
+                document.getElementById('total').textContent = responses[0].totalApplications;
+                document.getElementById('pending').textContent = responses[1].pendingApplications;
+                document.getElementById('approved').textContent = responses[2].approvedApplications;
+                document.getElementById('rejected').textContent = responses[3].rejectedApplications;
+            } catch (error) {
+                document.getElementById('error').textContent = "Error fetching data. Try again.";
+                console.error("Error fetching stats:", error);
+            }
+        }
+
+        fetchStats();
+    </script>
+
+</body>
+</html>

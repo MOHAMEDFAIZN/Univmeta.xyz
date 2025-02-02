@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application Statistics</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .stat-box p {
+            font-size: 22px;
+            color: #4e73df;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leave Application Statistics</h1>
+        <div class="stats-container">
+            <div class="stat-box" id="totalLeaveApplications">
+                <h3>Total Applications</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box" id="pendingLeaveApplications">
+                <h3>Pending Applications</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box" id="approvedLeaveApplications">
+                <h3>Approved Applications</h3>
+                <p>0</p>
+            </div>
+            <div class="stat-box" id="rejectedLeaveApplications">
+                <h3>Rejected Applications</h3>
+                <p>0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to fetch and update stats
+            function fetchStats(url, elementId) {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const statElement = document.getElementById(elementId);
+                        // Use 0 if no data found
+                        statElement.querySelector('p').textContent = data[elementId] || 0;
+                    })
+                    .catch(() => {
+                        const statElement = document.getElementById(elementId);
+                        // Set 0 if there's an error in fetching data
+                        statElement.querySelector('p').textContent = 0;
+                    });
+            }
+
+            // Fetching the leave application statistics for the logged-in faculty
+            fetchStats('/API/faculty/leave-applications/total', 'totalLeaveApplications');
+            fetchStats('/API/faculty/leave-applications/pending', 'pendingLeaveApplications');
+            fetchStats('/API/faculty/leave-applications/approved', 'approvedLeaveApplications');
+            fetchStats('/API/faculty/leave-applications/rejected', 'rejectedLeaveApplications');
+        });
+    </script>
+</body>
+</html>
