@@ -31,8 +31,10 @@
             background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Align items to the left */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative; /* Allow absolute positioning inside */
+    justify-content: space-between; /* Space items evenly */
+    padding-right: 1100px; /* Prevent text overlap */
         }
 
         .top-bar img {
@@ -152,13 +154,60 @@
                 font-size: 18px;
             }
         }
+        .scrolling-text {
+    width: 500px; /* Adjust width as needed */
+    height: 40px;
+    overflow: hidden;
+    position: absolute; /* Change from relative to absolute */
+    right: 0; /* Attach to the right edge */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    background-color: black;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.scrolling-text .text-container {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    animation: infiniteScroll 12s linear infinite;
+}
+
+.scrolling-text p {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 16px;
+    width: max-content;
+    margin: 0;
+}
+
+@keyframes infiniteScroll {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
     </style>
 </head>
 
 <body>
     <div class="top-bar">
         <img src="https://www.univmeta.xyz/faculty/Faculty%20Assest/UNIVMETA_BLACK.png" alt="Logo">
-        <h1>UnivMeta - Automation System</h1> <!-- UnivMeta with unique font -->
+        <h1>UnivMeta - Automation System</h1>
+        
+        <div class="scrolling-text">
+            <div class="text-container">
+                <p>Welcome to UnivMeta.xyz! Your personalized faculty dashboard to manage tasks efficiently.</p>
+                <p>Welcome to UnivMeta.xyz! Your personalized faculty dashboard to manage tasks efficiently.</p> 
+            </div>
+        </div>
     </div>
 
     <div class="login-container">

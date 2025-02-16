@@ -43,29 +43,43 @@
             font-family: 'Lobster', cursive; /* Unique font */
         }
         .scrolling-text {
-    width: 600px; /* Increased width for full visibility */
-    height: 30px;
+    width: 500px; /* Adjust width as needed */
+    height: 40px;
     overflow: hidden;
-    position: relative;
+    position: absolute; /* Change from relative to absolute */
+    right: 0; /* Attach to the right edge */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    background-color: black;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
     white-space: nowrap;
 }
 
-.scrolling-text p {
-    display: inline-block;
-    position: absolute;
-    color: darkgreen; /* Dark green text */
-    font-weight: bold;
-    font-size: 18px;
-    width: max-content;
-    animation: scrollText 10s linear infinite;
+.scrolling-text .text-container {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    animation: infiniteScroll 12s linear infinite;
 }
 
-@keyframes scrollText {
+.scrolling-text p {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 16px;
+    width: max-content;
+    margin: 0;
+}
+
+@keyframes infiniteScroll {
     from {
-        left: 100%;
+        transform: translateX(0%);
     }
     to {
-        left: -100%;
+        transform: translateX(-50%);
     }
 }
 
@@ -151,7 +165,10 @@
     <div class="top-bar">
         <h1>Academic Form Automation System</h1>
         <div class="scrolling-text">
-            <p>Registered students are now eligible to apply for on-duty leave, leave forms, and bonafide certificates.</p>
+            <div class="text-container">
+                <p>Registered students are now eligible to apply for on-duty leave, leave forms, and bonafide certificates.</p>
+                <p>Registered students are now eligible to apply for on-duty leave, leave forms, and bonafide certificates.</p> <!-- Duplicate for seamless scrolling -->
+            </div>
         </div>
     </div>
     
