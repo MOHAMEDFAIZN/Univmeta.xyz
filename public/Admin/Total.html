@@ -14,9 +14,9 @@
       padding: 0;
       box-sizing: border-box;
     }
-
+    
     body {
-      background: linear-gradient(to bottom, #ffffff, #f4f4f4);
+      background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
       font-family: 'Arial', sans-serif;
       color: #333;
       display: flex;
@@ -105,15 +105,33 @@
       height: 20px;
     }
 
-    footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #777;
-      text-align: center;
-    }
+     /* Footer Section */
+     footer {
+  width: 100%;
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+  padding: 40px 0;
+  font-weight: bold;
+  background-color: #d9e2ec;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
 
+footer::before {
+  content: "";
+  display: block;
+  width: 1480px; /* Adjust width as needed */
+  height: 2.2px;
+  background-color: #000;
+  margin: 0 auto 10px auto; /* Centering the line with margin */
+}
+
+
+    /* Footer Links */
     footer a {
-      color: #555;
+      color: #000; /* Links in black */
       text-decoration: none;
       font-weight: bold;
     }
@@ -171,7 +189,7 @@
   </a>
 
   <footer>
-    &copy; 2023 <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">univmeta.xyz</a>. All Rights Reserved.
+    &copy; 2023 <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">UnivMeta.Xyz</a>. All Rights Reserved.
   </footer>
 
   <script>

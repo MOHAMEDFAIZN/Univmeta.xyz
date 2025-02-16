@@ -2220,7 +2220,7 @@ app.post('/update-admin-status', (req, res) => {
     });
 });
 
-//////////////////////////////////////////////////////////////////
+///////////////////////VEIW APPLICATIONS BONAFIDE ///////////////////////////////////////////
 app.get('/student-applications', (req, res) => {
     // Ensure that the user is logged in
     if (!req.session.user || !req.session.user.id) {
@@ -2302,7 +2302,9 @@ app.get('/api/student-applications/total-applications', (req, res) => {
       res.status(200).json({ rejectedForms: results[0].rejectedForms });
     });
   });
-/// faculty///
+
+  
+/// FACULTY ///
   // Middleware to check faculty authentication
 const authenticateFaculty = (req, res, next) => {
     if (!req.session.faculty || !req.session.faculty.faculty_id) {
@@ -2424,9 +2426,10 @@ app.get('/api/faculty-bonafide/rejected', authenticateFaculty, (req, res) => {
 ///////////////////////////// DEVELOPMENT UNDERWAY /////////////////////////////////
 ///////////////////////////// APPLICATIONS END /////////////////////////////////////////////////
 
-//////////////////////// FACULTY REPORT SECTION LEAVE/ EVENT /////////////////////////////////////
+//////////////////////// ADMIN/FACULTY REPORT SECTION LEAVE/ EVENT /////////////////////////////////////
 /////////////////// EVENT APPLICATIONS DOWNLOAD EXCEL /////////////////////////////////////////
 // Route to download Event Applications as Excel
+// ADMIN ///
 app.get('/api/event-applications/download', async (req, res) => {
     try {
         const query = 'SELECT * FROM univmeta.event_applications;';
@@ -2464,7 +2467,8 @@ app.get('/api/event-applications/download', async (req, res) => {
 });
 
 
-////////////////////// EVENT APPLICATIONS REPORT ///////////////////////////////////////////////
+////////////////////// ADMIN/FACULTY EVENT APPLICATIONS REPORT ///////////////////////////////////////////////
+/// ADMIN //
 // Route to fetch total event applications
 app.get('/api/event-applications/total', (req, res) => {
     const query = 'SELECT COUNT(*) AS totalApplications FROM univmeta.event_applications;';
@@ -2518,7 +2522,7 @@ app.get('/api/event-applications/rejected', (req, res) => {
 });
 
 
-///// faculty
+///// FACULTY ///////////////////////////
 // Route to fetch total event applications for the logged-in faculty
 app.get('/API/faculty/event-applications/total', (req, res) => {
     if (!req.session.faculty || !req.session.faculty.faculty_id) {
@@ -2597,7 +2601,7 @@ app.get('/API/faculty/event-applications/rejected', (req, res) => {
 });
 
 
-/////////////////////////// EVENT VEIW APPLICATIONS ROUTE //////////////////////////////////////
+/////////////////////////// ADMIN EVENT VEIW APPLICATIONS ROUTE //////////////////////////////////////
 // Route to fetch all Event Applications
 app.get('/api/event-applications', (req, res) => {
     const query = 'SELECT * FROM univmeta.event_applications;';
@@ -2612,8 +2616,9 @@ app.get('/api/event-applications', (req, res) => {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////// LEAVE APPLICATIONS REPORT //////////////////////////////////////////////////////////
+///////////////////// ADMIN/FACULTY LEAVE APPLICATIONS REPORT //////////////////////////////////////////////////////////
 // Route: Get Statistics (Total, Pending, Approved, Rejected)
+// ADMIN //
 app.get('/api/leave-applications/stats', (req, res) => {
     const statsQuery = `
       SELECT 
@@ -2639,7 +2644,7 @@ app.get('/api/leave-applications/stats', (req, res) => {
   });
   
 
-  //// faculty/// 
+  //// FACULTY/// 
   app.get('/API/faculty/leave-applications/approved', (req, res) => {
     if (!req.session.faculty || !req.session.faculty.faculty_id) {
         return res.status(401).json({ error: 'Unauthorized. Faculty not logged in.' });
@@ -2715,7 +2720,7 @@ app.get('/API/faculty/leave-applications/total', (req, res) => {
 
 
 
-  /////////////////////////// LEAVE VIEW APPLICATIONS ROUTE ///////////////////////////////////////
+  /////////////////////////// ADMIN LEAVE VIEW APPLICATIONS ROUTE ///////////////////////////////////////
   // Route: Fetch All Leave Applications
   app.get('/api/leave-applications', (req, res) => {
     const fetchQuery = `
@@ -2740,7 +2745,7 @@ app.get('/API/faculty/leave-applications/total', (req, res) => {
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////
-  //////////// DOWNLOAD EXCEL LEAVE APPLICATIONS ///////////////////////////////////////
+  //////////// ADMIN DOWNLOAD EXCEL LEAVE APPLICATIONS ///////////////////////////////////////
   // Route: Download Leave Applications as Excel
   app.get('/api/leave-applications/download', async (req, res) => {
     const fetchQuery = `
@@ -2800,7 +2805,13 @@ app.get('/API/faculty/leave-applications/total', (req, res) => {
       res.end();
     });
   });
-///////////////////////////////////// REPORT SECTION END LEAVE/ EVENT //////////////////////////////////
+
+//////////////////FACULTY VEIW REPORT //////////
+
+
+
+///////////////////////////////////// ADMIN/FACULTY REPORT SECTION END LEAVE/ EVENT //////////////////////////////////
+
 //////////////////////////////////// PRODUCT UNIVMETA STARTS REGISTRATION PROCESS /////////////////////////////
 // Student Registration Endpoint
 app.post("/register/student", (req, res) => {
@@ -2831,7 +2842,7 @@ app.post("/register/student", (req, res) => {
         }
     );
 });
-
+/// FACULTY //
 // Faculty Registration Endpoint
 app.post("/register/faculty", (req, res) => {
     const { faculty_id, username, password, name, department, phone_no } = req.body;
@@ -2861,8 +2872,6 @@ app.post("/register/faculty", (req, res) => {
         }
     );
 });
-
-
 
 ///////////////////////////////////////////// MAIL /////////////////////////////////////////
 function sendConfirmationEmail(to, name) { 
@@ -2913,7 +2922,7 @@ function sendConfirmationEmail(to, name) {
     });
 }
 
-///// FETCHING AVAILABLE FACULTY ///////////////////////////////////////////////////////////////////
+///// REGISTERATION FETCHING AVAILABLE FACULTY ///////////////////////////////////////////////////////////////////
 // Route to fetch faculty data 
 app.get('/fetch/faculty-data', (req, res) => {
     const query = 'SELECT faculty_id AS id, name FROM faculty';
@@ -2946,7 +2955,7 @@ app.get('/students/:register_number', (req, res) => {
     });
 });
 
-////////////////////// REGISTRATION END //////////////////////////////////////////////////////////////////////
+////////////////////// //////////////////REGISTRATION END //////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// Logout Route (Handles all roles) ////////////////////////////////////////////////////

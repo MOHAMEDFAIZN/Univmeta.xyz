@@ -79,6 +79,44 @@
             background-color: #0c0c0c;
             color: #ffffff;
         }
+        /* Style for password toggle button */
+.input-group-append button {
+    background-color: #fff; /* Match input background */
+    border: 1px solid #ced4da; /* Match input border */
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.input-group-append button:hover {
+    background-color: #f8f9fa; /* Light hover effect */
+}
+
+.input-group-append .fa-eye, 
+.input-group-append .fa-eye-slash {
+    color: #555; /* Match existing text color */
+}
+/* Proper alignment for Remember Me checkbox */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between checkbox and text */
+    margin-top: -5px; /* Adjust if needed */
+    margin-bottom: 15px; /* Adds space below */
+}
+
+.remember-me input {
+    width: 18px;
+    height: 18px;
+}
+
+.remember-me label {
+    color: #000; /* Black text */
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -86,7 +124,7 @@
         <h1>Academic Form Automation System</h1>
     </div>
 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100"> 
         <div class="login-outer-container text-center">
             <div class="d-flex align-items-center mb-4">
                 <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta logo" class="rounded-circle" style="height: 75px; width: 75px;">
@@ -98,20 +136,55 @@
                 </div>
                 <div class="col-md-6 login-form">
                     <h2>Student Login</h2>
-                    <form id="loginForm">
+                    <form id="loginForm"> 
                         <div class="form-group">
                             <input type="text" id="username" class="form-control" placeholder="Username" required autocomplete="username">
                         </div>
                         <div class="form-group">
-                            <input type="password" id="password" class="form-control" placeholder="Password" required autocomplete="current-password">
+                            <div class="input-group">
+                                <input type="password" id="password" class="form-control" placeholder="Password" required autocomplete="current-password">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                    
+                        <!-- ✅ Corrected Remember Me Placement -->
+                        <div class="form-group remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember Me</label>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        
                     </form>
+                    
                     <div id="response" class="mt-3"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function() {
+            let passwordField = document.getElementById("password");
+            let icon = this.querySelector("i");
+    
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        });
+    </script>
+    
 
     <div class="bottom-bar">
         © 2024 All rights reserved | <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Team</a>
@@ -119,13 +192,22 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        document.addEventListener("DOMContentLoaded", function () {
+            // Load stored credentials if "Remember Me" was checked
+            if (localStorage.getItem("rememberMe") === "true") {
+                document.getElementById("username").value = localStorage.getItem("savedUsername") || "";
+                document.getElementById("password").value = localStorage.getItem("savedPassword") || "";
+                document.getElementById("rememberMe").checked = true;
+            }
+        });
     
-            const responseDiv = document.getElementById('response');
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const rememberMe = document.getElementById("rememberMe").checked;
+    
+            const responseDiv = document.getElementById("response");
             responseDiv.innerText = '';
     
             try {
@@ -133,9 +215,7 @@
     
                 const response = await fetch('/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
     
@@ -145,19 +225,28 @@
                 if (response.ok && data.status === 'success') {
                     responseDiv.innerText = data.message;
     
-                    // Store user data in localStorage
+                    // Store credentials if "Remember Me" is checked
+                    if (rememberMe) {
+                        localStorage.setItem("savedUsername", username);
+                        localStorage.setItem("savedPassword", password);
+                        localStorage.setItem("rememberMe", "true");
+                    } else {
+                        localStorage.removeItem("savedUsername");
+                        localStorage.removeItem("savedPassword");
+                        localStorage.removeItem("rememberMe");
+                    }
+    
+                    // Store user data and redirect to dashboard
                     localStorage.setItem('username', data.data.username);
                     localStorage.setItem('studentName', data.data.name);
                     localStorage.setItem('studentID', data.data.student_id);
-    
-                    // Redirect to dashboard
                     window.location.href = '/dash.html';
                 } else {
                     responseDiv.innerText = data.message || 'Login failed. Please try again.';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                responseDiv.innerText = 'An error occurred. Please try again.';
+                responseDiv.innerText = 'An error occurred. Try Again.';
             }
         });
     </script>

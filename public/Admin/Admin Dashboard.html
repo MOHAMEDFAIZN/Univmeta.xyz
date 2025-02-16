@@ -9,217 +9,272 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
 
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f4f4f9; /* Light grey background */
-        }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+    flex-direction: column;
+}
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background: #343a40;
-            padding: 30px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            color: white;
-            transition: width 0.3s ease;
-            overflow: hidden;
-            position: fixed;
-            height: 100%;
-        }
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: #000000;
+    padding: 30px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+}
 
-        .sidebar.closed {
-            width: 45px; /* Sidebar width when collapsed */
-        }
+.sidebar.closed {
+    width: 45px; /* Sidebar width when collapsed */
+}
 
-        .profile {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+.profile {
+    text-align: center;
+    margin-bottom: 10px;
+}
 
-        .profile img {
-            width: 80px;
-            height: 80px;
-            border-radius: 70%;
-            margin-bottom: 10px;
-        }
+.profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 70%;
+    margin-bottom: 10px;
+}
 
-        .profile h5 {
-            margin-bottom: 5px;
-            font-size: 18px;
-        }
+.profile h5 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
 
-        .profile p {
-            font-size: 14px;
-            color: #adb5bd;
-        }
+.profile p {
+    font-size: 14px;
+    color: #adb5bd;
+}
 
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #ffffff;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+.sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
 
-        .sidebar a i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
+.sidebar a i {
+    margin-right: 10px;
+    font-size: 20px;
+}
 
-        .sidebar a:hover {
-            background-color: #495057;
-        }
+.sidebar a:hover {
+    background-color: #495057;
+}
 
-        .notification-count {
-            background-color: #dc3545;
-            color: white;
-            border-radius: 50%;
-            padding: 3px 8px;
-            font-size: 12px;
-            margin-left: 5px;
-            vertical-align: middle;
-        }
+.notification-count {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 8px;
+    font-size: 12px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            padding: 30px;
-            flex: 1;
-            overflow-y: auto;
-            position: relative; /* Required for the pseudo-element */
-        }
+/* Main Content */
+.main-content {
+    flex-grow: 1; /* Fills available space */
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px); /* Ensures content expands */
+    margin-left: 250px; /* Adjust based on sidebar */
+    padding: 30px;
+    padding-bottom: 10px; /* Prevents content from overlapping footer */
+}
 
-        .sidebar.closed + .main-content {
-            margin-left: 60px; /* Adjust content when sidebar is collapsed */
-        }
+.sidebar.closed + .main-content {
+    margin-left: 60px; /* Adjust when sidebar is collapsed */
+}
 
-        .main-content::before {
-            content: '';
-            position: absolute;
-            top: 380px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://www.univmeta.xyz/Admin/Admin%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
-            background-size: 20%;
-            opacity: 0.1; /* Only the image is transparent */
-            z-index: -1; /* Ensures it stays behind the content */
-        }
+.main-content::before {
+    content: '';
+    position: absolute;
+    top: 380px;
+    left: 160px;
+    right: 0;
+    bottom: 0;
+    background: url('https://www.univmeta.xyz/Admin/Admin%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
+    background-size: 15%;
+    opacity: 0.1; /* Only the image is transparent */
+    z-index: 1; /* Ensures it stays behind the content */
+}
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
 
-        .toggle-sidebar {
-            cursor: pointer;
-            font-size: 24px;
-            color: #343a40;
-            margin-right: 10px;
-        }
+.toggle-sidebar {
+    cursor: pointer;
+    font-size: 24px;
+    color: #343a40;
+    margin-right: 10px;
+}
 
-        h1 {
-            font-size: 24px;
-            color: #343a40;
-        }
+h1 {
+    font-size: 24px;
+    color: #343a40;
+}
 
-        /* Cards */
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+/* Container */
+.card-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
 
-        .card {
-            background: #ffffff; /* Solid background for cards */
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+/* Pages Wrapper */
+.card-pages {
+    display: flex;
+    width: 200%; /* Since we have 2 pages, set width accordingly */
+    transition: transform 0.5s ease-in-out;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+/* Each Page (2 Rows, 2 Columns) */
+.card-page {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    grid-template-rows: repeat(2, 1fr); /* 2 rows */
+    gap: 20px;
+    width: 50%; /* Each page takes 50% of the total width */
+    flex-shrink: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-        .card h3 {
-            margin: 10px 0;
-            color: #343a40;
-            font-size: 18px;
-        }
+/* Individual Card */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px; /* Adjust height */
+    width: 90%; /* Adjusted width to make it more responsive */
+    max-width: 500px; /* Prevents cards from getting too wide */
+}
 
-        .card i {
-            font-size: 30px;
-            color: #17a2b8;
-            margin-bottom: 10px;
-        }
 
-        .card p {
-            font-size: 20px;
-            color: #495057;
-        }
+/* Icons inside cards */
+.card i {
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: #17a2b8;
+}
 
-        /* Footer */
-        .footer {
-            background: #343a40;
-            color: white;
-            text-align: center;
-            padding: 25px 5px;
-            margin-top: auto;
-        }
+/* View Report Link */
+.view-report {
+    color: #17a2b8;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+}
 
-        .footer h6 {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
+/* Arrow Button */
+.arrow-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-        .footer p {
-            font-size: 12px;
-        }
+/* Footer */
+.footer {
+    background: #000000;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 15px;
+    width: 100%;
+    margin-top: auto; /* Pushes footer to the bottom */
+    position: relative;
+    bottom: 0;
+    left: 0;
+}
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
+.footer h6 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
 
-            .sidebar.closed {
-                width: 60px;
-            }
+.footer p {
+    font-size: 12px;
+}
 
-            .card-container {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
 
-        @media (max-width: 480px) {
-            .sidebar a {
-                font-size: 14px;
-            }
+    .sidebar.closed {
+        width: 60px;
+    }
 
-            .toggle-sidebar {
-                font-size: 20px;
-            }
+    .main-content {
+        margin-left: 200px;
+    }
 
-            h1 {
-                font-size: 18px;
-            }
-        }
+    .card-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar a {
+        font-size: 14px;
+    }
+
+    .toggle-sidebar {
+        font-size: 20px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .main-content {
+        margin-left: 60px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -246,29 +301,71 @@
         </div>
         
         <!-- Card Section -->
-        <div class="card-container">
-            <div class="card">
-                <i class="fas fa-file-alt"></i>
-                <h3>Total Forms</h3>
-                <p>120</p>
+        <div class="card-slider-container">
+            <div class="card-pages" id="cardPages">
+                <!-- Page 1 -->
+                <div class="card-page">
+                    <div class="card">
+                        <i class="fas fa-file-alt text-primary"></i>
+                        <h3>Bonafide Applications</h3>
+                        
+                        <a href="Total.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-file-alt text-secondary"></i>
+                        <h3>On Duty Forms</h3>
+                        
+                        <a href="Total Event.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-file-alt text-info"></i>
+                        <h3>Leave Applications</h3>
+                        
+                        <a href="Total leave.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-id-card text-secondary"></i>
+                        <h3>Duplicate ID card</h3>
+                        
+                        <a href="approved-forms.html" class="view-report">View Report</a>
+                    </div>
+                </div>
+        
+                <!-- Page 2 -->
+                <div class="card-page">
+                    <div class="card">
+                        <i class="fas fa-users"></i>
+                        <h3>New Users</h3>
+                        <p>50</p>
+                        <a href="new-users.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-user-shield"></i>
+                        <h3>Admin Logins</h3>
+                        <p>12</p>
+                        <a href="admin-logins.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-database"></i>
+                        <h3>Database Records</h3>
+                        <p>5,000</p>
+                        <a href="database-records.html" class="view-report">View Report</a>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Performance</h3>
+                        <p>95%</p>
+                        <a href="performance.html" class="view-report">View Report</a>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-                <i class="fas fa-clock"></i>
-                <h3>Waiting Forms</h3>
-                <p>30</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-times-circle"></i>
-                <h3>Rejected Forms</h3>
-                <p>10</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-check-circle"></i>
-                <h3>Approved Forms</h3>
-                <p>80</p>
-            </div>
+        
+            <!-- Arrow Button -->
+            <button class="arrow-btn" onclick="nextPage()">&#10095;</button>
         </div>
-    </div>
+        
+        
+        
 
     <!-- Footer -->
     <div class="footer">
@@ -286,6 +383,17 @@
             alert("You have been logged out.");
             window.location.href = "https://www.univmeta.xyz/";
         }
+/*new*/
+let currentPage = 0;
+
+function nextPage() {
+    const pages = document.getElementById('cardPages');
+    const totalPages = document.querySelectorAll('.card-page').length; // Count total pages
+
+    currentPage = (currentPage + 1) % totalPages; // Loop through pages
+    pages.style.transform = `translateX(-${currentPage * 50}%)`; // Move left by 50% per page
+}
+
     </script>
 </body>
 </html>

@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leave Application Statistics</title>
     <style>
-        /* Global Styles */
+        /* Dark Gradient Background */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+            color: #fff;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,17 +21,20 @@
         .container {
             width: 90%;
             max-width: 900px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #222;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
         }
 
         h1 {
-            color: #333;
-            font-size: 28px;
-            text-align: center;
+            color: #fff;
+            font-size: 26px;
             margin-bottom: 20px;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 10px;
         }
 
         .stats-container {
@@ -41,35 +45,87 @@
         }
 
         .stat-box {
-            background-color: #f9f9f9;
+            background: #333;
+            color: #fff;
             padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            text-align: center;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4);
         }
 
         .stat-box h3 {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 15px;
+            margin: 0 0 10px;
+            font-size: 20px;
         }
 
         .stat-box p {
-            font-size: 22px;
-            color: #4e73df;
-            font-weight: bold;
+            font-size: 24px;
+            margin: 0;
         }
+
+        /* Print & Report Buttons */
+        .buttons {
+            position: absolute;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #000;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #444;
+        }
+
+        .footer { 
+    margin-top: 20px;
+    font-size: 12px;
+    opacity: 0.7;
+    text-align: center;
+    width: 100%;
+}
+
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .stats-container {
                 grid-template-columns: 1fr 1fr;
             }
+            .buttons {
+                right: -100px;
+            }
         }
 
         @media (max-width: 480px) {
             .stats-container {
                 grid-template-columns: 1fr;
+            }
+            .buttons {
+                position: static;
+                margin-top: 20px;
+                flex-direction: row;
+                justify-content: center;
             }
         }
     </style>
@@ -94,6 +150,15 @@
                 <h3>Rejected Applications</h3>
                 <p>0</p>
             </div>
+        </div>
+
+        <!-- Footer should be here -->
+<div class="footer">Powered by UnivMeta</div>
+
+        <!-- Print & Report Buttons -->
+        <div class="buttons">
+            <button class="btn" onclick="printPage()">Print</button>
+            <button class="btn" onclick="generateReport()">Get Report</button>
         </div>
     </div>
 
@@ -121,6 +186,14 @@
             fetchStats('/API/faculty/leave-applications/approved', 'approvedLeaveApplications');
             fetchStats('/API/faculty/leave-applications/rejected', 'rejectedLeaveApplications');
         });
+
+        function printPage() {
+            window.print();
+        }
+
+        function generateReport() {
+            alert("Generating report... (Implement report logic here)");
+        }
     </script>
 </body>
 </html>

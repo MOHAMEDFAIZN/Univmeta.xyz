@@ -104,6 +104,44 @@
 #onDutyFormsBtn:focus {
     outline: none;
 }
+/* Ensure the entire page takes full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevents full-page scrolling */
+}
+
+/* Scrollable container for the main content */
+.container {
+    flex: 1;
+    overflow-y: auto; /* Enables scrolling within this section */
+    padding-bottom: 20px; /* Adds spacing before footer */
+}
+
+/* Keep footer fixed at the bottom */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/* Ensure pagination is above the footer */
+.pagination {
+    margin-bottom: 80px; /* Pushes it up to prevent overlap */
+}
+
     </style>
 </head>
 
@@ -338,6 +376,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Footer -->
+<footer class="footer">
+    <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>
+</footer>
+
 </body>
 
 </html>

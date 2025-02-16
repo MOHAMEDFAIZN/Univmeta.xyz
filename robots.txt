@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /
+Allow: /index.html
 Allow: /Registration.html
 Allow: /Student/login.html
 Allow: /faculty/Faculty%20Login%20Page.html

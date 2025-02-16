@@ -153,6 +153,14 @@
                 font-size: 18px;
             }
         }
+        #responseMessage {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: red; /* Default for errors */
+}
+
     </style>
 </head>
 <body>
@@ -178,7 +186,11 @@
                 <div class="input-group">
                     <button type="button" onclick="validateLogin()">Login</button>
                 </div>
+            
+                <!-- ✅ Response Message Area -->
+                <div id="responseMessage"></div>
             </form>
+            
         </div>
     </div>
 
@@ -203,29 +215,39 @@
 
         // Validate login credentials
         async function validateLogin() {
-            const userId = document.getElementById("userId").value;
-            const password = document.getElementById("password").value;
+    const userId = document.getElementById("userId").value;
+    const password = document.getElementById("password").value;
+    const responseMessage = document.getElementById("responseMessage");
 
-            try {
-                const response = await fetch('/admin/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: userId, password: password })
-                });
+    // Clear previous messages
+    responseMessage.textContent = "";
+    responseMessage.style.color = "red"; // Default to red for errors
 
-                const result = await response.json();
+    try {
+        const response = await fetch('/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: userId, password: password })
+        });
 
-                if (result.status === 'success') {
-                    alert('Login successful!');
-                    window.location.href = "Admin Dashboard.html"; // Redirect to dashboard page
-                } else {
-                    alert('Invalid ID or Password');
-                }
-            } catch (error) {
-                console.error('Error during login:', error);
-                alert('Server error. Please try again later.');
-            }
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            responseMessage.style.color = "green"; // Success message in green
+            responseMessage.textContent = "Login successful! Redirecting...";
+
+            setTimeout(() => {
+                window.location.href = "Admin Dashboard.html"; // Redirect after delay
+            }, 1500);
+        } else {
+            responseMessage.textContent = "Invalid ID or Password";
         }
+    } catch (error) {
+        console.error('Error during login:', error);
+        responseMessage.textContent = "Server error. Please try again later.";
+    }
+}
+
     </script>
 </body>
 </html>

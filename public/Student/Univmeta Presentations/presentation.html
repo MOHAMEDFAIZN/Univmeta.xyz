@@ -83,48 +83,63 @@
         nav a:hover {
             color: #ccc;
         }
+/* Main Section */
+main {
+    padding: 50px 15px;
+}
 
-        /* Main Section */
-        main {
-            padding: 50px 15px;
-        }
+.branding-section {
+    text-align: center;
+    margin: 0 auto 40px;
+    background-color: #fff;
+    padding: 20px;
+    max-width: 850px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        .branding-section {
-            text-align: center;
-            margin: 0 auto 40px;
-            background-color: #fff;
-            padding: 20px;
-            max-width: 850px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+.branding-section img {
+    max-width: 70%; /* Ensures the image never exceeds its container */
+    width: 70%; /* Makes the image responsive on smaller screens */
+    height: auto; /* Maintains aspect ratio */
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
 
-        .branding-section img {
-            max-width: 550px;
-            height: auto;
-            margin-bottom: px;
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
+.branding-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.0em;
+    margin-bottom: 15px;
+    color: #222;
+    font-weight: 800;
+}
 
-        .branding-section h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.0em;
-            margin-bottom: 15px;
-            color: #222;
-            font-weight: 800;
-        }
+.branding-section p {
+    margin: 5px 0;
+    font-size: 1.1em;
+    color: #555;
+    font-weight: 600;
+}
 
-        .branding-section p {
-            margin: 5px 0;
-            font-size: 1.1em;
-            color: #555;
-            font-weight: 600;
-        }
+.branding-section strong {
+    color: #000;
+}
 
-        .branding-section strong {
-            color: #000;
-        }
+/* Media Query for Small Screens */
+@media (max-width: 600px) {
+    .branding-section {
+        padding: 15px;
+    }
+
+    .branding-section h3 {
+        font-size: 1.6em; /* Adjust heading size for smaller screens */
+    }
+
+    .branding-section p {
+        font-size: 1em; /* Adjust text size for readability */
+    }
+}
 
         /* File Viewer Section */
         #pdf-viewer {
@@ -201,39 +216,71 @@
         }
 
         /* Image Slider Section */
-        .image-slider {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 20px 0;
-        }
+.image-slider {
+    display: flex;
+    justify-content: flex-start; /* Start from left */
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+    scroll-padding-left: 20px; /* Ensures first image is fully visible */
+}
 
-        .image-slider img {
-            max-width: 250px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
+/* Ensure images resize dynamically */
+.image-slider img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    scroll-snap-align: center; /* Ensures full visibility when scrolling */
+}
 
-        .image-slider img:hover {
-            transform: scale(1.05);
-        }
+/* Hover effect */
+.image-slider img:hover {
+    transform: scale(1.05);
+}
 
-        /* Prevent horizontal scrollbars */
-        .image-slider::-webkit-scrollbar {
-            height: 8px;
-        }
+/* Prevent horizontal scrollbars */
+.image-slider::-webkit-scrollbar {
+    height: 8px;
+}
 
-        .image-slider::-webkit-scrollbar-thumb {
-            background-color: #444;
-            border-radius: 5px;
-        }
+.image-slider::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 5px;
+}
 
-        .image-slider::-webkit-scrollbar-track {
-            background-color: #f5f5f5;
-        }
+.image-slider::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .image-slider {
+        gap: 10px; /* Reduce gap for smaller screens */
+        padding: 10px;
+        scroll-padding-left: 10px; /* Adjust to keep first image visible */
+    }
+    
+    .image-slider img {
+        max-width: 180px; /* Reduce image size */
+    }
+}
+
+@media (max-width: 480px) {
+    .image-slider {
+        gap: 5px;
+        padding: 5px;
+        scroll-padding-left: 5px; /* Ensures proper scroll visibility */
+    }
+    
+    .image-slider img {
+        max-width: 150px; /* Adjust for smaller screens */
+    }
+}
+
     </style>
 </head>
 <body>

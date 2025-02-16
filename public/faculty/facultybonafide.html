@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnivMeta Faculty Dashboard</title>
     <style>
-        /* Black and White Theme */
+        /* Premium Dark Gradient Theme */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+
+            color: #fff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -21,17 +22,20 @@
         .container {
             width: 90%;
             max-width: 700px;
-            background: #ffffff;
+            background: #222;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
             text-align: center;
+            position: relative;
         }
 
         h1 {
-            color: #000000;
+            color: #fff;
             font-size: 26px;
             margin-bottom: 20px;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 10px;
         }
 
         .stats-container {
@@ -41,13 +45,13 @@
         }
 
         .stat-box {
-            background: #2c2c2c;
-            color: #ffffff;
+            background: #333;
+            color: #fff;
             padding: 20px;
             border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease-in-out;
             position: relative;
             overflow: hidden;
@@ -55,23 +59,43 @@
 
         .stat-box:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4);
         }
 
         .stat-box h3 {
             margin: 0 0 10px;
+            font-size: 20px;
         }
 
         .stat-box p {
-            font-size: 22px;
+            font-size: 24px;
             margin: 0;
         }
 
-        /* Specific Background Colors for Different Statuses */
-        .total { background: #757575; color: #fff; }
-        .pending { background: #b3b3b3; color: #121212; }
-        .approved { background: #4caf50; color: #fff; }
-        .rejected { background: #f44336; color: #fff; }
+        .buttons {
+            position: absolute;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #000;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #444;
+        }
 
         .footer {
             margin-top: 20px;
@@ -84,27 +108,35 @@
     <div class="container">
         <h1>UnivMeta Bonafide Applications</h1>
         <div class="stats-container">
-            <div class="stat-box total" id="total">
+            <div class="stat-box" id="total">
                 <h3>Total Applications</h3>
                 <p>0</p>
             </div>
-            <div class="stat-box pending" id="pending">
+            <div class="stat-box" id="pending">
                 <h3>Pending</h3>
                 <p>0</p>
             </div>
-            <div class="stat-box approved" id="approved">
+            <div class="stat-box" id="approved">
                 <h3>Approved</h3>
                 <p>0</p>
             </div>
-            <div class="stat-box rejected" id="rejected">
+            <div class="stat-box" id="rejected">
                 <h3>Rejected</h3>
                 <p>0</p>
             </div>
+        </div>
+        <div class="buttons">
+            <button class="btn" onclick="printPage()">Print Page</button>
+            <button class="btn">Get Report</button>
         </div>
         <div class="footer">Powered by UnivMeta</div>
     </div>
 
     <script>
+        function printPage() {
+            window.print();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const fetchData = async (endpoint, elementId) => {
                 try {
@@ -116,10 +148,10 @@
                 }
             };
 
-            fetchData("/api/univmeta/faculty-bonafide/total", "total");
-            fetchData("/api/univmeta/faculty-bonafide/pending", "pending");
-            fetchData("/api/univmeta/faculty-bonafide/approved", "approved");
-            fetchData("/api/univmeta/faculty-bonafide/rejected", "rejected");
+            fetchData("/api/faculty-bonafide/total", "total");
+            fetchData("/api/faculty-bonafide/pending", "pending");
+            fetchData("/api/faculty-bonafide/approved", "approved");
+            fetchData("/api/faculty-bonafide/rejected", "rejected");
         });
     </script>
 </body>

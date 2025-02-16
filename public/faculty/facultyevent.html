@@ -1,53 +1,99 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Event Applications</title>
     <style>
+        /* Premium Dark Gradient Theme */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
+
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 700px;
+            background: #222;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
             text-align: center;
-            width: 300px;
+            position: relative;
         }
+
         h2 {
+            color: #fff;
+            font-size: 26px;
             margin-bottom: 20px;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 10px;
         }
+
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 20px;
         }
+
         .stat-box {
-            padding: 15px;
-            border-radius: 8px;
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
+            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
         }
-        .total { background: #cce5ff; }
-        .pending { background: #fff3cd; }
-        .approved { background: #d4edda; }
-        .rejected { background: #f8d7da; }
-        .error {
-            color: red;
-            margin-top: 10px;
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .buttons {
+            position: absolute;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #000;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #444;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>Faculty Event Applications</h2>
         <div id="error" class="error"></div>
@@ -57,6 +103,11 @@
             <div class="stat-box approved">Approved: <span id="approved">0</span></div>
             <div class="stat-box rejected">Rejected: <span id="rejected">0</span></div>
         </div>
+        <div class="buttons">
+            <button class="btn" onclick="window.print()">Print Page</button>
+            <button class="btn" onclick="getReport()">Get Report</button>
+        </div>
+        <div class="footer">Powered by UnivMeta</div>
     </div>
 
     <script>
@@ -79,8 +130,11 @@
             }
         }
 
+        function getReport() {
+            alert("Generating report...");
+        }
+
         fetchStats();
     </script>
-
 </body>
 </html>

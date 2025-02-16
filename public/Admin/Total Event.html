@@ -6,24 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Event Applications Report - AFAS</title>
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png"> <!-- Replace with the actual path to your favicon -->
+  <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png">
+  
   <style>
     /* General Reset */
     * {
       margin: 0;
       padding: 0;
+      
       box-sizing: border-box;
     }
 
-    body {
-      background: linear-gradient(to bottom, #ffffff, #f4f4f4);
-      font-family: 'Arial', sans-serif;
-      color: #333;
+    /* Ensure full height and footer at bottom */
+    html, body {
+      height: 100%;
+      display: flex;
+      
+      flex-direction: column;
+    }
+
+    /* Main content fills available space */
+    .main-content {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      justify-content: center;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+      font-family: 'Arial', sans-serif;
+      color: #333;
+      text-align: center;
       padding: 20px;
     }
 
@@ -110,15 +125,21 @@
       height: 20px;
     }
 
+    /* Footer Section */
     footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #777;
+      width: 100%;
+      font-size: 16px;
+      color: #000; /* Text color black */
       text-align: center;
+      padding: 15px 0;
+      font-weight: bold; /* Makes text bold */
+      border-top: 3px solid #000; /* Black line above footer */
+      background-color: #d9e2ec; 
     }
 
+    /* Footer Links */
     footer a {
-      color: #555;
+      color: #000; /* Links in black */
       text-decoration: none;
       font-weight: bold;
     }
@@ -127,6 +148,7 @@
       text-decoration: underline;
     }
 
+    /* Responsive Styles */
     @media (max-width: 768px) {
       header {
         font-size: 28px;
@@ -141,48 +163,51 @@
 </head>
 
 <body>
-  <header>Event Applications Report</header>
 
-  <div class="dashboard-container">
-    <!-- Total Applications -->
-    <div class="card">
-      <h3>Total Applications</h3>
-      <span id="total-applications-count">Loading...</span>
+  <div class="main-content">
+    <header>Event Applications Report</header>
+
+    <div class="dashboard-container">
+      <!-- Total Applications -->
+      <div class="card">
+        <h3>Total Applications</h3>
+        <span id="total-applications-count">Loading...</span>
+      </div>
+
+      <!-- Pending Applications -->
+      <div class="card">
+        <h3>Pending Reviews</h3>
+        <span id="pending-reviews-count">Loading...</span>
+      </div>
+
+      <!-- Approved Applications -->
+      <div class="card">
+        <h3>Approved Applications</h3>
+        <span id="approved-applications-count">Loading...</span>
+      </div>
+
+      <!-- Rejected Applications -->
+      <div class="card">
+        <h3>Rejected Applications</h3>
+        <span id="rejected-applications-count">Loading...</span>
+      </div>
     </div>
 
-    <!-- Pending Applications -->
-    <div class="card">
-      <h3>Pending Reviews</h3>
-      <span id="pending-reviews-count">Loading...</span>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="/api/event-applications/download" class="action-button" target="_blank">
+        Download as Excel
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/download-from-cloud.png" alt="Download Icon" />
+      </a>
+      <a href="view-applications.html" class="action-button">
+        View Applications
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/view-file.png" alt="View Icon" />
+      </a>
     </div>
-
-    <!-- Approved Applications -->
-    <div class="card">
-      <h3>Approved Applications</h3>
-      <span id="approved-applications-count">Loading...</span>
-    </div>
-
-    <!-- Rejected Applications -->
-    <div class="card">
-      <h3>Rejected Applications</h3>
-      <span id="rejected-applications-count">Loading...</span>
-    </div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="action-buttons">
-    <a href="/api/event-applications/download" class="action-button" target="_blank">
-      Download as Excel
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/download-from-cloud.png" alt="Download Icon" />
-    </a>
-    <a href="view-applications.html" class="action-button">
-      View Applications
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/view-file.png" alt="View Icon" />
-    </a>
   </div>
 
   <footer>
-    &copy; 2023 <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">univmeta.xyz</a>. All Rights Reserved.
+    &copy; 2023 <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">UnivMeta.Xyz</a>. All Rights Reserved.
   </footer>
 
   <script>
@@ -210,6 +235,7 @@
     // Fetch stats after page load
     window.onload = fetchStats;
   </script>
+
 </body>
 
 </html>

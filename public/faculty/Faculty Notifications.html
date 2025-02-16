@@ -7,155 +7,176 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png"> <!-- Replace with the actual path to your favicon -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa; /* Light gray background for contrast */
-            color: #000;
-            padding-top: 20px;
-            position: relative;
-            min-height: 90vh; /* Ensures body covers full viewport */
-            display: flex;
-            flex-direction: column;
-        }
+      /* Reset default margins & paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            flex-grow: 1; /* Ensures the container takes available space */
-            position: relative; /* Keeps content above the watermark */
-        }
+/* Full-page layout */
+html, body {
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #f0f4f8, #1c1c1c);
+    color: #000;
+    display: flex;
+    flex-direction: column;
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #000000;
-            border-bottom: 2px solid #ddd;
-            display: inline-block;
-            padding-bottom: 10px;
-        }
+/* Main content area */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto; /* Enables scrolling when notifications exceed the viewport */
+    padding-bottom: 120px; /* Prevents overlap with pagination & footer */
+}
 
-        .notification-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-color: #fff; /* White card background */
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+/* Faculty Notifications title (sticky at top) */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #000;
+    border-bottom: 2px solid #ddd;
+    display: inline-block;
+    padding-bottom: 10px;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to bottom, #f0f4f8, #e0e4e8);
+    z-index: 1000;
+    padding-top: 10px;
+}
 
-        .notification-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-        }
+/* Notification card */
+.notification-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
 
-        .notification-card.unread {
-            border-left: 5px solid #007bff; /* Blue accent for unread notifications */
-        }
+.notification-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
 
-        .notification-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.notification-card.unread {
+    border-left: 5px solid #007bff;
+}
 
-        .notification-text {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #000000;
-        }
+/* Notification content */
+.notification-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .timestamp {
-            font-size: 0.85rem;
-            color: #000000;
-            text-align: right;
-        }
+.notification-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #000;
+}
 
-        .no-notifications {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #000000;
-            margin-top: 50px;
-        }
+.timestamp {
+    font-size: 0.85rem;
+    color: #000;
+    text-align: right;
+}
 
-        /* Pagination Styles */
-        .pagination {
-            justify-content: center;
-            margin-top: 10px;
-        }
+/* No notifications message */
+.no-notifications {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+    margin-top: 50px;
+}
 
-        .pagination a {
-            color: #000000;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
+/* Pagination section fixed just above footer */
+.pagination-wrapper {
+    position: fixed;
+    bottom: 75px; /* Places it just above the footer */
+    width: 100%;
+    background: #fff; /* White background */
+    padding: 3px 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+}
 
-        .pagination a:hover {
-            background-color: #f1f1f1;
-        }
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
-        .pagination .active {
-            background-color: #007bff;
-            color: white;
-        }
+.pagination a {
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    background: #f8f9fa;
+    transition: background 0.2s;
+}
 
-        /* Watermark Background */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-image: url(''); /* Replace with your watermark image URL */
-            background-size: cover;
-            background-position: center;
-            width: 50%;
-            height: 50%;
-            z-index: -1; /* Ensures watermark stays behind content */
-            opacity: 0.15; /* Adjust opacity for faint watermark */
-        }
+.pagination a:hover {
+    background-color: #ddd;
+}
 
-        /* Footer Styles */
-        footer {
-            margin-top: auto; /* Ensures footer stays at bottom */
-            text-align: center;
-            color: #888;
-            font-size: 0.9rem;
-            padding: 10px 0;
-        }
+.pagination .active {
+    background-color: #050505;
+    color: white;
+}
 
-        footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
+/* Footer - fixed at the bottom */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: #fff; /* White background */
+    color: #000; /* Black text */
+    font-size: 0.9rem;
+    padding: 0px 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for better separation */
+}
 
-        footer a:hover {
-            text-decoration: underline;
-        }
+footer a {
+    color: #000000;
+    text-decoration: none;
+}
 
-    </style>
+footer a:hover {
+    text-decoration: underline;
+}
+    </style> 
 </head>
 <body>
-    <div class="container">
+ <div class="container">
         <h2>Faculty Notifications</h2>
+        
         <div id="notifications">
             <!-- Notifications will be dynamically populated here -->
         </div>
+    </div>
 
-        <!-- Pagination -->
+    <!-- Pagination Section (Fixed Above Footer) -->
+    <div class="pagination-wrapper">
         <div class="pagination">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">Next</a>
+            <!-- Pagination links will be populated here dynamically -->
         </div>
     </div>
 
@@ -166,31 +187,20 @@
     </footer>
 
     <script>
+        let currentPage = 1;
+        const notificationsPerPage = 10;
+    
         async function fetchNotifications() {
             try {
                 const response = await fetch('/api/notifications');
                 if (!response.ok) throw new Error('Failed to fetch notifications');
                 const notifications = await response.json();
-
-                const container = document.getElementById('notifications');
-                container.innerHTML = '';
-
-                if (notifications.length === 0) {
-                    container.innerHTML = `<p class="no-notifications">No notifications available.</p>`;
-                    return;
-                }
-
-                notifications.forEach(notification => {
-                    const timestamp = new Date(notification.created_at).toLocaleString();
-                    container.innerHTML += `
-                        <div class="notification-card ${notification.is_read ? '' : 'unread'}">
-                            <div class="notification-content">
-                                <p class="notification-text">${notification.message}</p>
-                                <small class="timestamp">${timestamp}</small>
-                            </div>
-                        </div>
-                    `;
-                });
+    
+                const totalNotifications = notifications.length;
+                const totalPages = Math.ceil(totalNotifications / notificationsPerPage);
+                
+                displayNotifications(notifications);
+                setupPagination(totalPages);
             } catch (error) {
                 console.error('Error fetching notifications:', error);
                 document.getElementById('notifications').innerHTML = `
@@ -198,8 +208,62 @@
                 `;
             }
         }
-
+    
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notifications');
+            container.innerHTML = '';
+    
+            // Get the notifications for the current page
+            const startIndex = (currentPage - 1) * notificationsPerPage;
+            const endIndex = startIndex + notificationsPerPage;
+            const currentNotifications = notifications.slice(startIndex, endIndex);
+    
+            if (currentNotifications.length === 0) {
+                container.innerHTML = `<p class="no-notifications">No notifications available.</p>`;
+                return;
+            }
+    
+            currentNotifications.forEach(notification => {
+                const timestamp = new Date(notification.created_at).toLocaleString();
+                container.innerHTML += `
+                    <div class="notification-card ${notification.is_read ? '' : 'unread'}">
+                        <div class="notification-content">
+                            <p class="notification-text">${notification.message}</p>
+                            <small class="timestamp">${timestamp}</small>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    
+        function setupPagination(totalPages) {
+            const paginationContainer = document.querySelector('.pagination');
+            paginationContainer.innerHTML = '';
+    
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+    
+                // Add active class to the current page link
+                if (i === currentPage) {
+                    pageLink.classList.add('active');
+                }
+    
+                // Add click event to change pages
+                pageLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage = i;
+                    fetchNotifications();
+                });
+    
+                paginationContainer.appendChild(pageLink);
+            }
+        }
+    
+        // Initialize the fetch
         fetchNotifications();
     </script>
+    
 </body>
 </html>
