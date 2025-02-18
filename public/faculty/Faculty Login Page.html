@@ -33,8 +33,8 @@
             align-items: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative; /* Allow absolute positioning inside */
-    justify-content: space-between; /* Space items evenly */
-    padding-right: 1100px; /* Prevent text overlap */
+            justify-content: space-between; /* Space items evenly */
+            padding-right: 1100px; /* Prevent text overlap */
         }
 
         .top-bar img {
@@ -49,6 +49,38 @@
             color: #333333;
             font-family: 'Lobster', cursive; /* Unique font */
         }
+
+        .scrolling-text {
+    width: 500px; /* Adjust width as needed */
+    height: 40px;
+    overflow: hidden;
+    position: absolute; /* Change from relative to absolute */
+    right: 0; /* Attach to the right edge */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    background-color: black;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.scrolling-text .text-container {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    animation: infiniteScroll 12s linear infinite;
+}
+
+.scrolling-text p {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 16px;
+    width: max-content;
+    margin: 0;
+}
 
         .bottom-bar {
             width: 100%;
@@ -150,48 +182,80 @@
                 font-size: 20px;
             }
 
-            .top-bar h1 {
-                font-size: 18px;
-            }
         }
-        .scrolling-text {
-    width: 500px; /* Adjust width as needed */
-    height: 40px;
-    overflow: hidden;
-    position: absolute; /* Change from relative to absolute */
-    right: 0; /* Attach to the right edge */
-    top: 50%;
-    transform: translateY(-50%); /* Center vertically */
-    background-color: black;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    padding: 5px 15px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
-.scrolling-text .text-container {
-    display: flex;
-    gap: 50px;
-    white-space: nowrap;
-    animation: infiniteScroll 12s linear infinite;
-}
-
-.scrolling-text p {
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    font-size: 16px;
-    width: max-content;
-    margin: 0;
-}
-
+        
 @keyframes infiniteScroll {
     from {
         transform: translateX(0%);
     }
     to {
         transform: translateX(-50%);
+    }
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) { 
+    .top-bar {
+        flex-direction: row; /* Keep the layout horizontal */
+        text-align: center;
+        padding: 15px;
+        position: relative;
+        justify-content: space-between; /* Ensure elements are spaced out */
+    }
+
+    /* Ensure image stays on the right side of heading and scrolling text */
+    .top-bar img {
+        width: 70px;  /* Adjust image size */
+        height: 70px;
+        margin-right: 0;
+        margin-left: 15px; /* Space between image and text */
+        align-self: center; /* Align the image vertically with the text */
+        border-radius: 50%; /* Round the image */
+    }
+
+    .top-bar h1 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left; /* Align heading to the left */
+        margin-bottom: 10px; /* Space before moving scrolling text */
+        display: inline-block;
+    }
+
+    /* Move scrolling text below the heading */
+    .scrolling-text {
+        position: static; /* Reset absolute positioning */
+        width: 90%;
+        margin: 10px auto; /* Center it */
+        height: 30px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        border-radius: 20px; /* Rounded edges on both sides */
+    }
+
+    .scrolling-text .text-container {
+        gap: 20px;
+    }
+
+    .scrolling-text p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar h1 {
+        font-size: 18px;
+    }
+
+    .scrolling-text {
+        width: 95%;
+        height: 25px;
+        font-size: 10px;
+    }
+
+    .top-bar img {
+        width: 60px; /* Further reduce image size */
+        height: 60px;
     }
 }
     </style>

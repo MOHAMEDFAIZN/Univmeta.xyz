@@ -73,18 +73,6 @@
     width: max-content;
     margin: 0;
 }
-
-@keyframes infiniteScroll {
-    from {
-        transform: translateX(0%);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
-
-
-
         .bottom-bar {
             width: 100%;
             padding: 28px 20px;
@@ -157,8 +145,63 @@
     cursor: pointer;
 }
 
+@keyframes infiniteScroll {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
 
+@media (max-width: 768px) { 
+    .top-bar {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+        position: relative; /* Ensure child elements stack properly */
+    }
 
+    .top-bar h1 {
+        font-size: 20px;
+        width: 100%;
+        text-align: center;
+        display: block; /* Ensures it's visible */
+        margin-bottom: 10px; /* Space before moving scrolling text */
+    }
+
+    /* Move scrolling text below the heading */
+    .scrolling-text {
+        position: static; /* Reset absolute positioning */
+        width: 90%;
+        margin: 10px auto; /* Center it */
+        height: 30px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        border-radius: 20px; /* Rounded edges on both sides */
+    }
+
+    .scrolling-text .text-container {
+        gap: 20px;
+    }
+
+    .scrolling-text p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar h1 {
+        font-size: 18px;
+    }
+
+    .scrolling-text {
+        width: 95%;
+        height: 25px;
+        font-size: 10px;
+    }
+}
     </style>
 </head>
 <body>
