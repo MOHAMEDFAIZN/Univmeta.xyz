@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             background-color: #f5f5f5; /* Light background color for contrast */
+            padding-bottom: 60px; /* Adjust to the height of the footer */
             color: #333;
         }
 
@@ -109,6 +110,35 @@
             width: 100%;
             box-sizing: border-box;
         }
+
+        /* Keep footer fixed at the bottom */
+/* Keep footer fixed at the bottom */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/* Style the footer link */
+.footer a {
+    color: black; /* Make text black */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Optional: Make it bold */
+}
+
+/* Hover effect for the link */
+.footer a:hover {
+    text-decoration: none; /* Add underline on hover */
+}
     </style>
 </head>
 <body>
@@ -420,5 +450,10 @@
             });
         });
         </script>    
+
+        <!-- Footer -->
+<footer class="footer">
+    <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>
+</footer>
 </body>
 </html>

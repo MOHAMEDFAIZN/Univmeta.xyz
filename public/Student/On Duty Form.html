@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+9<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+            padding-bottom: 90px; /* Adjust to the height of the footer */
             color: #333;
             display: flex;
             justify-content: center;
@@ -132,6 +133,35 @@
             color: #4caf50;
             display: none;
         }
+
+        /* Keep footer fixed at the bottom */
+/* Keep footer fixed at the bottom */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/* Style the footer link */
+.footer a {
+    color: black; /* Make text black */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Optional: Make it bold */
+}
+
+/* Hover effect for the link */
+.footer a:hover {
+    text-decoration: none; /* Add underline on hover */
+}
     </style>
 </head>
 
@@ -251,6 +281,11 @@
             }
         });
     </script>
+
+    <!-- Footer -->
+<footer class="footer">
+    <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>
+</footer>
 </body>
 
 </html>

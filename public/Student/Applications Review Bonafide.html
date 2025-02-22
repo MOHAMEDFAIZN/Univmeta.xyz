@@ -13,11 +13,23 @@
         body {
             background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             margin-top: 30px;
         }
+
+        h2 {
+   
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #000000;
+    font-family: "Arial", sans-serif; /* Modern and clean font */
+    font-size: 24px; /* Adjust size as needed */
+    letter-spacing: 1px; /* Slight spacing for better readability */
+}
 
         .table {
             background-color: #ffffff;
@@ -63,6 +75,7 @@
             justify-content: center;
             margin-top: 20px;
         }
+
         /* Ensure the entire page takes full height */
 html, body {
     height: 100%;
@@ -73,12 +86,16 @@ html, body {
     overflow: hidden; /* Prevents full-page scrolling */
 }
 
-/* Scrollable container for the main content */
 .container {
     flex: 1;
-    overflow-y: auto; /* Enables scrolling within this section */
+    overflow-y: auto; /* Enables scrolling */
     padding-bottom: 20px; /* Adds spacing before footer */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
+.container::-webkit-scrollbar {
+    display: none; /* Hides scrollbar in Chrome, Safari */
+}
+
 
 /* Keep footer fixed at the bottom */
 .footer {
@@ -106,7 +123,7 @@ html, body {
 
 <body>
     <div class="container">
-        <h2 class="text-center mb-5">Bonafide Application Review</h2>
+        <h2 class="text-left mb-5">Bonafide Application Review</h2>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>

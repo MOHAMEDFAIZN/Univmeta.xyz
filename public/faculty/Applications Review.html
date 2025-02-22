@@ -15,6 +15,16 @@
             font-family: Arial, sans-serif;
         }
 
+        h1 {
+   
+   margin-bottom: 20px;
+   font-weight: bold;
+   color: #000000;
+   font-family: "Arial", sans-serif; /* Modern and clean font */
+   font-size: 24px; /* Adjust size as needed */
+   letter-spacing: 1px; /* Slight spacing for better readability */
+}
+
         .container {
             padding: 20px;
         }
@@ -114,11 +124,14 @@ html, body {
     overflow: hidden; /* Prevents full-page scrolling */
 }
 
-/* Scrollable container for the main content */
 .container {
     flex: 1;
-    overflow-y: auto; /* Enables scrolling within this section */
+    overflow-y: auto; /* Enables scrolling */
     padding-bottom: 20px; /* Adds spacing before footer */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+.container::-webkit-scrollbar {
+    display: none; /* Hides scrollbar in Chrome, Safari */
 }
 
 /* Keep footer fixed at the bottom */

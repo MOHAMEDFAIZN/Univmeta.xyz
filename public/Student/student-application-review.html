@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            
             font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
             margin: 0;
@@ -24,11 +24,15 @@
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #000000;
-        }
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #000000;
+    font-family: "Arial", sans-serif; /* Modern and clean font */
+    font-size: 24px; /* Adjust size as needed */
+    letter-spacing: 1px; /* Slight spacing for better readability */
+}
+
 
         .btn-group {
             display: flex;
@@ -145,12 +149,16 @@ html, body {
     overflow: hidden; /* Prevents full-page scrolling */
 }
 
-/* Scrollable container for the main content */
 .container {
     flex: 1;
-    overflow-y: auto; /* Enables scrolling within this section */
+    overflow-y: auto; /* Enables scrolling */
     padding-bottom: 20px; /* Adds spacing before footer */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
+.container::-webkit-scrollbar {
+    display: none; /* Hides scrollbar in Chrome, Safari */
+}
+
 
 /* Keep footer fixed at the bottom */
 .footer {
@@ -293,9 +301,9 @@ html, body {
             <td>
                 ${app.status === 'Approved' ? `
                     <a href="/download-${currentApplicationType}-certificate/${app.id}" class="download-btn"><i class="fas fa-download"></i> Download</a>
-                    <button class="btn btn-secondary btn-sm ml-2" onclick="window.open('/print-leave-certificate/${app.id}', '_blank')">
-                        <i class="fas fa-print"></i> Print
-                    </button>` : app.status}
+                      <button class="btn btn-secondary btn-sm ml-2" onclick="printCertificate('${currentApplicationType}', '${app.id}')">
+            <i class="fas fa-print"></i> Print
+        </button>` : app.status}
             </td>
         `;
         applicationTableBody.appendChild(row);
@@ -329,6 +337,11 @@ html, body {
         }
 
         window.onload = () => fetchApplications(currentApplicationType);
+
+        function printCertificate(applicationType, appId) {
+        const printUrl = `/print-${applicationType}-certificate/${appId}`;
+        window.open(printUrl, '_blank');
+    }
     </script>
     <!-- Footer -->
 <footer class="footer">
