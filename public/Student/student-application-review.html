@@ -106,23 +106,46 @@
         }
 
         .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+}
 
-        .pagination .page-item .page-link {
-            color: #007bff;
-            border: 1px solid #dee2e6;
-            padding: 8px 12px;
-            border-radius: 5px;
-        }
+.pagination .page-item {
+    margin: 0 5px;
+}
 
-        .pagination .page-item.active .page-link {
-            background-color: #007bff;
-            color: #fff;
-            border-color: #007bff;
-        }
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000000; 
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13; /* Orange color for active page */
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
+
 
         @media (max-width: 768px) {
             .btn-group {
@@ -178,7 +201,7 @@ html, body {
 
 /* Ensure pagination is above the footer */
 .pagination {
-    margin-bottom: 80px; /* Pushes it up to prevent overlap */
+    margin-bottom: 30px; /* Pushes it up to prevent overlap */
 }
 
     </style>
@@ -312,23 +335,39 @@ html, body {
 
 
 
-        function renderPagination() {
-            const paginationNav = document.getElementById('paginationNav');
-            paginationNav.innerHTML = '';
+function renderPagination() {
+    const paginationNav = document.getElementById('paginationNav');
+    paginationNav.innerHTML = ''; // Clear existing pagination buttons
 
-            const totalPages = Math.ceil(applications.length / rowsPerPage);
-            for (let i = 1; i <= totalPages; i++) {
-                const pageItem = document.createElement('button');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<span>${i}</span>`;
-                pageItem.addEventListener('click', () => {
-                    currentPage = i;
-                    renderTableRows();
-                    renderPagination();
-                });
-                paginationNav.appendChild(pageItem);
-            }
-        }
+    const totalPages = Math.ceil(applications.length / rowsPerPage);
+    if (totalPages <= 1) return; // Hide pagination if there's only one page
+
+    const ul = document.createElement('ul');
+    ul.className = 'pagination';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+
+        const a = document.createElement('a');
+        a.href = "#";
+        a.className = "page-link";
+        a.textContent = i;
+
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            renderTableRows();
+            renderPagination();
+        });
+
+        li.appendChild(a);
+        ul.appendChild(li);
+    }
+
+    paginationNav.appendChild(ul);
+}
+
 
         function showApplications(applicationType) {
             currentApplicationType = applicationType;

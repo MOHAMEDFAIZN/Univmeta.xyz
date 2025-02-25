@@ -20,7 +20,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const fs = require('fs');
 const { chromium } = require('playwright');
-
 const app = express();
 const PORT = process.env.PORT || 3078;  // Use environment variable for port
 
@@ -1006,6 +1005,98 @@ app.get('/download-event-certificate/:applicationId', async (req, res) => {
 });
 
 module.exports = app;
+
+
+
+/// print event ///
+
+// Function to format dates
+function formatDate(date) { 
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-US', options);
+}
+
+// Route to print Event Application Certificate
+app.get('/print-event-certificate/:applicationId', async (req, res) => {
+    const applicationId = req.params.applicationId;
+
+    // Fetch event application data from the database
+    const query = 'SELECT * FROM event_applications WHERE id = ?';
+    connection.query(query, [applicationId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err.message);
+            return res.status(500).send('Error fetching data from the database.');
+        }
+
+        if (results.length === 0 || results[0].status !== 'Approved') {
+            console.error(`Event application not approved or does not exist. Application ID: ${applicationId}`);
+            return res.status(400).send('Event application not approved or does not exist.');
+        }
+
+        const application = results[0];
+
+        // Template with placeholders replaced dynamically
+        const certificateContent = `
+            <!DOCTYPE html> 
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>OD Certificate</title>
+                <link rel="stylesheet" href="/css/styles.css">  <!-- External CSS file -->
+                <script src="/js/print.js" defer></script>  <!-- External JavaScript file -->
+            </head>
+            <body>
+                <!-- Print button at the top-left -->
+                <div class="print-container">
+                    <button id="printButton" class="print-btn">
+                        <i class="fas fa-print"></i> Print Certificate
+                    </button>
+                </div>
+
+                <div class="certificate-container">
+                    <div class="header">
+                        <img src="https://www.univmeta.xyz/General%20Assest/Kalasalingam_Black.png" alt="Institution Logo" />
+                        <h1>Event Participation Approval Certificate</h1>
+                    </div>
+
+                    <div class="content">
+                        <p><label>Submission Date:</label> <span>${formatDate(application.submission_date)}</span></p>
+                        <p><label>Name of the Event:</label> <span>${application.event_name}</span></p>
+                        <p><label>Date:</label> <span>${formatDate(application.event_date)}</span></p>
+                        <p><label>Organizing Department / Club / College:</label> <span>${application.organizing_department}</span></p>
+                        <p><label>Number of Days:</label> <span>${application.number_of_days}</span></p>
+                        <p><label>Type of Event:</label> <span>${application.event_type}</span></p>
+                        <p><label>Register Number:</label> <span>${application.student_reg_no}</span></p>
+                        <p><label>Name of the Student:</label> <span>${application.student_name}</span></p>
+                    </div>
+
+                    <div class="signature-section">
+                        <div class="signature">
+                            <img src="https://www.univmeta.xyz/Student/Student%20Assest/Faculty%20Advisor.jpg" alt="Class Coordinator Image">
+                            <p>Class Coordinator</p>
+                            <div class="signature-line"></div>
+                        </div>
+                        <div class="signature">
+                            <img src="https://www.univmeta.xyz/Student/Student%20Assest/HOD.jpg" alt="HOD Image">
+                            <p>Head of the Department</p>
+                            <div class="signature-line"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">Powered by UnivMeta</div>
+            </body>
+            </html>
+        `;
+
+        res.send(certificateContent);
+    });
+});
+
+module.exports = app;
+
                 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1143,7 +1234,7 @@ app.post('/submit-event-form', (req, res) => {
                         <div style="font-family: 'Arial', sans-serif; background-color: #f4f4f9; padding: 20px;">
                             <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                                 <div style="text-align: center;">
-                                    <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
+                                    <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
                                 </div>
                                 <h3 style="color: #333333; text-align: center;">New Event Application</h3>
                                 <p style="color: #555555; text-align: center;">A new event application has been submitted and requires your attention.</p>
@@ -1156,7 +1247,7 @@ app.post('/submit-event-form', (req, res) => {
                                     <strong>Department:</strong> ${organizingDepartment}
                                 </p>
                                 <div style="text-align: center; margin: 20px 0;">
-                                    <a href="http://localhost:3078/faculty-dashboard" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Review Now</a>
+                                    <a href="https://www.univmeta.xyz/faculty/Faculty%20Login%20Page.html" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Review Now</a>
                                 </div>
                                 <p style="color: #999999; font-size: 0.85em; text-align: center;">Thank you for supporting UnivMeta’s mission to enhance academic engagement.</p>
                             </div>
@@ -1173,7 +1264,7 @@ app.post('/submit-event-form', (req, res) => {
                         <div style="font-family: 'Arial', sans-serif; background-color: #f4f4f9; padding: 20px;">
                             <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                                 <div style="text-align: center;">
-                                    <img src="http://localhost:3078/UnivMeta%20Index%20Page/UNIVMETA%20LOGO_BLACK.png" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
+                                    <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="UnivMeta Logo" style="max-width: 100px; margin-bottom: 15px;">
                                 </div>
                                 <h3 style="color: #333333; text-align: center;">Your Application is Under Review</h3>
                                 <p style="color: #555555; text-align: center;">Thank you for submitting your event application. Here are the details:</p>
@@ -1185,7 +1276,7 @@ app.post('/submit-event-form', (req, res) => {
                                 </p>
                                 <p style="color: #555555; text-align: center;">Your application is being reviewed by the faculty. You can track its progress in your dashboard.</p>
                                 <div style="text-align: center; margin: 20px 0;">
-                                    <a href="http://localhost:3078/student-dashboard" style="background-color: #28a745; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Track Application</a>
+                                    <a href="https://www.univmeta.xyz/Student/login.html" style="background-color: #28a745; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Track Application</a>
                                 </div>
                                 <p style="color: #999999; font-size: 0.85em; text-align: center;">Thank you for being an active participant in UnivMeta.</p>
                             </div>

@@ -30,23 +30,33 @@
 }
 
 
-        .table {
+.table {
             background-color: #ffffff;
-            border: 2px solid #ffffff;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
         }
 
         .table th,
         .table td {
-            vertical-align: middle;
             padding: 15px;
+            vertical-align: middle;
+            text-align: left;
+            border: 2px solid #dee2e6;
         }
 
         .table thead {
             background-color: #000000;
             color: #ffffff;
         }
+
+        .status-pending {
+    color: #ff9800; /* Orange color for Pending status */
+    font-weight: bold;
+}
 
         .icon-button {
             border: none;
@@ -150,6 +160,46 @@ html, body {
     margin-bottom: 80px; /* Pushes it up to prevent overlap */
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000000; 
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13; /* Orange color for active page */
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
     </style>
 </head>
 
@@ -250,67 +300,179 @@ html, body {
 
             return `${formattedDate} <br> <small>${formattedTime}</small>`;
         }
+        const rowsPerPage = 15; // Limit to 15 rows per page
+let currentPage = 1;
+let applicationsData = []; // Store fetched data
 
-        async function fetchApplications() {
-            const loadingMessage = document.getElementById('loadingMessage');
-            const tableWrapper = document.getElementById('applicationsTableWrapper');
-            const tableBody = document.getElementById('applicationsTable');
-            loadingMessage.style.display = 'block';
-            tableWrapper.style.display = 'none';
+async function fetchApplications() {
+    const loadingMessage = document.getElementById('loadingMessage');
+    const tableWrapper = document.getElementById('applicationsTableWrapper');
+    const tableBody = document.getElementById('applicationsTable');
+    
+    loadingMessage.style.display = 'block';
+    tableWrapper.style.display = 'none';
 
-            try {
-                const response = await fetch('/api/faculty/pending-bonafide-requisitions', {
-                    method: 'GET',
-                    credentials: 'include' // Include session cookie
-                });
+    try {
+        const response = await fetch('/api/faculty/pending-bonafide-requisitions', {
+            method: 'GET',
+            credentials: 'include' // Include session cookie
+        });
 
-                if (!response.ok) throw new Error('Failed to fetch applications');
+        if (!response.ok) throw new Error('Failed to fetch applications');
 
-                const applications = await response.json();
-                tableBody.innerHTML = ''; // Clear previous table content
-
-                if (applications.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No pending requisitions</td></tr>`;
-                } else {
-                    applications.forEach(application => {
-                        const formattedDateTime = application.date
-                            ? formatDateTime(application.date)
-                            : 'N/A';
-
-                        const row = `
-                            <tr>
-                                <td>${application.id || 'Unknown'}</td>
-                                <td>${formattedDateTime}</td>
-                                <td>${application.name || 'Unknown'}</td>
-                                <td>${application.registerNumber || 'Unknown'}</td>
-                                <td>${application.reason || 'No details provided'}</td>
-                                <td id="status-${application.id}" 
-                                    class="${application.status === 'Approved' ? 'text-success' : 
-                                           application.status === 'Rejected' ? 'text-danger' : 
-                                           'text-warning'}">
-                                    ${application.status}
-                                </td>
-                                <td>
-                                    <button class="icon-button view-icon" onclick="viewDetails(${application.id})">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="icon-button approve-icon" onclick="openStatusModal(${application.id})">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                        tableBody.innerHTML += row;
-                    });
-                }
-
-                loadingMessage.style.display = 'none';
-                tableWrapper.style.display = 'table';
-            } catch (error) {
-                console.error('Error loading applications:', error);
-                loadingMessage.textContent = 'NO PENDING APPLICATIONS....';
-            }
+        applicationsData = await response.json(); // Store all applications
+        
+        if (applicationsData.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No applications found</td></tr>`;
+        } else {
+            displayPaginatedData();
+            renderPagination(); // ✅ Now pagination updates only when data exists
         }
+
+        loadingMessage.style.display = 'none';
+        tableWrapper.style.display = 'table';
+    } catch (error) {
+        console.error('Error loading applications:', error);
+        loadingMessage.textContent = 'NO PENDING APPLICATIONS....';
+    }
+}
+
+// Function to display paginated data
+function displayPaginatedData() {
+    const tableBody = document.getElementById('applicationsTable');
+    tableBody.innerHTML = ''; // Clear previous data
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const currentPageData = applicationsData.slice(start, end); // Get only the current page data
+
+    if (currentPageData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No applications found</td></tr>`;
+    } else {
+        currentPageData.forEach(application => {
+            const formattedDateTime = application.date
+                ? formatDateTime(application.date)
+                : 'N/A';
+
+            const row = `
+                <tr>
+                    <td>${application.id || 'Unknown'}</td>
+                    <td>${formattedDateTime}</td>
+                    <td>${application.name || 'Unknown'}</td>
+                    <td>${application.registerNumber || 'Unknown'}</td>
+                    <td>${application.reason || 'No details provided'}</td>
+                    <td id="status-${application.id}" 
+                        class="${application.status === 'Approved' ? 'text-success' : 
+                               application.status === 'Rejected' ? 'text-danger' : 
+                               application.status === 'Pending' ? 'status-pending' : ''}">
+                        ${application.status}
+                    </td>
+                    <td>
+                        <button class="icon-button view-icon" onclick="viewDetails(${application.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="icon-button approve-icon" onclick="openStatusModal(${application.id})">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    renderPagination(); // Update pagination UI
+}
+
+function renderPagination() {
+    const paginationWrapper = document.getElementById('pagination');
+    
+    if (!paginationWrapper) {
+        console.error("Pagination element not found! Make sure <ul id='pagination'></ul> exists in your HTML.");
+        return;
+    }
+
+    paginationWrapper.innerHTML = ''; // Clear previous pagination
+
+    const totalPages = Math.ceil(applicationsData.length / rowsPerPage);
+    
+    if (totalPages === 0) {
+        console.warn("Pagination: No data available for pagination.");
+        return;
+    }
+
+    console.log(`Total Pages: ${totalPages}, Current Page: ${currentPage}`);
+
+    // Previous Button
+    if (currentPage > 1) {
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        prevLi.innerHTML = `<a href="#" class="page-link">&laquo;</a>`;
+        prevLi.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage--;
+            displayPaginatedData();
+            renderPagination(); // ✅ Re-render after clicking
+        });
+        paginationWrapper.appendChild(prevLi);
+    }
+
+    // Page Numbers
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+
+        const a = document.createElement('a');
+        a.href = "#";
+        a.className = "page-link";
+        a.textContent = i;
+
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            displayPaginatedData();
+            renderPagination(); // ✅ Update active state
+        });
+
+        li.appendChild(a);
+        paginationWrapper.appendChild(li);
+    }
+
+    // Next Button
+    if (currentPage < totalPages) {
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        nextLi.innerHTML = `<a href="#" class="page-link">&raquo;</a>`;
+        nextLi.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage++;
+            displayPaginatedData();
+            renderPagination();
+        });
+        paginationWrapper.appendChild(nextLi);
+    }
+}
+
+
+
+
+window.onload = async function () {
+    try {
+        console.log("Fetching applications...");
+        await fetchApplications(); // ✅ Ensure data loads before proceeding
+
+        if (applicationsData.length > 0) {
+            displayPaginatedData();
+            renderPagination(); // ✅ Call pagination only if data exists
+        } else {
+            console.warn("No applications found. Pagination will not be displayed.");
+        }
+    } catch (error) {
+        console.error("Error during window.onload:", error);
+    }
+};
+
+
 
         function openStatusModal(applicationId) {
             document.getElementById('applicationIdInput').value = applicationId;
@@ -391,6 +553,11 @@ html, body {
         }, 2000); // Simulated 2-second delay
     }
     </script>
+    <!-- Pagination -->
+<nav>
+    <ul id="pagination" class="pagination"></ul>
+</nav>
+
     <!-- Footer -->
 <footer class="footer">
     <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>

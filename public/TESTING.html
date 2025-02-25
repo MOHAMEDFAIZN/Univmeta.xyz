@@ -1,86 +1,138 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Event Applications</title>
+    <title>OD Certificate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/js/print.js" defer></script> <!-- External script for print button -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        /* Ensure A4 size print layout */
+        @page { size: A4; margin: 0; } 
+
+        /* General Styling */
+        body { 
+            font-family: 'Times New Roman', Times, serif;
             margin: 0;
-        }
-        .container {
-            background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fdfdfd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            width: 100vw;
+            overflow: auto;
+        }
+
+        /* Print button styling */
+        .print-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .print-btn { 
+            background-color: black; 
+            color: white; 
+            padding: 10px 15px; 
+            font-size: 14px; 
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .print-btn:hover { background-color: #333; }
+
+        /* Certificate container */
+        .certificate-container {
+            border: 2px solid black;
+            padding: 30px;
+            width: 35%;
+            margin: 30px auto;
+            background-color: #ffffff;
+            min-height: 700px;
             text-align: center;
-            width: 300px;
         }
-        h2 {
-            margin-bottom: 20px;
+
+        .certificate-container::before {
+            position: absolute;
+            top: 90px;
+            left: 90px;
+            width: 80%;
+            height: 80%;
+            z-index: 1;
+            background: url('https://www.univmeta.xyz/General%20Assest/Klu%20Black%20Logo.png') no-repeat center center;
+            background-size: 40%;
+            opacity: 0.1;
+            pointer-events: none;
+            content: "";
         }
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: gray;
+            padding: 10px;
+            width: 100%;
+            position: relative;
+            bottom: 0;
         }
-        .stat-box {
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .total { background: #cce5ff; }
-        .pending { background: #fff3cd; }
-        .approved { background: #d4edda; }
-        .rejected { background: #f8d7da; }
-        .error {
-            color: red;
-            margin-top: 10px;
+
+        /* Print formatting */
+        @media print {
+            .print-container { display: none; } /* Hide print button */
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                transform: scale(1); /* Ensures exact fit */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden; /* Prevents extra pages */
+            }
+            .certificate-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .footer {
+                position: absolute;
+                bottom: 10px;
+                width: 100%;
+                font-size: 14px;
+                color: black;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>Faculty Event Applications</h2>
-        <div id="error" class="error"></div>
-        <div class="stats">
-            <div class="stat-box total">Total: <span id="total">0</span></div>
-            <div class="stat-box pending">Pending: <span id="pending">0</span></div>
-            <div class="stat-box approved">Approved: <span id="approved">0</span></div>
-            <div class="stat-box rejected">Rejected: <span id="rejected">0</span></div>
-        </div>
+    <!-- Print button at the top-left -->
+    <div class="print-container">
+        <button id="printButton" class="print-btn">
+            <i class="fas fa-print"></i> Print Certificate
+        </button>
     </div>
 
+    <!-- Certificate Content -->
+    <div class="certificate-container">${certificateContent}</div>
+
+    <!-- Footer (Always Visible) -->
+    <div class="footer">Powered by UnivMeta</div>
+
     <script>
-        async function fetchStats() {
-            try {
-                const responses = await Promise.all([
-                    fetch('/API/faculty/event-applications/total').then(res => res.json()),
-                    fetch('/API/faculty/event-applications/pending').then(res => res.json()),
-                    fetch('/API/faculty/event-applications/approved').then(res => res.json()),
-                    fetch('/API/faculty/event-applications/rejected').then(res => res.json())
-                ]);
-
-                document.getElementById('total').textContent = responses[0].totalApplications;
-                document.getElementById('pending').textContent = responses[1].pendingApplications;
-                document.getElementById('approved').textContent = responses[2].approvedApplications;
-                document.getElementById('rejected').textContent = responses[3].rejectedApplications;
-            } catch (error) {
-                document.getElementById('error').textContent = "Error fetching data. Try again.";
-                console.error("Error fetching stats:", error);
-            }
-        }
-
-        fetchStats();
+        document.getElementById('printButton').addEventListener('click', function () {
+            window.print();
+        });
     </script>
-
 </body>
 </html>

@@ -15,6 +15,7 @@
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(to bottom, #f0f4f8, #f0f4f8);
+      padding-bottom: 90px; /* Adjust to the height of the footer */
       color: #333;
       margin: 0;
       padding: 0;
@@ -199,8 +200,49 @@ html, body {
 
 /* Ensure pagination is above the footer */
 .pagination {
-    margin-bottom: 80px; /* Pushes it up to prevent overlap */
+    margin-bottom: 95px; /* Pushes it up to prevent overlap */
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000000; 
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13;
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
 
   </style>
 </head>
@@ -243,18 +285,36 @@ html, body {
   <script>
     let selectedApplicationId = null;
     let currentActionType = "";
+    let applicationsData = []; // Store fetched applications
+    let currentPage = 1;
+    const rowsPerPage = 15; // Set max rows per page
 
     // Function to Fetch Applications
     async function fetchApplications() {
       try {
         const response = await fetch('/admin-applications');
-        const applications = await response.json();
-        const tableBody = document.getElementById('application-table');
-        tableBody.innerHTML = '';
+        applicationsData = await response.json(); // Store full data
+        displayPaginatedData(); // Load first page data
+      } catch (error) {
+        console.error('Failed to load applications:', error);
+      }
+    }
 
-        applications.forEach(app => {
-          const row = document.createElement('tr');
+    // Function to Display Paginated Data
+    function displayPaginatedData() {
+      const tableBody = document.getElementById('application-table');
+      tableBody.innerHTML = ''; // Clear existing content
+
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const paginatedData = applicationsData.slice(start, end);
+
+      if (paginatedData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center">No applications available</td></tr>`;
+      } else {
+        paginatedData.forEach(app => {
           const formattedDate = new Date(app.date).toLocaleDateString();
+          const row = document.createElement('tr');
           row.innerHTML = `
             <td>${app.id}</td>
             <td><p><strong>Name:</strong> ${app.name || 'N/A'}</p>
@@ -270,9 +330,45 @@ html, body {
           `;
           tableBody.appendChild(row);
         });
-      } catch (error) {
-        console.error('Failed to load applications:', error);
       }
+
+      renderPagination(); // Update pagination UI
+    }
+
+    // Function to Render Pagination
+    function renderPagination() {
+      const paginationWrapper = document.getElementById('pagination');
+      paginationWrapper.innerHTML = ''; // Clear previous pagination
+
+      const totalPages = Math.ceil(applicationsData.length / rowsPerPage);
+      if (totalPages <= 1) return; // Hide pagination if only 1 page exists
+
+      // Previous Button
+      if (currentPage > 1) {
+        paginationWrapper.innerHTML += `<li class="page-item">
+          <a href="#" class="page-link" onclick="changePage(${currentPage - 1})">&laquo; Prev</a>
+        </li>`;
+      }
+
+      // Page Numbers
+      for (let i = 1; i <= totalPages; i++) {
+        paginationWrapper.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+          <a href="#" class="page-link" onclick="changePage(${i})">${i}</a>
+        </li>`;
+      }
+
+      // Next Button
+      if (currentPage < totalPages) {
+        paginationWrapper.innerHTML += `<li class="page-item">
+          <a href="#" class="page-link" onclick="changePage(${currentPage + 1})">Next &raquo;</a>
+        </li>`;
+      }
+    }
+
+    // Function to Change Page
+    function changePage(page) {
+      currentPage = page;
+      displayPaginatedData();
     }
 
     // Open Modal with Context
@@ -306,6 +402,11 @@ html, body {
 
     window.onload = fetchApplications;
   </script>
+
+   <!-- Pagination Section -->
+   <nav>
+    <ul id="pagination" class="pagination justify-content-center"></ul>
+  </nav>
   <!-- Footer -->
 <footer class="footer">
   <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>

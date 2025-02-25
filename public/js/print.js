@@ -6,3 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("printButton").addEventListener("click", function () {
+        window.print();
+    });
+});

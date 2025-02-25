@@ -23,7 +23,7 @@
 
         h2 {
    
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     font-weight: bold;
     color: #000000;
     font-family: "Arial", sans-serif; /* Modern and clean font */
@@ -31,20 +31,26 @@
     letter-spacing: 1px; /* Slight spacing for better readability */
 }
 
-        .table {
+.table {
             background-color: #ffffff;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
         }
 
         .table th,
         .table td {
             padding: 15px;
             vertical-align: middle;
+            text-align: left;
+            border: 2px solid #dee2e6;
         }
 
         .table thead {
-            background-color: #020202;
+            background-color: #000000;
             color: #ffffff;
         }
 
@@ -72,9 +78,44 @@
         }
 
         .pagination {
-            justify-content: center;
-            margin-top: 20px;
-        }
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000000; 
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13; /* Orange color for active page */
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
 
         /* Ensure the entire page takes full height */
 html, body {
@@ -239,25 +280,33 @@ html, body {
         }
 
         // Render pagination controls
-        function renderPagination() {
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = ''; // Clear existing buttons
+function renderPagination() {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = ''; // Clear existing buttons
 
-            const totalPages = Math.ceil(applications.length / rowsPerPage);
+    const totalPages = Math.ceil(applications.length / rowsPerPage);
 
-            for (let i = 1; i <= totalPages; i++) {
-                const li = document.createElement('li');
-                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                li.innerHTML = `<a href="#" class="page-link">${i}</a>`;
-                li.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = i;
-                    renderTableRows();
-                    renderPagination();
-                });
-                pagination.appendChild(li);
-            }
-        }
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+
+        const a = document.createElement('a');
+        a.href = "#";
+        a.className = "page-link";
+        a.textContent = i;
+
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            renderTableRows();
+            renderPagination();
+        });
+
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }
+}
+
 
         // Fetch applications and initialize the table
         async function fetchApplications() {
