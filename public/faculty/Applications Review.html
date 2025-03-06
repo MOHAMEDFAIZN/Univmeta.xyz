@@ -16,7 +16,7 @@
         }
 
         h1 {
-   
+  text-align: center;
    margin-bottom: 20px;
    font-weight: bold;
    color: #000000;
@@ -205,6 +205,46 @@ html, body {
 .pagination {
     margin-bottom: 35px; /* Pushes it up to prevent overlap */
 }
+
+/* Mobile Optimization Media Query */
+@media (max-width: 576px) {
+      /* Container adjustments */
+      .container {
+        padding: 10px;
+      }
+      
+      /* Header font size */
+      h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      
+      /* Table adjustments */
+      .table th,
+      .table td {
+        padding: 10px;
+        font-size: 12px;
+      }
+      
+      /* Button adjustments */
+      .gradient-button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+      
+      /* Pagination adjustments */
+      .pagination .page-link {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+      }
+      
+      /* Footer adjustments */
+      .footer {
+        font-size: 12px;
+        padding: 10px;
+      }
+    }
 
     </style>
 </head>

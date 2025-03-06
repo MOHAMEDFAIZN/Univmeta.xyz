@@ -22,7 +22,6 @@
         }
 
         h2 {
-   
     margin-bottom: 5px;
     font-weight: bold;
     color: #000000;
@@ -159,12 +158,38 @@ html, body {
     margin-bottom: 80px; /* Pushes it up to prevent overlap */
 }
 
+@media (max-width: 576px) {
+    .container {
+        margin-top: 20px;
+        padding: 10px;
+    }
+    h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .table th,
+    .table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+    .pagination .page-link {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    .footer {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
+
+
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2 class="text-left mb-5">Bonafide Application Review</h2>
+        <h2 class="text-center mb-5">Bonafide Application Review</h2>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>

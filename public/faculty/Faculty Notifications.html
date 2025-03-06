@@ -27,46 +27,25 @@ html, body {
     flex-direction: column;
 }
 
-/* Main content area */
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 10px;
-    flex-grow: 1;
-    overflow-y: auto; /* Enables scrolling when notifications exceed the viewport */
-    padding-bottom: 120px; /* Prevents overlap with pagination & footer */
-}
 
-/* Faculty Notifications title (sticky at top) */
+
+/* Fix header position while scrolling with text-centered underline */
 h2 {
     text-align: center;
-    margin-bottom: 30px;
     font-size: 1.8rem;
     font-weight: bold;
     color: #000;
-    border-bottom: 2px solid #ddd;
-    display: inline-block;
-    padding-bottom: 10px;
-    position: sticky;
+    display: inline-block; /* Ensures the border applies only to text width */
+    padding: 15px 0;
+    position: fixed; /* Keeps header constant while scrolling */
     top: 0;
-    background: linear-gradient(to bottom, #f0f4f8, #e0e4e8);
-    z-index: 1000;
-    padding-top: 10px;
+    left: 31%;
+    transform: translateX(-50%); /* Centers the heading properly */
+    z-index: 1000; /* Ensures it stays above notifications */
+    border-bottom: 2px solid hsl(0, 0%, 0%); /* Underline applies only to text */
 }
 
-/* Notification card */
-.notification-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
+
 
 .notification-card:hover {
     transform: scale(1.02);
@@ -74,7 +53,7 @@ h2 {
 }
 
 .notification-card.unread {
-    border-left: 5px solid #007bff;
+    border-left: 5px solid #000000;
 }
 
 /* Notification content */
@@ -104,64 +83,172 @@ h2 {
     margin-top: 50px;
 }
 
-/* Pagination section fixed just above footer */
-.pagination-wrapper {
-    position: fixed;
-    bottom: 75px; /* Places it just above the footer */
-    width: 100%;
-    background: #fff; /* White background */
-    padding: 3px 0;
-    display: flex;
-    justify-content: center;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
-}
-
-/* Pagination styles */
+/* Fix pagination alignment */
 .pagination {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    list-style: none;
+    padding: 70px; /* Reduced unnecessary padding */
 }
 
-.pagination a {
-    color: #000;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 5px;
-    background: #f8f9fa;
-    transition: background 0.2s;
+.pagination .page-item {
+    margin: 0 5px;
 }
 
-.pagination a:hover {
-    background-color: #ddd;
-}
-
-.pagination .active {
-    background-color: #050505;
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000; 
     color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
-/* Footer - fixed at the bottom */
-footer {
-    position: fixed;
-    bottom: 0;
+.pagination .page-link:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13;
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
+/* Footer properly aligned */
+.footer {
     width: 100%;
     text-align: center;
-    background: #fff; /* White background */
-    color: #000; /* Black text */
-    font-size: 0.9rem;
-    padding: 0px 0;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for better separation */
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
-footer a {
-    color: #000000;
-    text-decoration: none;
+/* Adjust container to extend fully down to pagination */
+.container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px; /* Keeps space below fixed header */
+    height: calc(100vh - 140px); /* Extends height down to pagination */
+    overflow-y: auto; /* Allows scrolling only if needed */
+    padding: 10px 10px 20px; /* Reduced bottom padding to fill space */
+    width: 90%;
+    max-width: 900px;
 }
 
-footer a:hover {
-    text-decoration: underline;
+/* Ensure notifications take up all available space */
+#notifications {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allows notifications to expand fully */
+    gap: 5px; /* Keep minimal space between cards */
 }
+
+/* Ensure pagination sits right below notifications */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: auto; /* Pushes pagination to the bottom of container */
+    margin-bottom: 10px; /* Keeps a small gap above footer */
+}
+
+
+/* Notification card styling */
+.notification-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 5px; /* Reduced margin to fit more cards */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 60px; /* Reduced height to fit 5 cards */
+    max-height: 80px; /* Ensures a consistent size */
+    overflow: hidden;
+    padding: 10px;
+    font-size: 0.85rem; /* Slightly smaller text */
+    line-height: 1.1; /* Adjusted line height */
+}
+
+/* Hide scrollbar while allowing scrolling */
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+    /* Adjust header for mobile */
+    h2 {
+        font-size: 1.5rem; /* Reduce font size */
+        padding: 12px 0;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90%;
+        text-align: center;
+        white-space: nowrap; /* Prevents text wrapping */
+    }
+
+    /* Adjust container for mobile */
+    .container {
+        width: 95%; /* Reduce width for smaller screens */
+        max-width: 100%;
+        height: calc(100vh - 160px); /* Adjusted height for small screens */
+        padding: 5px 5px 20px;
+    }
+
+    /* Adjust notification cards */
+    .notification-card {
+        min-height: 70px; /* Slightly increase height for readability */
+        max-height: 90px;
+        font-size: 0.8rem; /* Reduce font size */
+        padding: 8px;
+        line-height: 1.2;
+    }
+
+    /* Ensure pagination fits mobile screens */
+    .pagination {
+        flex-wrap: wrap; /* Allows wrapping if needed */
+        padding: 50px; /* Reduce space usage */
+    }
+
+    .pagination .page-item {
+        margin: 2px; /* Reduce spacing */
+    }
+
+    .pagination .page-link {
+        width: 35px; /* Reduce button size */
+        height: 35px;
+        font-size: 14px;
+    }
+
+    /* Footer optimization */
+    .footer {
+        font-size: 12px; /* Reduce text size */
+        padding: 10px;
+    }
+}
+
     </style> 
 </head>
 <body>
@@ -180,11 +267,15 @@ footer a:hover {
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 UnivMeta.xyz. All Rights Reserved.</p>
-        <p><a href="#">Contact Support</a></p>
-    </footer>
+    <nav>
+        <ul id="pagination" class="pagination justify-content-center"></ul>
+    </nav>
+    
+
+   <!-- Footer -->
+<footer class="footer">
+    <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>
+</footer>
 
     <script>
         let currentPage = 1;
@@ -237,33 +328,38 @@ footer a:hover {
         }
     
         function setupPagination(totalPages) {
-            const paginationContainer = document.querySelector('.pagination');
-            paginationContainer.innerHTML = '';
-    
-            for (let i = 1; i <= totalPages; i++) {
-                const pageLink = document.createElement('a');
-                pageLink.href = '#';
-                pageLink.textContent = i;
-    
-                // Add active class to the current page link
-                if (i === currentPage) {
-                    pageLink.classList.add('active');
-                }
-    
-                // Add click event to change pages
-                pageLink.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    currentPage = i;
-                    fetchNotifications();
-                });
-    
-                paginationContainer.appendChild(pageLink);
-            }
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement('li');
+        pageItem.classList.add('page-item');
+
+        if (i === currentPage) {
+            pageItem.classList.add('active'); // Apply active class correctly
         }
+
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = i;
+        pageLink.classList.add('page-link');
+
+        pageLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentPage = i;
+            fetchNotifications();
+        });
+
+        pageItem.appendChild(pageLink);
+        paginationContainer.appendChild(pageItem);
+    }
+}
+
     
         // Initialize the fetch
         fetchNotifications();
     </script>
+
     
 </body>
 </html>
