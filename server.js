@@ -5,6 +5,8 @@ const twilio = require('twilio'); // Twilio module for sending WhatsApp messages
 // Twilio configuration for WhatsApp sandbox
 const twilioClient = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const twilioWhatsAppNumber = process.env.TWILIO_WHATSAPP_NUMBER;
+const { OpenAI } = require("openai");
+
 
 const express = require('express');
 const ExcelJS = require('exceljs');
@@ -95,6 +97,161 @@ app.get('/robots.txt', (req, res) => {
 app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.join(databasePath, 'sitemap.xml'));
 });
+
+// Initialize OpenAI API
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY, // Securely load API key from .env
+  });
+  
+  // Mock Database for Form Status
+  const forms = [
+    { id: "123", status: "approved", name: "John Doe" },
+    { id: "456", status: "pending", name: "Jane Smith" },
+  ];
+  
+  // FAQs Data
+  const faqs = [
+    {
+        question: "how do I apply for a form",
+        answer:
+          'To apply for a form, follow these steps:\n1. Go to the "Forms" section.\n2. Click on "Apply Now".\n3. Fill in the required details.\n4. Submit the form.',
+      },
+      {
+        question: "hi",
+        answer:
+       "Hello! How can I help you Today?"},
+       {
+        question: "hello",
+        answer:
+       "Hello! How can I help you Today?"},
+      {
+        question: "how do I check my form status",
+        answer:
+          'You can check your form status by entering your form ID in the chatbot and asking, "What is the status of my form?"',
+      },
+      {
+        question: "what should I do if my form is rejected",
+        answer:
+          "If your form is rejected, you can resubmit it after making the necessary corrections. Contact support if you need further assistance.",
+      },
+      {
+        question: "how does this chatbot work",
+        answer:
+          'This chatbot can help you with:\n1. Checking your form status.\n2. Answering FAQs.\n3. Providing general assistance.\nType "help" to see a list of commands.',
+      },
+      {
+        question: "what is the purpose of this application",
+        answer:
+          "AFAS automates Bonafide OD Leave and No Due processes reducing delays paperwork and errors. A web-based system enables digital approvals real-time tracking and transparency for students and faculty.",
+      },
+      {
+        question: "how to i apply for leave form",
+        answer:
+          "Click the navbar on the index page to navigate to the Student Login page.Log in using your student ID and password on the student_login page.Click on the Application Form option after successful login to proceed to the application_form page.Select the Apply Leave Form option to open the leave_form page.Fill  your leave application details and submit the form.",
+      },
+      {
+        question: "how to i apply for od form",
+        answer:
+          "Click the navbar on the index page to navigate to the Student Login page.Log in using your student ID and password on the student_login page.Click on the Application Form option after successful login to proceed to the application_form page.Select the Apply OD Form option to open the OD_form page.Fill  your OD application details and submit the form.",
+      },
+      {
+        question: "how to i apply for no due form",
+        answer:
+          "Click the navbar on the index page to navigate to the Student Login page.Log in using your student ID and password on the student_login page.Click on the Application Form option after successful login to proceed to the application_form page.Select the Apply NO-Due Form option to open the NO-Due_form page.Fill  your NO-Due application details and submit the form.",
+      },
+      {
+        question: "how to i apply for bonafide certificate form",
+        answer:
+          "Click the navbar on the index page to navigate to the Student Login page.Log in using your student ID and password on the student_login page.Click on the Application Form option after successful login to proceed to the application_form page.Select the Apply Bonafide Certificate Form option to open the Bonafide Certificate_form page.Fill  your Bonafide Certificate application details and submit the form.",
+      },
+      {
+        question: "how to i apply for duplicate id card form",
+        answer:
+          "Click the navbar on the index page to navigate to the Student Login page.Log in using your student ID and password on the student_login page.Click on the Application Form option after successful login to proceed to the application_form page.Select the Apply Duplicate ID Card Form option to open the Duplicate ID Card_form page.Fill  your Duplicate ID Card application details and submit the form.",
+      },
+      {
+        question: "how do i update my profile",
+        answer:
+          "To update your profile:\n1. Log in to your account.\n2. Go to the 'Profile' section.\n3. Make the necessary changes.\n4. Click 'Save' to update your profile.",
+      },
+      {
+        question: "how do i reset my password",
+        answer:
+          "To reset your password:\n1. Go to the 'Student Login' page.\n2. Click on 'Forgot Password'.\n3. Enter your registered email address.\n4. Follow the instructions sent to your email to reset your password.",
+      },
+      {
+        question: "what is univmeta",
+        answer:
+          "UnivMeta is a platform that automates Bonafide, OD Leave, and No Due processes, reducing delays, paperwork, and errors. It provides a web-based system for digital approvals, real-time tracking, and transparency for students and faculty.",
+      },
+      {
+        question: "how do i get contact support",
+        answer:
+          "For support, please email us at support@univmeta.xyz or mail univmeta21@gmail.com.",
+      },
+      {
+        question: "what are the features of this web page",
+        answer:
+          "The web page features include:\n1. Form automation for leave, OD, no-due, and more.\n2. Real-time form status tracking.\n3. AI-powered chatbot for assistance.\n4. User-friendly interface.",
+      },
+      {
+        question: "how do i navigate the web page",
+        answer:
+          "To navigate the web page:\n1. Use the navbar at the top to access different sections.\n2. Click on 'Student Login' to log in and access forms.\n3. Use the chatbot for assistance.",
+      },
+  ];
+  
+  // Help Guide
+  const helpGuide = `
+  Welcome to the AI Chatbot! Here's what I can do:
+  1. *Check Form Status*: Ask "What is the status of my form?" and provide your form ID.
+  2. *FAQs*: Ask questions like "How do I apply for a form?" or "What if my form is rejected?"
+  3. *General Assistance*: Ask me anything, and I'll do my best to help!
+  Type "help" anytime to see this guide again.
+  `;
+  
+  // AI Chatbot API Endpoint
+  app.post("/api/chatbot", async (req, res) => {
+    try {
+      const { message, formId } = req.body;
+  
+      const lowerCaseMessage = message.toLowerCase();
+  
+      // Help Guide
+      if (lowerCaseMessage.includes("help")) {
+        return res.json({ response: helpGuide });
+      }
+  
+      // Check FAQs
+      const faqMatch = faqs.find((faq) => lowerCaseMessage.includes(faq.question.toLowerCase()));
+      if (faqMatch) {
+        return res.json({ response: faqMatch.answer });
+      }
+  
+      // Check Form Status
+      if (lowerCaseMessage.includes("form status")) {
+        const form = forms.find((f) => f.id === formId);
+        if (form) {
+          return res.json({ response: `Form status for ${form.name}: ${form.status}` });
+        } else {
+          return res.json({ response: "Form not found. Please check the form ID." });
+        }
+      }
+  
+      // Use OpenAI for general queries
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: message }],
+      });
+  
+      res.json({ response: response.choices[0].message.content });
+    } catch (error) {
+      console.error("Error communicating with OpenAI:", error);
+      res.status(500).json({ error: "Failed to process your request" });
+    }
+  });
+  
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // HOME PAGE //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -439,7 +596,7 @@ app.get('/api/faculty/pending-applications/:type', (req, res) => {
 
 
 //////////////////// FACULTY UPDATE STATUS FOR LEAVE/EVENT /////////////////////////////////////////
-app.post('/api/faculty/update-status', (req, res) => { 
+app.post('/api/faculty/update-status', (req, res) => {  
     const { id, status, applicationType } = req.body;
 
     // Validate required fields
@@ -469,8 +626,9 @@ app.post('/api/faculty/update-status', (req, res) => {
             return res.status(404).json({ error: 'Application not found' });
         }
 
-        // Fetch the student ID to send a notification
-        const studentQuery = `SELECT ${studentIdColumn}, ${applicationType === 'Event' ? 'event_name' : 'leaveType'} AS applicationName FROM ${table} WHERE id = ?`;
+        // Fetch student ID and application name
+        const studentQuery = `SELECT ${studentIdColumn}, ${applicationType === 'Event' ? 'event_name' : 'leaveType'} AS applicationName, startDate, endDate FROM ${table} WHERE id = ?`;
+
         connection.query(studentQuery, [id], (studentErr, studentResults) => {
             if (studentErr) {
                 console.error('Error fetching student data:', studentErr);
@@ -483,6 +641,8 @@ app.post('/api/faculty/update-status', (req, res) => {
 
             const studentId = studentResults[0][studentIdColumn];
             const applicationName = studentResults[0].applicationName;
+            const startDate = studentResults[0].startDate;
+            const endDate = studentResults[0].endDate;
 
             // Create a notification for the student
             const notificationMessage = `Your ${applicationType} application (${applicationName}) has been ${status.toLowerCase()} by the faculty.`;
@@ -497,8 +657,44 @@ app.post('/api/faculty/update-status', (req, res) => {
                     return res.status(500).json({ error: 'Failed to send notification' });
                 }
 
-                // Respond to the faculty with success
-                res.json({ message: 'Status updated and notification sent successfully' });
+
+// If the application is a Leave request, update attendance logs based on status
+if (applicationType === 'Leave') {
+    let updateAttendanceQuery = '';
+
+    if (status === 'Approved') {
+        // Set 'A' (On Leave) if approved
+        updateAttendanceQuery = `
+            UPDATE studentinfo.attendance_logs 
+            SET Status = 'A' 
+            WHERE student_id = ? 
+            AND EntryDate BETWEEN ? AND ? 
+            AND Status = 'P';
+        `;
+    } else if (status === 'Rejected') {
+        // Set 'P' (Present) if rejected
+        updateAttendanceQuery = `
+            UPDATE studentinfo.attendance_logs 
+            SET Status = 'O' 
+            WHERE student_id = ? 
+            AND EntryDate BETWEEN ? AND ? 
+            AND Status = 'P';
+        `;
+    }
+
+    connection.query(updateAttendanceQuery, [studentId, startDate, endDate], (attErr, attResult) => {
+        if (attErr) {
+            console.error('Error updating attendance logs:', attErr);
+            return res.status(500).json({ error: 'Failed to update attendance records' });
+        }
+
+        res.json({ message: `Status updated, attendance logs modified (${status}), and notification sent successfully` });
+    });
+}
+ else {
+                    // If it's an event or leave is rejected, return success without updating attendance
+                    res.json({ message: 'Status updated and notification sent successfully' });
+                }
             });
         });
     });
@@ -506,12 +702,50 @@ app.post('/api/faculty/update-status', (req, res) => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////// ATT SYSTEM ///
+// Fetch attendance details
+// Fetch attendance details for the logged-in student
+app.get('/api/attendance-details', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Student not logged in' });
+    }
+
+    const studentId = req.session.user.id;
+    const query = 'SELECT * FROM studentinfo.attendancedetails WHERE student_id = ?';
+
+    connection.query(query, [studentId], (err, results) => {
+        if (err) {
+            console.error('Error fetching attendance details:', err);
+            return res.status(500).json({ error: 'Failed to fetch attendance details' });
+        }
+        res.json(results.length ? results : []);
+    });
+});
+
+// Fetch attendance logs for a specific course (only for logged-in student)
+app.get('/api/attendance-logs/:code', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Student not logged in' });
+    }
+
+    const studentId = req.session.user.id;
+    const { code } = req.params;
+    const query = 'SELECT * FROM studentinfo.attendance_logs WHERE Code = ? AND student_id = ?';
+
+    connection.query(query, [code, studentId], (err, results) => {
+        if (err) {
+            console.error('Error fetching attendance logs:', err);
+            return res.status(500).json({ error: 'Failed to fetch attendance logs' });
+        }
+        res.json(results.length ? results : []);
+    });
+});
+
+
 
 ////////////////////////// SUBMIT ROUTES FOR LEAVE //////////////////////////////////////////////////////
 ///////////////////////// LEAVE APPLICATION SUBMIT /////////////////////////////////////////////////////
 // Handle the form submission POST request
-
-// To track processed requests by session or user
 let processedRequests = new Set();
 
 app.post('/submit', (req, res) => {
@@ -521,130 +755,178 @@ app.post('/submit', (req, res) => {
     }
 
     // Extract student ID from session
-    const studentId = req.session.user.id; // Student ID from session
+    const studentId = req.session.user.id;
 
-     // Fetch faculty ID and phone number
-     const fetchFacultyQuery = `
-     SELECT s.faculty_id, f.phone_no AS faculty_phone
-     FROM univmeta.students s
-     INNER JOIN univmeta.faculty f ON s.faculty_id = f.faculty_id
-     WHERE s.id = ?
- `;
-    connection.query(fetchFacultyQuery, [studentId], (fetchErr, results) => {
-        if (fetchErr || results.length === 0) {
-            console.error('Error fetching faculty details:', fetchErr || 'No faculty found');
-            return res.status(500).json({ status: 'error', message: 'Unable to fetch faculty details' });
+    // Fetch attendance details for the student
+    const attendanceQuery = `
+        SELECT Code, Name, AttendancePercentage 
+        FROM studentinfo.attendancedetails 
+        WHERE student_id = ?
+    `;
+
+    connection.query(attendanceQuery, [studentId], (attErr, attendanceRecords) => {
+        if (attErr) {
+            console.error('Error fetching attendance:', attErr);
+            return res.status(500).json({ status: 'error', message: 'Unable to fetch attendance records' });
         }
 
-        const { faculty_id: facultyId, faculty_phone: facultyPhone } = results[0]; // Extract faculty ID and phone number
-        const formData = req.body; // Extract form data from the request body
-
-        // Validate required fields
-        if (
-            !formData.name ||
-            !formData.registerNo ||
-            !formData.contactNo ||
-            !formData.email ||
-            !formData.parentContactNo ||
-            !formData.department ||
-            !formData.leaveType ||
-            !formData.startDate ||
-            !formData.endDate ||
-            !formData.reason
-        ) {
-            return res.status(400).json({ status: 'error', message: 'Required fields are missing' });
+        // Check if any subject has attendance below 75%
+        const lowAttendance = attendanceRecords.some(record => record.AttendancePercentage < 75);
+        if (lowAttendance) {
+            return res.status(400).json({ status: 'error', message: 'Attendance below 75%, leave application not allowed' });
         }
 
-        // SQL query to insert leave application
-        const insertLeaveQuery = `
-            INSERT INTO leave_applications 
-            (student_id, faculty_id, name, registerNo, contactNo, parentContactNo, email, department, leaveType, startDate, endDate, reason, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')
+        // Fetch faculty ID and phone number
+        const fetchFacultyQuery = `
+            SELECT s.faculty_id, f.phone_no AS faculty_phone
+            FROM univmeta.students s
+            INNER JOIN univmeta.faculty f ON s.faculty_id = f.faculty_id
+            WHERE s.id = ?
         `;
 
-        connection.query(
-            insertLeaveQuery,
-            [
-                studentId,                // student_id from session
-                facultyId,                // faculty_id from query
-                formData.name,
-                formData.registerNo,
-                formData.contactNo,
-                formData.parentContactNo,
-                formData.email,
-                formData.department,
-                formData.leaveType,
-                formData.startDate,
-                formData.endDate,
-                formData.reason
-            ],
-            (insertErr, result) => {
-                if (insertErr) {
-                    console.error('Database error:', insertErr); // Log error for debugging
-                    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-                }
+        connection.query(fetchFacultyQuery, [studentId], (fetchErr, results) => {
+            if (fetchErr || results.length === 0) {
+                console.error('Error fetching faculty details:', fetchErr || 'No faculty found');
+                return res.status(500).json({ status: 'error', message: 'Unable to fetch faculty details' });
+            }
 
-                const notificationMessage = `A new leave application has been submitted by ${formData.name}.`;
+            const { faculty_id: facultyId, faculty_phone: facultyPhone } = results[0];
+            const formData = req.body;
 
-                 // Detailed message for WhatsApp
-                 const whatsappMessage = `
-                 📢 *Leave Application Notification*  
-                 Hello,  
-                 
-                 You have received a new leave application from your student on *univmeta.xyz*.  
-                 
-                 📝 *Details of the Application:*  
-                 👤 *Name:* ${formData.name}  
-                 🎓 *Register No:* ${formData.registerNo}  
-                 📱 *Contact No:* ${formData.contactNo}  
-                 📧 *Email:* ${formData.email}  
-                 🏫 *Department:* ${formData.department}  
-                 📅 *Leave Type:* ${formData.leaveType}  
-                 🗓️ *From:* ${formData.startDate}  
-                 🗓️ *To:* ${formData.endDate}  
-                 🛑 *Reason:* ${formData.reason}  
-                 
-                 Please review the application and take necessary action.  
-                 
-                 *Visit your dashboard on univmeta.xyz to process the application.*  
-                 
-                 Thank you,  
-                 Team *univmeta.xyz* 🌟
-                                 `;
+            // Validate required fields
+            if (
+                !formData.name ||
+                !formData.registerNo ||
+                !formData.contactNo ||
+                !formData.email ||
+                !formData.parentContactNo ||
+                !formData.department ||
+                !formData.leaveType ||
+                !formData.startDate ||
+                !formData.endDate ||
+                !formData.reason
+            ) {
+                return res.status(400).json({ status: 'error', message: 'Required fields are missing' });
+            }
 
-                // Insert notification for the faculty
-                const notificationQuery = `
-                    INSERT INTO notifications (user_id, message, type, created_at) 
-                    VALUES (?, ?, 'application', NOW())
-                `;
-                connection.query(notificationQuery, [facultyId, notificationMessage], (notifErr) => {
-                    if (notifErr) {
-                        console.error('Notification error:', notifErr); // Log notification error
+            // SQL query to insert leave application
+            const insertLeaveQuery = `
+                INSERT INTO leave_applications 
+                (student_id, faculty_id, name, registerNo, contactNo, parentContactNo, email, department, leaveType, startDate, endDate, reason, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')
+            `;
+
+            connection.query(
+                insertLeaveQuery,
+                [
+                    studentId,
+                    facultyId,
+                    formData.name,
+                    formData.registerNo,
+                    formData.contactNo,
+                    formData.parentContactNo,
+                    formData.email,
+                    formData.department,
+                    formData.leaveType,
+                    formData.startDate,
+                    formData.endDate,
+                    formData.reason
+                ],
+                (insertErr, result) => {
+                    if (insertErr) {
+                        console.error('Database error:', insertErr);
+                        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
                     }
 
-                    // Send WhatsApp message to the faculty
-                    twilioClient.messages
-                        .create({
-                            body: whatsappMessage, // Full detailed message for WhatsApp
-                            from: twilioWhatsAppNumber,
-                            to: `whatsapp:${facultyPhone}`,
-                        })
-                        .then((message) => {
-                            console.log('WhatsApp message sent:', message.sid);
-                        })
-                        .catch((waErr) => {
-                            console.error('WhatsApp sending error:', waErr);
-                        });
+                    const notificationMessage = `A new leave application has been submitted by ${formData.name}.`;
 
-                    const applicationId = result.insertId; // Get the inserted application ID
+                    // Detailed message for WhatsApp
+                    const whatsappMessage = `
+                        📢 *Leave Application Notification*  
+                        Hello,  
+                        
+                        You have received a new leave application from your student on *univmeta.xyz*.  
+                        
+                        📝 *Details of the Application:*  
+                        👤 *Name:* ${formData.name}  
+                        🎓 *Register No:* ${formData.registerNo}  
+                        📱 *Contact No:* ${formData.contactNo}  
+                        📧 *Email:* ${formData.email}  
+                        🏫 *Department:* ${formData.department}  
+                        📅 *Leave Type:* ${formData.leaveType}  
+                        🗓️ *From:* ${formData.startDate}  
+                        🗓️ *To:* ${formData.endDate}  
+                        🛑 *Reason:* ${formData.reason}  
+                        
+                        Please review the application and take necessary action.  
+                        
+                        *Visit your dashboard on univmeta.xyz to process the application.*  
+                        
+                        Thank you,  
+                        Team *univmeta.xyz* 🌟
+                    `;
 
-                    // Respond with the applicationId for client-side redirection
-                    return res.json({ applicationId: applicationId });
-                });
-            }
-        );
+                    // Insert notification for the faculty
+                    const notificationQuery = `
+                        INSERT INTO notifications (user_id, message, type, created_at) 
+                        VALUES (?, ?, 'application', NOW())
+                    `;
+
+                    connection.query(notificationQuery, [facultyId, notificationMessage], (notifErr) => {
+                        if (notifErr) {
+                            console.error('Notification error:', notifErr);
+                        }
+
+                        // Send WhatsApp message to the faculty
+                        twilioClient.messages
+                            .create({
+                                body: whatsappMessage,
+                                from: twilioWhatsAppNumber,
+                                to: `whatsapp:${facultyPhone}`,
+                            })
+                            .then((message) => {
+                                console.log('WhatsApp message sent:', message.sid);
+                            })
+                            .catch((waErr) => {
+                                console.error('WhatsApp sending error:', waErr);
+                            });
+
+                        const applicationId = result.insertId;
+                        return res.json({ applicationId });
+                    });
+                }
+            );
+        });
     });
 });
+
+// New route to fetch attendance details for frontend
+app.get('/attendance', (req, res) => {
+    // Check if student is logged in
+    if (!req.session.user) {
+        return res.status(401).json({ status: 'error', message: 'Student not logged in' });
+    }
+
+    // Extract student ID from session
+    const studentId = req.session.user.id;
+
+    // Fetch attendance details for the student
+    const attendanceQuery = `
+        SELECT Code, Name, AttendancePercentage 
+        FROM studentinfo.attendancedetails 
+        WHERE student_id = ?
+    `;
+
+    connection.query(attendanceQuery, [studentId], (err, results) => {
+        if (err) {
+            console.error('Error fetching attendance:', err);
+            return res.status(500).json({ status: 'error', message: 'Unable to fetch attendance records' });
+        }
+
+        return res.json({ attendanceRecords: results });
+    });
+});
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3033,7 +3315,7 @@ app.get('/fetch/faculty-data', (req, res) => {
 // Route to fetch student details from studentinfo by registration number
 app.get('/students/:register_number', (req, res) => {
     const registerNumber = req.params.register_number;
-    const sql = 'SELECT * FROM students WHERE register_number = ?';
+    const sql = 'SELECT * FROM students WHERE regno = ?';
 
     studentDB.query(sql, [registerNumber], (err, result) => {
         if (err) {
@@ -3045,6 +3327,51 @@ app.get('/students/:register_number', (req, res) => {
         }
     });
 });
+
+
+// **POST Route - HOD Login**
+app.post("/hodlogin", (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ 
+            status: "error", 
+            message: "Username and password are required" 
+        });
+    }
+
+    const query = "SELECT hod_id, name, username, password FROM hod WHERE username = ?";
+    connection.query(query, [username], (err, results) => {
+        if (err) {
+            console.error("Database error:", err.message);
+            return res.status(500).json({ 
+                status: "error", 
+                message: "Internal Server Error" 
+            });
+        }
+
+        if (results.length > 0 && password === results[0].password) {
+            // Store HOD details in the session
+            req.session.hod = {
+                hod_id: results[0].hod_id,
+                name: results[0].name,
+                username: results[0].username,
+            };
+
+            res.json({ 
+                status: "success", 
+                message: "HOD login successful!" 
+            });
+        } else {
+            res.status(401).json({ 
+                status: "error", 
+                message: "Invalid username or password." 
+            });
+        }
+    });
+});
+
+module.exports = app;
 
 ////////////////////// //////////////////REGISTRATION END //////////////////////////////////////////////////////////////////////
 

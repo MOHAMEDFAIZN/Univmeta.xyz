@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Login - UnivMeta</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png"> <!-- Replace with the actual path to your favicon -->
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Unique font -->
+    <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -22,19 +22,19 @@
             justify-content: space-between;
             align-items: center;
             height: 100vh;
-            background: url('https://www.univmeta.xyz/Background%20Image.jpg') no-repeat center center/cover; /* Placeholder for the background image */
+            background: url('https://www.univmeta.xyz/Background%20Image.jpg') no-repeat center center/cover;
         }
 
         .top-bar {
             width: 100%;
             padding: 0px 35px;
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            background-color: rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative; /* Allow absolute positioning inside */
-            justify-content: space-between; /* Space items evenly */
-            padding-right: 1100px; /* Prevent text overlap */
+            position: relative;
+            justify-content: space-between;
+            padding-right: 1100px;
         }
 
         .top-bar img {
@@ -47,45 +47,45 @@
             font-size: 24px;
             margin: 0;
             color: #333333;
-            font-family: 'Lobster', cursive; /* Unique font */
+            font-family: 'Lobster', cursive;
         }
 
         .scrolling-text {
-    width: 500px; /* Adjust width as needed */
-    height: 40px;
-    overflow: hidden;
-    position: absolute; /* Change from relative to absolute */
-    right: 0; /* Attach to the right edge */
-    top: 50%;
-    transform: translateY(-50%); /* Center vertically */
-    background-color: black;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    padding: 5px 15px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
+            width: 500px;
+            height: 40px;
+            overflow: hidden;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: black;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
 
-.scrolling-text .text-container {
-    display: flex;
-    gap: 50px;
-    white-space: nowrap;
-    animation: infiniteScroll 12s linear infinite;
-}
+        .scrolling-text .text-container {
+            display: flex;
+            gap: 50px;
+            white-space: nowrap;
+            animation: infiniteScroll 12s linear infinite;
+        }
 
-.scrolling-text p {
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    font-size: 16px;
-    width: max-content;
-    margin: 0;
-}
+        .scrolling-text p {
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            font-size: 16px;
+            width: max-content;
+            margin: 0;
+        }
 
         .bottom-bar {
             width: 100%;
             padding: 30px 35px;
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            background-color: rgba(255, 255, 255, 0.9);
             text-align: center;
             font-size: 14px;
             color: #555555;
@@ -111,7 +111,7 @@
         }
 
         .login-box {
-            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -171,6 +171,22 @@
             background-color: #e6b800;
         }
 
+        .hod-login-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555555;
+        }
+
+        .hod-login-link a {
+            color: #000000;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .hod-login-link a:hover {
+            color: #e6b800;
+        }
+
         @media (max-width: 768px) {
             .login-box {
                 padding: 20px;
@@ -181,83 +197,16 @@
             h2 {
                 font-size: 20px;
             }
-
         }
-        
-@keyframes infiniteScroll {
-    from {
-        transform: translateX(0%);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
 
-/* Media Query for smaller screens */
-@media (max-width: 768px) { 
-    .top-bar {
-        flex-direction: row; /* Keep the layout horizontal */
-        text-align: center;
-        padding: 15px;
-        position: relative;
-        justify-content: space-between; /* Ensure elements are spaced out */
-    }
-
-    /* Ensure image stays on the right side of heading and scrolling text */
-    .top-bar img {
-        width: 70px;  /* Adjust image size */
-        height: 70px;
-        margin-right: 0;
-        margin-left: 15px; /* Space between image and text */
-        align-self: center; /* Align the image vertically with the text */
-        border-radius: 50%; /* Round the image */
-    }
-
-    .top-bar h1 {
-        font-size: 20px;
-        width: 100%;
-        text-align: left; /* Align heading to the left */
-        margin-bottom: 10px; /* Space before moving scrolling text */
-        display: inline-block;
-    }
-
-    /* Move scrolling text below the heading */
-    .scrolling-text {
-        position: static; /* Reset absolute positioning */
-        width: 90%;
-        margin: 10px auto; /* Center it */
-        height: 30px;
-        font-size: 12px;
-        display: flex;
-        justify-content: center;
-        border-radius: 20px; /* Rounded edges on both sides */
-    }
-
-    .scrolling-text .text-container {
-        gap: 20px;
-    }
-
-    .scrolling-text p {
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .top-bar h1 {
-        font-size: 18px;
-    }
-
-    .scrolling-text {
-        width: 95%;
-        height: 25px;
-        font-size: 10px;
-    }
-
-    .top-bar img {
-        width: 60px; /* Further reduce image size */
-        height: 60px;
-    }
-}
+        @keyframes infiniteScroll {
+            from {
+                transform: translateX(0%);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
     </style>
 </head>
 
@@ -284,24 +233,27 @@
                 </div>
                 <div class="input-group">
                     <input type="password" id="password" name="password" placeholder="Password" required>
-                    <span onclick="togglePassword()">Show</span>
+                    <span onclick="togglePassword('password')">Show</span>
                 </div>
                 <div class="input-group">
                     <button type="submit">Login</button>
                 </div>
             </form>
-             <div id="response" style="color: red; margin-top: 10px;"></div> <!-- Added -->
+            <div id="facultyResponse" style="color: red; margin-top: 10px;"></div>
+            <div class="hod-login-link">
+                <p>Are you an HOD? <a href="hod-login.html">Click here to login</a></p>
+            </div>
         </div>
     </div>
 
     <div class="bottom-bar">
-        © All rights reserved | <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Teams</a>
+        © 2025 All rights reserved | <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Teams</a>
     </div>
 
     <script>
         // Toggle password visibility
-        function togglePassword() {
-            const passwordField = document.getElementById("password");
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
             const showHideIcon = event.target;
             if (passwordField.type === "password") {
                 passwordField.type = "text";
@@ -311,47 +263,42 @@
                 showHideIcon.textContent = "Show";
             }
         }
-        
+
         document.getElementById('facultyLoginForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-    const responseDiv = document.getElementById('response');
-    responseDiv.innerText = '';
+            const responseDiv = document.getElementById('facultyResponse');
+            responseDiv.innerText = '';
 
-    try {
-        responseDiv.innerText = 'Logging in...';
+            try {
+                responseDiv.innerText = 'Logging in...';
 
-        const response = await fetch('/faculty/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
+                const response = await fetch('/faculty/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+                console.log('Response Data:', data);
+
+                if (response.ok && data.status === 'success') {
+                    localStorage.setItem('facultyUsername', data.username);
+                    console.log('Saved to localStorage:', data.username);
+                    window.location.href = data.redirectTo;
+                } else {
+                    responseDiv.innerText = data.message || 'Login failed. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.innerText = 'An error occurred. Please try again.';
+            }
         });
-
-        const data = await response.json();
-        console.log('Response Data:', data);
-
-        if (response.ok && data.status === 'success') {
-            // Save username to localStorage here
-            localStorage.setItem('facultyUsername', data.username);
-            console.log('Saved to localStorage:', data.username);
-
-            // Redirect to dashboard
-            window.location.href = data.redirectTo;
-        } else {
-            responseDiv.innerText = data.message || 'Login failed. Please try again.';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        responseDiv.innerText = 'An error occurred. Please try again.';
-    }
-});
-
-</script>
-
+    </script>
 </body>
 
 </html>

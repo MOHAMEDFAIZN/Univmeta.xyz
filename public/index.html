@@ -321,6 +321,115 @@
         width: 40px;
     }
 }
+
+/* Chatbot Styles */
+.chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-button img {
+            filter: brightness(0) invert(1);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-container.open {
+            display: flex;
+        }
+
+        .chat-header {
+            background-color: #000000;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .message.assistant {
+            background-color: #90928f;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #sendButton {
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background-color: #128c7e;
+        }
     </style>
 </head>
 <body>
@@ -395,8 +504,153 @@
         <h6>© 2024 All Rights Reserved | <strong>Developed and Maintained by AFAS Teams.</strong></h6>
     </div>
 
+    <!-- Chatbot -->
+    <button id="chatButton" class="chat-button">
+        <img src="UnivMeta Index Page/chatbot_5226034.png" alt="" width="30" height="30">
+    </button>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <strong>AI Assistant</strong>
+            <button id="closeButton" class="close-button">×</button>
+        </div>
+        <div class="chat-window" id="chatWindow">
+            <div class="message assistant">
+                <strong>AI:</strong> Hi! I am your AI assistant. How can I help you today?<br />
+                You can ask me:<br />
+                - How to apply for a form<br />
+                - How to check your form status<br />
+                - FAQs about the system<br />
+                - Tutorials
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Ask me anything, e.g., How do I apply for a form?">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
      <!-- Bootstrap JS (AMP-compatible) -->
      <script async src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+
+    <!-- Chatbot Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const chatWindow = document.getElementById("chatWindow");
+            const messageInput = document.getElementById("messageInput");
+            const sendButton = document.getElementById("sendButton");
+            const chatButton = document.getElementById("chatButton");
+            const chatContainer = document.getElementById("chatContainer");
+            const closeButton = document.getElementById("closeButton");
+
+            // Function to add a message to the chat window
+            function addMessage(role, content) {
+                const messageDiv = document.createElement("div");
+                messageDiv.classList.add("message", role);
+                messageDiv.innerHTML = `<strong>${
+                    role === "user" ? "You:" : "AI:"
+                }</strong> ${content}`;
+                chatWindow.appendChild(messageDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+            }
+
+            // Function to send a message to the backend
+            async function sendMessage() {
+                const message = messageInput.value.trim();
+
+                if (!message) return;
+
+                // Add user message to the chat window
+                addMessage("user", message);
+
+                // Clear input field
+                messageInput.value = "";
+
+                // Show loading indicator
+                const loadingDiv = document.createElement("div");
+                loadingDiv.classList.add("message", "assistant");
+                loadingDiv.innerHTML = `<strong>AI:</strong> Thinking...`;
+                chatWindow.appendChild(loadingDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                try {
+                    // Check if the user is asking for help
+                    if (message.toLowerCase().includes("help")) {
+                        chatWindow.removeChild(loadingDiv);
+                        addMessage(
+                            "assistant",
+                            `Here's what I can help you with:
+                            1. **Apply for a leave letter**: Ask "How do I apply for a leave letter?"
+                            2. **Check form status**: Ask "What is the status of my form?" and provide your form ID.
+                            3. **FAQs**: Ask questions like "What documents are required for a leave letter?"
+                            4. **General assistance**: Ask me anything, and I'll do my best to help!`
+                        );
+                        return;
+                    }
+
+                    // Check if the user is asking for form status
+                    if (message.toLowerCase().includes("form status")) {
+                        chatWindow.removeChild(loadingDiv);
+                        addMessage(
+                            "assistant",
+                            "Please provide your form ID to check the status."
+                        );
+                        return;
+                    }
+
+                    // If no specific command, send the message to the backend
+                    const response = await fetch("http://localhost:3078/api/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ message }),
+                    });
+
+                    const data = await response.json();
+
+                    // Remove loading indicator
+                    chatWindow.removeChild(loadingDiv);
+
+                    // Add AI response to the chat window
+                    addMessage("assistant", data.response);
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                    chatWindow.removeChild(loadingDiv);
+                    addMessage(
+                        "assistant",
+                        "Failed to process your request. Please try again."
+                    );
+                }
+            }
+
+            // Open Chat Window
+            chatButton.addEventListener("click", () => {
+                chatContainer.classList.add("open");
+            });
+
+            // Close Chat Window
+            closeButton.addEventListener("click", () => {
+                chatContainer.classList.remove("open");
+            });
+
+            // Event listener for the send button
+            sendButton.addEventListener("click", sendMessage);
+
+            // Event listener for the Enter key
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            // Auto-send a welcome message when the page loads
+            addMessage(
+                "assistant",
+                "Welcome to the AI Chatbot! Type 'help' to see what I can do."
+            );
+        });
+    </script>
 
 </body>
 

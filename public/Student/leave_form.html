@@ -163,73 +163,147 @@
     text-decoration: none; /* Add underline on hover */
 }
 
+
+/* Table Styling */
+#attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-family: Arial, sans-serif;
+        background-color: #fff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #attendance-table thead {
+        background-color: #007BFF;
+        color: white;
+        text-align: left;
+    }
+
+    #attendance-table th, #attendance-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #attendance-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    #attendance-table td {
+        color: #333;
+    }
+
+    /* No Data Row */
+    #no-data {
+        text-align: center;
+        font-weight: bold;
+        color: #777;
+    }
+
+
     </style>
     <script>
-      let formSubmitted = false;
 
-      async function handleSubmit(event) {
-          event.preventDefault();
-      
-          if (formSubmitted) {
-              const confirmResubmit = confirm("You have already submitted the form. Do you want to submit it again?");
-              if (!confirmResubmit) {
-                  return;
-              }
-          }
-      
-          formSubmitted = true;
-      
-          const modal = document.getElementById('processing-modal');
-          const spinner = document.querySelector('.spinner');
-          const message = document.getElementById('processing-message');
-          const successIcon = document.getElementById('success-icon');
-          const form = event.target; // Reference to the form element
-      
-          // Show modal
-          modal.classList.add('show');
-          spinner.style.display = 'block'; // Ensure spinner is shown
-          successIcon.style.display = 'none'; // Hide success icon initially
-          message.textContent = 'Processing your request...'; // Update the message
-      
-          try {
-              // Collect form data
-              const formData = new FormData(form);
-              const requestData = Object.fromEntries(formData.entries());
-      
-              // Simulate submission delay with a timeout
-              await new Promise((resolve) => setTimeout(resolve, 10000)); // Simulating server delay for spinner
-      
-              // Simulate server response
-              const response = await fetch('/submit', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(requestData),
-              });
-      
-              if (response.ok) {
-                  const result = await response.json();
-      
-                  // Success Response
-                  spinner.style.display = 'none'; // Hide spinner
-                  successIcon.style.display = 'block'; // Show success icon
-                  message.textContent = 'Successfully Submitted!';
-      
-                  setTimeout(() => {
-                      form.reset(); // Clear all form fields
-                      modal.classList.remove('show'); // Hide the modal
-                      const applicationId = result.applicationId || '123'; // Replace '123' with dynamic ID if available
-                      window.location.href = `/Student/confirmation.html?applicationId=${applicationId}`;
-                  }, 5000); // Show success message for 2 seconds
-              } else {
-                  throw new Error('Submission failed');
-              }
-          } catch (error) {
-              modal.classList.remove('show');
-              alert('An error occurred: ' + error.message);
-              console.error(error);
-          }
-      }
+        let formSubmitted = false;
+    
+        async function fetchAttendance() {
+        try {
+            const response = await fetch('/attendance'); // API call to get attendance
+            const data = await response.json();
+            const attendanceTable = document.getElementById('attendance-list');
+            attendanceTable.innerHTML = ""; // Clear previous records
+
+            if (response.ok && data.attendanceRecords.length > 0) {
+                data.attendanceRecords.forEach(record => {
+                    const row = `<tr>
+                                    <td>${record.Code}</td>
+                                    <td>${record.Name}</td>
+                                    <td>${record.AttendancePercentage}%</td>
+                                </tr>`;
+                    attendanceTable.innerHTML += row;
+                });
+            } else {
+                attendanceTable.innerHTML = `<tr id="no-data"><td colspan="3">No data available</td></tr>`;
+            }
+
+            document.getElementById('attendance-details').style.display = 'block'; // Show attendance details
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('attendance-list').innerHTML = `<tr id="no-data"><td colspan="3">Error fetching data</td></tr>`;
+        }
+    }
+
+    fetchAttendance();
+    
+        async function handleSubmit(event) {
+            event.preventDefault();
+    
+            if (formSubmitted) {
+                const confirmResubmit = confirm("You have already submitted the form. Do you want to submit it again?");
+                if (!confirmResubmit) return;
+            }
+    
+            formSubmitted = true;
+    
+            const modal = document.getElementById('processing-modal');
+            const message = document.getElementById('processing-message');
+            const form = event.target;
+            
+            modal.style.display = 'block';
+            message.textContent = 'Processing your request...';
+    
+            try {
+                const formData = new FormData(form);
+                const requestData = Object.fromEntries(formData.entries());
+    
+                // Fetch latest attendance details
+                const attendanceResponse = await fetch('/attendance');
+                const attendanceData = await attendanceResponse.json();
+    
+                if (!attendanceResponse.ok) {
+                    throw new Error("Failed to fetch attendance data.");
+                }
+    
+                // Check if attendance is below 75%
+                const lowAttendance = attendanceData.attendanceRecords.some(record => record.AttendancePercentage < 75);
+    
+                if (lowAttendance) {
+                    modal.style.display = 'none';
+                    alert('Your attendance is below 75%, leave application cannot be submitted.');
+                    return;
+                }
+    
+                // Submit leave application if attendance is valid
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData),
+                });
+    
+                if (response.ok) {
+                    const result = await response.json();
+                    message.textContent = 'Successfully Submitted!';
+                    setTimeout(() => {
+                        form.reset();
+                        modal.style.display = 'none';
+                        window.location.href = `/Student/confirmation.html?applicationId=${result.applicationId}`;
+                    }, 3000);
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                modal.style.display = 'none';
+                alert('An error occurred: ' + error.message);
+                console.error(error);
+            }
+        }
+    
+        // Fetch attendance when page loads
+        document.addEventListener("DOMContentLoaded", fetchAttendance);
     </script>
+    
 
     
 </head>
@@ -298,6 +372,25 @@
             <div class="form-group">
                 <input type="submit" value="Submit">
             </div>
+
+            <div id="attendance-details">
+                <h3>Your Attendance Records</h3>
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Attendance Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendance-list">
+                        <tr id="no-data">
+                            <td colspan="3">No data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
         </form>
     </div>
     <div id="processing-modal">

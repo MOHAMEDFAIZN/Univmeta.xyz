@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> HOD Dashboard - AFAS</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #000000;
+            color: #ffffff;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding-top: 50px;
+            transition: width 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 80px; /* Collapsed width */
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: #ffffff;
+            text-decoration: none;
+            margin: 5px 0;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .sidebar a:hover {
+            background-color: #16182b;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .sidebar .profile h5 {
+            margin: 10px 0;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 55px;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: 80px; /* Adjust main content when sidebar is collapsed */
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 220px; /* Positioned above the sidebar */
+            font-size: 30px;
+            color: #0b0b0bc2;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 5px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-section {
+            max-width: 97%;
+            margin: 35px auto;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffd64e, #e7e7e7);
+            color: #000000;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            height: auto;
+        }
+
+        .welcome-section h2 {
+            margin: 0;
+           
+            font-size: 2rem;
+            overflow: hidden; /* Hide overflow for typewriter effect */
+            border-right: 0.15em solid orange; /* Cursor effect */
+            white-space: nowrap; /* Keep text in one line */
+            letter-spacing: 0.15em; /* Spacing between letters */
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        .welcome-section p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            overflow: hidden; /* Hide overflow for typewriter effect */
+            border-right: 0.15em solid orange; /* Cursor effect */
+            white-space: nowrap; /* Keep text in one line */
+            letter-spacing: 0.15em; /* Spacing between letters */
+            animation: typing 3.5s steps(40, end) 3.5s, blink-caret 0.75s step-end infinite;
+        }
+
+        /* Typewriter Animation */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        /* Cursor Blinking Animation */
+        @keyframes blink-caret {
+            from, to {
+                border-color: transparent;
+            }
+        }
+
+        .summary-box {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: linear-gradient(135deg, #eaf0ff, #ffffff);
+            color: #2b2c34;
+            height: 155px;
+            font-family: 'Verdana', sans-serif;
+        }
+
+        .summary-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-box i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .summary-box h4 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .summary-box p {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        a.box-link {
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer {
+            background: linear-gradient(90deg, #000000, #000000);
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .footer h6 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .footer p {
+            margin: 10px 0 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px; /* Collapsed sidebar on mobile */
+            }
+
+            .sidebar a {
+                text-align: center;
+                padding: 10px;
+            }
+
+            .sidebar a i {
+                margin-right: 0; /* Remove margin for icons */
+            }
+
+            .sidebar a span {
+                display: none; /* Hide text on mobile */
+            }
+
+            .sidebar .profile h5,
+            .sidebar .profile p {
+                display: none; /* Hide profile text on mobile */
+            }
+
+            .main-content {
+                margin-left: 80px; /* Adjust main content for collapsed sidebar */
+                padding: 20px; /* Reduce padding on mobile */
+            }
+
+            .sidebar-toggle {
+                left: 60px; /* Adjust toggle button position */
+            }
+
+            .welcome-section h2 {
+                font-size: 1.5rem; /* Smaller font size for mobile */
+            }
+
+            .welcome-section p {
+                font-size: 1rem; /* Smaller font size for mobile */
+            }
+
+            .summary-box {
+                height: auto; /* Allow height to adjust */
+                margin: 10px 0; /* Adjust margin for mobile */
+            }
+
+            .summary-box h4 {
+                font-size: 1.2rem; /* Smaller font size for mobile */
+            }
+
+            .summary-box p {
+                font-size: 0.9rem; /* Smaller font size for mobile */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                transform: translateX(-100%); /* Hide sidebar completely */
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(0); /* Show sidebar when toggled */
+            }
+
+            .main-content {
+                margin-left: 0; /* Full width for main content */
+            }
+
+            .sidebar-toggle {
+                left: 20px; /* Adjust toggle button position */
+            }
+
+            .welcome-section {
+                padding: 15px; /* Reduce padding for smaller screens */
+            }
+
+            .summary-box {
+                width: 100%; /* Full width for summary boxes */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <img src="https://www.univmeta.xyz/UNIVMETA_BLACK.png" alt="Profile">
+            <h5>Head Of The Department</h5>
+            <p id="sidebarUserName">Loading...</p>
+            <p>UnivMeta.xyz</p>
+        </div>
+        <a href="#"><i class="fas fa-home"></i> <span>Home</span></a>
+        <a href="hod login/hodod.html"><i class="fas fa-file-alt"></i> <span>Applications</span></a>
+        <a href="hod login/hodbonofide.html"><i class="fas fa-file-alt"></i> <span>Bonafide Applications</span></a>
+        <a href="hod login/hodreveiw.html"><i class="fas fa-file-alt"></i> <span> No Due Applications</span></a>
+        <a href="faculty/change-password.html"><i class="fas fa-key"></i> <span>Change Password</span></a>
+        <a href="faculty/Faculty Login Page.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    </div>
+
+    <!-- Button to Toggle Sidebar -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2 id="welcomeHeading"><b>Welcome to UnivMeta.xyz</b></h2>
+            <p id="welcomeText">Your personalized faculty dashboard to manage tasks efficiently.</p>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <a href="#" class="col-md-4 box-link">
+                    <div class="summary-box">
+                        <i class="fas fa-bell text-warning"></i>
+                        <h4>Notifications</h4>
+                    </div>
+                </a>
+                <a href="Admin/Total.html" class="col-md-4 box-link">
+                    <div class="summary-box">
+                        <i class="fas fa-file-alt text-primary"></i>
+                        <h4>Bonafide Form</h4>
+                        <p>View Report</p>
+                    </div>
+                </a>
+                
+            </div>
+            <div class="row justify-content-center">
+                <a href="Admin/Total Event.html" class="col-md-4 box-link">
+                    <div class="summary-box">
+                        <i class="fas fa-file-alt text-secondary"></i>
+                        <h4>On Duty Forms</h4>
+                        <p>View Report</p>
+                    </div>
+                </a>
+                <a href="#" class="col-md-4 box-link">
+                    <div class="summary-box">
+                        <i class="far fa-file-alt text-primary"></i>
+                        <h4>No Due Forms</h4>
+                        <p>View Report</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h6>© 2025 UnivMeta.xyz. All Rights Reserved.</h6>
+    </div>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.main-content');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('collapsed');
+        });
+    </script>
+</body>
+
+</html>

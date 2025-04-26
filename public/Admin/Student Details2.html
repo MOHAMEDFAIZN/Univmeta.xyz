@@ -7,13 +7,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             text-align: center;
             background: linear-gradient(to bottom, #f0f4f8, #f0f4f8);
         }
         h1 {
-            color: #000000;
+            color: #000;
             margin-top: 20px;
         }
         .container {
@@ -37,7 +35,7 @@
             font-size: 16px;
             border: none;
             border-radius: 5px;
-            background-color: #000000;
+            background-color: #000;
             color: white;
             cursor: pointer;
             margin-top: 10px;
@@ -67,15 +65,12 @@
             background-color: #218838;
         }
         .footer {
-    text-align: center;
-    font-size: 15px;
-    color: #000000;
-    margin-top: 20px;
-    font-weight: bold; /* Makes text bold */
-    padding-top: 15px; /* Adds spacing above text */
-    
-}
-
+            text-align: center;
+            font-size: 15px;
+            color: #000;
+            margin-top: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -86,20 +81,41 @@
         <button onclick="fetchStudent()">Search</button>
         
         <div id="studentDetails" class="student-card">
-            <p><strong>Registration Number:</strong> <span id="regNumber"></span></p>
-            <p><strong>Aadhar Number:</strong> <span id="aadharNumber"></span></p>
+            <p><strong>Registration Number:</strong> <span id="regno"></span></p>
+            <p><strong>Aadhar Number:</strong> <span id="aadhar_number"></span></p>
             <p><strong>Name:</strong> <span id="name"></span></p>
-            <p><strong>Degree Programme:</strong> <span id="degreeProgramme"></span></p>
-            <p><strong>Batch:</strong> <span id="batch"></span></p>
-            <p><strong>Section:</strong> <span id="section"></span></p>
-            <p><strong>Faculty Advisor:</strong> <span id="facultyAdvisor"></span></p>
             <p><strong>DOB:</strong> <span id="dob"></span></p>
             <p><strong>Gender:</strong> <span id="gender"></span></p>
             <p><strong>Nationality:</strong> <span id="nationality"></span></p>
-            <p><strong>Religion:</strong> <span id="religion"></span></p>
-            <p><strong>Community:</strong> <span id="community"></span></p>
-            <p><strong>Caste:</strong> <span id="caste"></span></p>
-            <p><strong>Address:</strong> <span id="address"></span></p>
+            <p><strong>Blood Group:</strong> <span id="blood_Group"></span></p>
+            <p><strong>Phone:</strong> <span id="phone"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Permanent Address:</strong> <span id="permanent_address"></span></p>
+            <p><strong>Current Address:</strong> <span id="current_address"></span></p>
+            <p><strong>Parent Name:</strong> <span id="parent_name"></span></p>
+            <p><strong>Parent Contact:</strong> <span id="parent_contact"></span></p>
+            <p><strong>Degree Programme:</strong> <span id="course"></span></p>
+            <p><strong>Department:</strong> <span id="department"></span></p>
+            <p><strong>Year:</strong> <span id="year"></span></p>
+            <p><strong>Semester:</strong> <span id="semester"></span></p>
+            <p><strong>Section:</strong> <span id="section"></span></p>
+            <p><strong>Admission Type:</strong> <span id="admission_type"></span></p>
+            <p><strong>CGPA:</strong> <span id="cgpa"></span></p>
+            <p><strong>Attendance %:</strong> <span id="attendance_percentage"></span></p>
+            <p><strong>Backlogs:</strong> <span id="backlogs"></span></p>
+            <p><strong>Scholarship Details:</strong> <span id="scholarship_details"></span></p>
+            <p><strong>Fees Paid:</strong> <span id="fees_paid"></span></p>
+            <p><strong>Pending Dues:</strong> <span id="pending_dues"></span></p>
+            <p><strong>Library Card Number:</strong> <span id="library_card_number"></span></p>
+            <p><strong>Hostel Block:</strong> <span id="hostel_block"></span></p>
+            <p><strong>Hostel Room Number:</strong> <span id="hostel_room_number"></span></p>
+            <p><strong>Hostel Fees Paid:</strong> <span id="hostel_fees_paid"></span></p>
+            <p><strong>Transport Route:</strong> <span id="transport_route"></span></p>
+            <p><strong>Transport Bus Number:</strong> <span id="transport_bus_number"></span></p>
+            <p><strong>Club Memberships:</strong> <span id="club_memberships"></span></p>
+            <p><strong>Sports Participation:</strong> <span id="sports_participation"></span></p>
+            <p><strong>Warnings:</strong> <span id="warnings"></span></p>
+            <p><strong>Batch:</strong> <span id="batch"></span></p>
         </div>
         <p id="errorMessage" class="error"></p>
         
@@ -114,45 +130,36 @@
 
     <script>
         function fetchStudent() {
-            const registerNumber = document.getElementById("registerNumber").value;
+            const registerNumber = document.getElementById("registerNumber").value.trim();
             const studentDetails = document.getElementById("studentDetails");
             const errorMessage = document.getElementById("errorMessage");
 
-            if (registerNumber.trim() === "") {
-                errorMessage.textContent = "Please enter a registration number!";
+            if (registerNumber === "") {
+                errorMessage.textContent = "⚠ Please enter a registration number!";
                 studentDetails.style.display = "none";
                 return;
             }
 
             fetch(`/students/${registerNumber}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error || data.message) {
-                        errorMessage.textContent = "Student not found!";
-                        studentDetails.style.display = "none";
-                    } else {
-                        document.getElementById("regNumber").textContent = data.register_number;
-                        document.getElementById("aadharNumber").textContent = data.aadhar_number;
-                        document.getElementById("name").textContent = data.name;
-                        document.getElementById("degreeProgramme").textContent = data.degree_programme;
-                        document.getElementById("batch").textContent = data.batch;
-                        document.getElementById("section").textContent = data.section;
-                        document.getElementById("facultyAdvisor").textContent = data.faculty_advisor;
-                        document.getElementById("dob").textContent = data.dob;
-                        document.getElementById("gender").textContent = data.gender;
-                        document.getElementById("nationality").textContent = data.nationality;
-                        document.getElementById("religion").textContent = data.religion;
-                        document.getElementById("community").textContent = data.community;
-                        document.getElementById("caste").textContent = data.caste;
-                        document.getElementById("address").textContent = data.address;
-
-                        studentDetails.style.display = "block";
-                        errorMessage.textContent = "";
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Student not found");
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    Object.keys(data).forEach(key => {
+                        if (document.getElementById(key)) {
+                            document.getElementById(key).textContent = data[key] || "N/A";
+                        }
+                    });
+
+                    studentDetails.style.display = "block";
+                    errorMessage.textContent = "";
                 })
                 .catch(error => {
-                    console.error("Error fetching student:", error);
-                    errorMessage.textContent = "Error fetching data!";
+                    console.error("❌ Error fetching student:", error);
+                    errorMessage.textContent = "❌ Student not found!";
                     studentDetails.style.display = "none";
                 });
         }

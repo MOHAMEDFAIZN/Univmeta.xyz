@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOD Bonafide Application Review</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png"> <!-- Replace with the actual path to your favicon -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* General Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #f0f4f8, #f0f4f8);
+      padding-bottom: 90px; /* Adjust to the height of the footer */
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Main Container */
+    .container {
+      margin: 30px auto;
+      max-width: 1200px;
+      padding: 15px;
+    }
+
+    /* Title Section */
+    h2 {
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #000000;
+    font-family: "Arial", sans-serif; /* Modern and clean font */
+    font-size: 24px; /* Adjust size as needed */
+    letter-spacing: 1px; /* Slight spacing for better readability */
+}
+
+    /* Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table th,
+    table td {
+      border: 3px solid #dee2e6;
+      padding: 12px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #000000;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .status-approved {
+      color: #239423;
+      font-weight: bold;
+    }
+
+    .status-rejected {
+      color: #000000;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: #000000;
+      font-weight: bold;
+    }
+
+    /* Modal Design */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #ffffff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      max-width: 400px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .modal-content:hover {
+      transform: scale(1.05);
+    }
+
+    h4 {
+      color: #333;
+    }
+
+    /* Modal Buttons */
+    .modal-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .modal-button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .confirm {
+      background-color: #000000;
+    }
+
+    .cancel {
+      background-color: #6c757d;
+    }
+
+    .modal-button:hover {
+      background-color: #555;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      table th,
+      table td {
+        padding: 8px;
+        font-size: 14px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+    /* Ensure the entire page takes full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevents full-page scrolling */
+}
+
+.container {
+    flex: 1;
+    overflow-y: auto; /* Enables scrolling */
+    padding-bottom: 20px; /* Adds spacing before footer */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+.container::-webkit-scrollbar {
+    display: none; /* Hides scrollbar in Chrome, Safari */
+}
+
+
+/* Keep footer fixed at the bottom */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/* Ensure pagination is above the footer */
+.pagination {
+    margin-bottom: 95px; /* Pushes it up to prevent overlap */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #000000; 
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.pagination .active .page-link {
+    background-color: #20aa13;
+    color: white;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Title Section -->
+    <h2>HOD Application Review Dashboard</h2>
+
+    <!-- Application Table -->
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Application ID</th>
+          <th>Student Details</th>
+          <th>Submitted Date</th>
+          <th>Faculty Status</th>
+          <th>HOD Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="application-table">
+        <!-- Dynamically loaded rows here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Box -->
+  <div id="actionModal" class="modal">
+    <div class="modal-content">
+      <h4>Confirm Your Action</h4>
+      <p id="modalMessage">Are you sure you want to proceed with this action?</p>
+      <div class="modal-buttons">
+        <button class="modal-button confirm" onclick="performAction()">Confirm</button>
+        <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function updateStatus(applicationId, status3) {
+      if (!confirm(`Are you sure you want to ${status3} this application?`)) {
+        return;
+      }
+  
+      try {
+        const response = await fetch('/api/hod/update-status', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json' 
+          },
+          credentials: 'include', // Ensure session cookie is sent
+          body: JSON.stringify({ applicationId, status3 })
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Action failed!");
+        }
+  
+        // Update the UI without reloading
+        applicationsData = applicationsData.map(app => 
+          app.id === applicationId ? { ...app, status3 } : app
+        );
+  
+        displayPaginatedData();
+      } catch (error) {
+        console.error('Action error', error);
+        alert(error.message);
+      }
+    }
+  
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/hod/check-session', { credentials: 'include' });
+        if (!response.ok) {
+          throw new Error("Unauthorized: Please log in");
+        }
+        const data = await response.json();
+        console.log("User session:", data);
+      } catch (error) {
+        console.error(error.message);
+        alert("Please log in as HOD before approving/rejecting.");
+      }
+    }
+  
+    window.onload = function() {
+      checkSession();
+      fetchApplications();
+    };
+  </script>
+  
+
+   <!-- Pagination Section -->
+   <nav>
+    <ul id="pagination" class="pagination justify-content-center"></ul>
+  </nav>
+  <!-- Footer -->
+<footer class="footer">
+  <p>Powered by <a href="https://www.univmeta.xyz" target="_blank">UnivMeta</a></p>
+</footer>
+
+</body>
+
+</html>

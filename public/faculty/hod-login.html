@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Login - UnivMeta</title>
+    <link rel="icon" type="image/png" href="https://www.univmeta.xyz/UNIVMETA_BLACK.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            background: url('https://www.univmeta.xyz/Background%20Image.jpg') no-repeat center center/cover;
+        }
+
+        .top-bar {
+            width: 100%;
+            padding: 10px 35px;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar img {
+            width: 95px;
+            height: 76px;
+        }
+
+        .top-bar h1 {
+            font-size: 24px;
+            text-align: right;
+            color: #333333;
+            font-family: 'Lobster', cursive;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 200px;
+            height: 190px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #292517;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .input-group span {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #333;
+        }
+
+        .input-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #000000;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.4s ease;
+        }
+
+        .input-group button:hover {
+            background-color: #e6b800;
+        }
+
+        .bottom-bar {
+            width: 100%;
+            padding: 30px 35px;
+            background-color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 14px;
+            color: #555555;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-bar a {
+            text-decoration: none;
+            color: #555555;
+            font-weight: bold;
+        }
+
+        .bottom-bar a:hover {
+            color: #333333;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <img src="https://www.univmeta.xyz/faculty/Faculty%20Assest/UNIVMETA_BLACK.png" alt="Logo">
+        <h1>UnivMeta - HOD Login</h1>
+    </div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2>HOD Login</h2>
+            <img src="Faculty Assest/Education.gif" alt="Login Image">
+            <form id="hodLoginForm" method="POST" action="/hod/login">
+                <div class="input-group">
+                    <input type="text" id="hodUsername" name="username" placeholder="HOD Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="hodPassword" name="password" placeholder="Password" required>
+                    <span onclick="togglePassword()">Show</span>
+                </div>
+                <div class="input-group">
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        © 2025 All rights reserved | <a href="https://www.univmeta.xyz/Developers%20Details%20UnivMeta/developers.html" target="_blank">Developed and Maintained by AFAS Teams</a>
+    </div>
+
+    <script>
+        document.getElementById("hodLoginForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const username = document.getElementById("hodUsername").value;
+            const password = document.getElementById("hodPassword").value;
+    
+            try {
+                const response = await fetch("/hodlogin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    alert("Login successful!");
+                    window.location.href = "/hoddashboard.html"; // Redirect correctly
+                } else {
+                    alert(data.message); // Show error message
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("Something went wrong. Please try again.");
+            }
+        });
+    
+        function togglePassword() {
+            const passwordField = document.getElementById("hodPassword");
+            const showHideIcon = event.target;
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                showHideIcon.textContent = "Hide";
+            } else {
+                passwordField.type = "password";
+                showHideIcon.textContent = "Show";
+            }
+        }
+    </script>
+    
+    
+</body>
+
+</html>
